@@ -35,6 +35,7 @@ create table if not exists public.settings (
   emotions text[] not null,
   accounts text[] not null,
   max_daily_loss numeric(12,2) not null default 100,
+  account_capitals jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
 

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useData } from '../context/DataContext'
-import { toScoreboard, groupStats, fmtMoney, fmtPnl } from '../lib/stats'
+import { toScoreboard, groupStats, fmtMoney, fmtPnl, capitalOf, roiPct } from '../lib/stats'
 import type { DashboardStats, DailyPnl } from '../lib/types'
 import KillSwitch from '../components/KillSwitch'
 import ShareCard from '../components/ShareCard'
@@ -29,7 +29,7 @@ function StatCard({ label, value, tone }: { label: string; value: string; tone?:
 }
 
 export default function Dashboard() {
-  const { trades, loading } = useData()
+  const { trades, settings, loading } = useData()
 
   const stats = useMemo<DashboardStats | null>(() => {
     if (!trades.length) return null
@@ -54,6 +54,14 @@ export default function Dashboard() {
   const bySetup = useMemo(() => toScoreboard(groupStats(trades, (t) => t.setup)), [trades])
   const bySession = useMemo(() => toScoreboard(groupStats(trades, (t) => t.session)), [trades])
   const byEmotion = useMemo(() => toScoreboard(groupStats(trades, (t) => t.emotion)), [trades])
+
+  const byAccount = useMemo(() => {
+    return toScoreboard(groupStats(trades, (t) => t.account)).map((r) => {
+      const capital = capitalOf(settings, r.label)
+      const roi = roiPct(r.net, capital)
+      return { ...r, capital, roi }
+    })
+  }, [trades, settings])
 
   const equity = useMemo<DailyPnl[]>(() => {
     const byDate = new Map<string, number>()
@@ -147,12 +155,13 @@ export default function Dashboard() {
 
       <Scoreboard title="Setup Scoreboard" rows={bySetup} />
       <Scoreboard title="Session Scoreboard" rows={bySession} />
+      <Scoreboard title="Account Performance" rows={byAccount} accounts />
       <Scoreboard title="Emotion Scoreboard" rows={byEmotion} />
     </div>
   )
 }
 
-function Scoreboard({ title, rows }: { title: string; rows: Array<{ label: string; trades: number; net: number; winRate: number }> }) {
+function Scoreboard({ title, rows, accounts = false }: { title: string; rows: Array<{ label: string; trades: number; net: number; winRate: number } & Partial<{ capital: number; roi: number | null }>>; accounts?: boolean }) {
   return (
     <div className="panel">
       <h2>{title}</h2>
@@ -163,6 +172,12 @@ function Scoreboard({ title, rows }: { title: string; rows: Array<{ label: strin
             <th className="num">Trades</th>
             <th className="num">Win Rate</th>
             <th className="num">Net P&L</th>
+            {accounts && (
+              <>
+                <th className="num">Starting Capital</th>
+                <th className="num">ROI</th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -172,6 +187,14 @@ function Scoreboard({ title, rows }: { title: string; rows: Array<{ label: strin
               <td className="num">{r.trades}</td>
               <td className="num">{r.winRate.toFixed(1)}%</td>
               <td className={`num ${r.net >= 0 ? 'green' : 'red'}`}>{fmtPnl(r.net)}</td>
+              {accounts && (
+                <>
+                  <td className="num">{r.capital ? fmtMoney(r.capital) : '—'}</td>
+                  <td className={`num ${(r.roi ?? 0) >= 0 ? 'green' : 'red'}`}>
+                    {r.roi == null ? '—' : `${r.roi >= 0 ? '+' : ''}${r.roi.toFixed(1)}%`}
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>

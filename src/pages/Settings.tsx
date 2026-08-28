@@ -4,7 +4,10 @@ import type { Settings } from '../lib/types'
 
 export default function SettingsPage() {
   const { settings, updateSettings } = useData()
-  const [form, setForm] = useState<Settings>(settings)
+  const [form, setForm] = useState<Settings>({
+    ...settings,
+    account_capitals: settings.account_capitals ?? {},
+  })
   const [saved, setSaved] = useState(false)
   const [copied, setCopied] = useState(false)
 
@@ -12,9 +15,24 @@ export default function SettingsPage() {
     setForm({ ...form, [key]: value.split('\n').map((s) => s.trim()).filter(Boolean) })
   }
 
+  function setCapital(account: string, value: string) {
+    const caps = { ...(form.account_capitals ?? {}) }
+    const n = parseFloat(value)
+    if (!Number.isFinite(n) || n <= 0) {
+      delete caps[account]
+    } else {
+      caps[account] = n
+    }
+    setForm({ ...form, account_capitals: caps })
+  }
+
   async function save(e: React.FormEvent) {
     e.preventDefault()
-    await updateSettings({ ...form, max_daily_loss: Number(form.max_daily_loss) || 0 })
+    await updateSettings({
+      ...form,
+      max_daily_loss: Number(form.max_daily_loss) || 0,
+      account_capitals: form.account_capitals ?? {},
+    })
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -90,6 +108,32 @@ export default function SettingsPage() {
         <div className="field">
           <label>Trading Accounts (one per line)</label>
           <textarea rows={6} value={form.accounts.join('\n')} onChange={(e) => updateList('accounts', e.target.value)} />
+        </div>
+        <div className="field">
+          <label>Starting Capital per Account ($)</label>
+          <p className="muted" style={{ fontSize: 0.82, margin: '0 0 10px' }}>
+            Set modal permulaan untuk setiap akaun — ROI dikira sebagai Net P&amp;L ÷ starting capital.
+            Kosongkan = tiada ROI untuk akaun itu.
+          </p>
+          {form.accounts.length === 0 && (
+            <p className="muted">Tiada akaun lagi — tambah akaun di kotak di atas.</p>
+          )}
+          {form.accounts.map((a) => (
+            <div key={a} className="cap-row">
+              <span className="cap-name">{a}</span>
+              <span className="cap-input-wrap">
+                <span className="cap-dollar">$</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="100"
+                  placeholder="cth. 10000"
+                  value={form.account_capitals?.[a] ?? ''}
+                  onChange={(e) => setCapital(a, e.target.value)}
+                />
+              </span>
+            </div>
+          ))}
         </div>
         <div className="field">
           <label>Max Daily Loss Limit ($)</label>

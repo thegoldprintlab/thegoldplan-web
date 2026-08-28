@@ -1,4 +1,17 @@
-import type { Trade } from './types'
+import type { Trade, Settings } from './types'
+
+/** Starting capital for an account (0 if not set). */
+export function capitalOf(settings: Settings | null | undefined, account: string): number {
+  const v = settings?.account_capitals?.[account]
+  const n = Number(v)
+  return Number.isFinite(n) && n > 0 ? n : 0
+}
+
+/** ROI % = net P&L / starting capital. Returns null when capital not set. */
+export function roiPct(net: number, capital: number): number | null {
+  if (!capital || capital <= 0) return null
+  return (net / capital) * 100
+}
 
 export interface GroupedStats {
   trades: number

@@ -22,6 +22,7 @@ const DEFAULT_SETTINGS: Settings = {
   emotions: ['Calm & Focused', 'FOMO / Chasing Price', 'Revenge Trading', 'Hesitant'],
   accounts: ['Personal Account', 'Prop Firm 1', 'Prop Firm 2', 'Compounding Account'],
   max_daily_loss: 100,
+  account_capitals: {},
 }
 
 export function computePips(direction: Direction, entry: number, exit: number): number {
@@ -101,9 +102,21 @@ export async function fetchSettings(): Promise<Settings> {
       accounts: data.accounts ?? DEFAULT_SETTINGS.accounts,
       max_daily_loss: data.max_daily_loss ?? DEFAULT_SETTINGS.max_daily_loss,
       api_token: data.api_token ?? null,
+      account_capitals: normalizeCapitals(data.account_capitals),
     }
   }
   return { ...DEFAULT_SETTINGS, user_id: userId ?? '' }
+}
+
+/** Normalize jsonb from DB into Record<string, number> (values may be strings/numbers/null). */
+function normalizeCapitals(raw: unknown): Record<string, number> {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {}
+  const out: Record<string, number> = {}
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    const n = Number(v)
+    if (Number.isFinite(n) && n > 0) out[k] = n
+  }
+  return out
 }
 
 export async function saveSettings(s: Settings): Promise<void> {
@@ -118,6 +131,7 @@ export async function saveSettings(s: Settings): Promise<void> {
     emotions: s.emotions,
     accounts: s.accounts,
     max_daily_loss: s.max_daily_loss,
+    account_capitals: s.account_capitals ?? {},
   }
   const { data: existing } = await sb.from('settings').select('id').eq('user_id', userId).maybeSingle()
   if (existing) {

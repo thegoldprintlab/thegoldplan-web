@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useData } from '../context/DataContext'
 import { deleteTrade } from '../lib/api'
-import { fmtPnl } from '../lib/stats'
+import { fmtPnl, fmtMoney, capitalOf, roiPct } from '../lib/stats'
 
 export default function TradingLog() {
   const { trades, settings, reload } = useData()
@@ -19,6 +19,9 @@ export default function TradingLog() {
   const wins = filtered.filter((t) => t.profit_loss > 0).length
   const losses = filtered.filter((t) => t.profit_loss < 0).length
 
+  const capital = useMemo(() => (filter === 'All Accounts' ? 0 : capitalOf(settings, filter)), [settings, filter])
+  const roi = useMemo(() => roiPct(net, capital), [net, capital])
+
   async function doDelete(id: string) {
     try {
       await deleteTrade(id)
@@ -33,7 +36,12 @@ export default function TradingLog() {
     <div>
       <div className="page-head">
         <h1>Trading Log</h1>
-        <p className="muted">Your central database — {filtered.length} trades · {wins}W / {losses}L · Net {fmtPnl(net)}</p>
+        <p className="muted">
+          {filtered.length} trades · {wins}W / {losses}L · Net {fmtPnl(net)}
+          {filter !== 'All Accounts' && (
+            <> · Starting {capital ? fmtMoney(capital) : '—'} · ROI {roi == null ? '—' : `${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%`}</>
+          )}
+        </p>
       </div>
 
       <div className="panel">

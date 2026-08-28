@@ -14,7 +14,7 @@ interface DataCtx {
 
 const Ctx = createContext<DataCtx>({
   trades: [],
-  settings: { user_id: '', setups: [], sessions: [], emotions: [], accounts: [], max_daily_loss: 100 },
+  settings: { user_id: '', setups: [], sessions: [], emotions: [], accounts: [], max_daily_loss: 100, account_capitals: {} },
   loading: true,
   configured: false,
   error: null,
@@ -25,7 +25,7 @@ const Ctx = createContext<DataCtx>({
 export function DataProvider({ children }: { children: ReactNode }) {
   const configured = useConfigured()
   const [trades, setTrades] = useState<Trade[]>([])
-  const [settings, setSettings] = useState<Settings>({ user_id: '', setups: [], sessions: [], emotions: [], accounts: [], max_daily_loss: 100 })
+  const [settings, setSettings] = useState<Settings>({ user_id: '', setups: [], sessions: [], emotions: [], accounts: [], max_daily_loss: 100, account_capitals: {} })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
