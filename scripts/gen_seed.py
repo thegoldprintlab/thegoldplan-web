@@ -54,7 +54,7 @@ def main(path: str) -> None:
         seen.add(key)
 
         values.append(
-            f"  (:USER_ID, '{parse_date(date)}', '{esc(account)}', '{esc(session)}', '{esc(setup)}', "
+            f"  (':USER_ID', '{parse_date(date)}', '{esc(account)}', '{esc(session)}', '{esc(setup)}', "
             f"'{direction}', {entry}, {exit_}, {pips}, {pl}, '{esc(emotion)}', '{notes}')"
         )
 
@@ -64,7 +64,7 @@ def main(path: str) -> None:
     print()
     print('-- Seed default settings for the same user:')
     print("insert into public.settings (user_id, setups, sessions, emotions, accounts, max_daily_loss)")
-    print("values (:USER_ID,")
+    print("values (':USER_ID',")
     print("  array['SNR Breakout','SND Rejection','SNR + SND','Others'],")
     print("  array['Australia (Aus)','Tokyo (Tok)','London (Lon)','New York (NY)'],")
     print("  array['Calm & Focused','FOMO / Chasing Price','Revenge Trading','Hesitant'],")
