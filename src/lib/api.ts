@@ -34,6 +34,12 @@ export function computePnl(pips: number): number {
   return Math.round(pips * 10) / 10
 }
 
+// Tag "High Volatility" when submitted during London–NY overlap (12:00–16:00 UTC)
+export function currentVolatility(): string {
+  const h = new Date().getUTCHours()
+  return h >= 12 && h < 16 ? 'High Volatility' : 'Normal'
+}
+
 export async function fetchTrades(): Promise<Trade[]> {
   const sb = getSupabase()
   const { data, error } = await sb
@@ -66,6 +72,7 @@ export async function insertTrade(t: NewTrade): Promise<Trade> {
       profit_loss: t.profit_loss,
       emotion: t.emotion,
       notes: t.notes || '',
+      volatility: currentVolatility(),
     })
     .select()
     .single()
@@ -93,6 +100,7 @@ export async function fetchSettings(): Promise<Settings> {
       emotions: data.emotions ?? DEFAULT_SETTINGS.emotions,
       accounts: data.accounts ?? DEFAULT_SETTINGS.accounts,
       max_daily_loss: data.max_daily_loss ?? DEFAULT_SETTINGS.max_daily_loss,
+      api_token: data.api_token ?? null,
     }
   }
   return { ...DEFAULT_SETTINGS, user_id: userId ?? '' }

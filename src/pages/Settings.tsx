@@ -6,6 +6,7 @@ export default function SettingsPage() {
   const { settings, updateSettings } = useData()
   const [form, setForm] = useState<Settings>(settings)
   const [saved, setSaved] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   function updateList(key: 'setups' | 'sessions' | 'emotions' | 'accounts', value: string) {
     setForm({ ...form, [key]: value.split('\n').map((s) => s.trim()).filter(Boolean) })
@@ -18,11 +19,59 @@ export default function SettingsPage() {
     setTimeout(() => setSaved(false), 2000)
   }
 
+  async function copyToken() {
+    if (!settings.api_token) return
+    await navigator.clipboard.writeText(settings.api_token)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const shortcutBody = settings.api_token
+    ? `{
+  "token": "${settings.api_token}",
+  "entry": 2320.50,
+  "exit": 2325.00,
+  "direction": "BUY"
+}`.replace(/\n/g, '\n')
+    : ''
+
   return (
     <div>
       <div className="page-head">
         <h1>Settings</h1>
-        <p className="muted">Configure setups, sessions, emotions, accounts, and your daily loss limit.</p>
+        <p className="muted">Configure setups, sessions, emotions, accounts, daily loss limit, dan Quick Log API.</p>
+      </div>
+
+      <div className="panel">
+        <h2>⚡ Quick Log API (iOS Shortcuts)</h2>
+        <p className="muted" style={{ marginBottom: 16 }}>
+          Guna token ini untuk log trade terus dari Home Screen tanpa buka app. Bina Shortcut dengan blok
+          "Get Contents of URL" (POST) ke endpoint di bawah.
+        </p>
+        <div className="field">
+          <label>Endpoint (POST JSON)</label>
+          <input readOnly value="https://gtblmwijohoetczqngpr.supabase.co/rest/v1/rpc/api_log_trade" onFocus={(e) => e.target.select()} />
+        </div>
+        <div className="field" style={{ marginTop: 12 }}>
+          <label>API Token anda</label>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <input readOnly value={settings.api_token ?? 'Menjana…'} onFocus={(e) => e.target.select()} />
+            <button className="btn btn-secondary" onClick={copyToken}>{copied ? '✓ Copied' : 'Copy'}</button>
+          </div>
+        </div>
+        <div className="field" style={{ marginTop: 12 }}>
+          <label>Contoh JSON Body (untuk Shortcut)</label>
+          <textarea readOnly rows={5} value={shortcutBody} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 0.82 }} />
+        </div>
+        <div style={{ marginTop: 12, background: 'var(--surface-2)', border: '1px solid var(--hairline)', borderRadius: 8, padding: 12 }}>
+          <div style={{ fontSize: 0.85, color: 'var(--ink-muted)', marginBottom: 8 }}>Header yang diperlukan:</div>
+          <code>apikey: &lt;anon-key&gt;</code><br />
+          <code>Authorization: Bearer &lt;anon-key&gt;</code><br />
+          <code>Content-Type: application/json</code>
+          <div style={{ fontSize: 0.82, color: 'var(--ink-subtle)', marginTop: 8 }}>
+            Anon key boleh diambil dari halaman ini: <b>Settings → API → anon public</b>.
+          </div>
+        </div>
       </div>
 
       <form onSubmit={save} className="panel form-grid">

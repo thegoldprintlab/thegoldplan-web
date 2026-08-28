@@ -2,6 +2,8 @@ import { useMemo } from 'react'
 import { useData } from '../context/DataContext'
 import { toScoreboard, groupStats, fmtMoney, fmtPnl } from '../lib/stats'
 import type { DashboardStats, DailyPnl } from '../lib/types'
+import KillSwitch from '../components/KillSwitch'
+import ShareCard from '../components/ShareCard'
 import {
   ResponsiveContainer,
   LineChart,
@@ -83,6 +85,10 @@ export default function Dashboard() {
         <h1>Dashboard</h1>
         <p className="muted">Your command center for growth.</p>
       </div>
+
+      <KillSwitch />
+
+      <ShareCard />
 
       <div className="stat-grid">
         <StatCard label="Total Net P&L" value={fmtMoney(stats.totalNet)} tone={stats.totalNet >= 0 ? 'pos' : 'neg'} />

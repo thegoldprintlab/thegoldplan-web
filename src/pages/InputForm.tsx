@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useData } from '../context/DataContext'
-import { insertTrade, computePips, computePnl } from '../lib/api'
+import { insertTrade, computePips, computePnl, currentVolatility } from '../lib/api'
 import { todayISO } from '../lib/stats'
 import type { Direction } from '../lib/types'
 
@@ -23,6 +23,7 @@ export default function InputForm() {
   const valid = Number.isFinite(entryNum) && Number.isFinite(exitNum) && entryNum > 0 && exitNum > 0 && Boolean(tradeDate) && Boolean(account)
   const pips = valid ? computePips(direction, entryNum, exitNum) : 0
   const pnl = valid ? computePnl(pips) : 0
+  const vol = currentVolatility()
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -124,6 +125,9 @@ export default function InputForm() {
             <>
               <span>Pips: <b className={pips >= 0 ? 'green' : 'red'}>{pips}</b></span>
               <span>P&L: <b className={pnl >= 0 ? 'green' : 'red'}>{pnl >= 0 ? '+' : '-'}${Math.abs(pnl).toFixed(0)}</b></span>
+              <span className={vol === 'High Volatility' ? 'badge-volatile' : 'badge-normal'}>
+                {vol === 'High Volatility' ? '⚡ High Volatility (London-NY overlap)' : 'Normal Volatility'}
+              </span>
               <span className={valid ? 'ready' : ''}>✅ READY</span>
             </>
           ) : (

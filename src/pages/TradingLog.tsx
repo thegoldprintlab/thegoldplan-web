@@ -60,6 +60,7 @@ export default function TradingLog() {
                 <th className="num">Pips</th>
                 <th className="num">P&L</th>
                 <th>Emotion</th>
+                <th>Volatility</th>
                 <th>Notes</th>
                 <th></th>
               </tr>
@@ -77,6 +78,11 @@ export default function TradingLog() {
                   <td className={`num ${t.pips >= 0 ? 'green' : 'red'}`}>{t.pips}</td>
                   <td className={`num ${t.profit_loss >= 0 ? 'green' : 'red'}`}>{fmtPnl(t.profit_loss)}</td>
                   <td>{t.emotion}</td>
+                  <td>
+                    <span className={t.volatility === 'High Volatility' ? 'badge-volatile' : 'badge-normal'}>
+                      {t.volatility === 'High Volatility' ? '⚡ High Volatility' : 'Normal'}
+                    </span>
+                  </td>
                   <td className="notes-cell">{t.notes}</td>
                   <td>
                     {confirmDelete === t.id ? (

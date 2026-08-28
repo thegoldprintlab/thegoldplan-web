@@ -15,6 +15,7 @@ export interface Trade {
   profit_loss: number
   emotion: string
   notes: string
+  volatility: string
 }
 
 export interface Settings {
@@ -24,6 +25,7 @@ export interface Settings {
   emotions: string[]
   accounts: string[]
   max_daily_loss: number
+  api_token?: string | null
 }
 
 export interface DashboardStats {
