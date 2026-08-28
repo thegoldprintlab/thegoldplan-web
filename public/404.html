@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>The Gold Plan Trading Journey</title>
+    <script>
+      // SPA fallback for GitHub Pages: rewrite /path to ?/path and load the app.
+      (function () {
+        var path = sessionStorage.getItem('redirect');
+        var base = location.pathname.replace(/\/$/, '').replace(/\/[^/]+$/, '');
+        var target = location.pathname.replace(base, '') || '/';
+        if (target !== '/') {
+          sessionStorage.setItem('redirect', target);
+          var q = target.charAt(0) === '/' ? target : '/' + target;
+          location.replace(base + '/?p=' + encodeURIComponent(q));
+        } else {
+          sessionStorage.removeItem('redirect');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>Loading…</noscript>
+  </body>
+</html>
