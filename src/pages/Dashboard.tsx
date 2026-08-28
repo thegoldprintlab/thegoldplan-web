@@ -100,17 +100,17 @@ export default function Dashboard() {
         <div className="chart" style={{ height: 260 }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={equity}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(v) => `$${v}`} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#23252a" />
+              <XAxis dataKey="date" stroke="#8a8f98" fontSize={11} />
+              <YAxis stroke="#8a8f98" fontSize={11} tickFormatter={(v) => `$${v}`} />
               <Tooltip
-                contentStyle={{ background: '#0f172a', border: '1px solid #334155', borderRadius: 8 }}
-                labelStyle={{ color: '#e2e8f0' }}
+                contentStyle={{ background: '#0f1011', border: '1px solid #23252a', borderRadius: 8 }}
+                labelStyle={{ color: '#d0d6e0' }}
                 formatter={(v: number, name: string) => [fmtMoney(v), name === 'cumulative' ? 'Cumulative P&L' : 'Daily P&L']}
               />
               <Legend />
-              <Line type="monotone" dataKey="cumulative" name="Cumulative P&L" stroke="#fbbf24" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="pnl" name="Daily P&L" stroke="#38bdf8" strokeWidth={1.5} dot={false} />
+              <Line type="monotone" dataKey="cumulative" name="Cumulative P&L" stroke="#5e6ad2" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="pnl" name="Daily P&L" stroke="#828fff" strokeWidth={1.5} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -121,17 +121,17 @@ export default function Dashboard() {
         <div className="chart" style={{ height: 220 }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={emotionBars}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-              <XAxis dataKey="name" stroke="#94a3b8" fontSize={10} interval={0} />
-              <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(v) => `$${v}`} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#23252a" />
+              <XAxis dataKey="name" stroke="#8a8f98" fontSize={10} interval={0} />
+              <YAxis stroke="#8a8f98" fontSize={11} tickFormatter={(v) => `$${v}`} />
               <Tooltip
-                contentStyle={{ background: '#0f172a', border: '1px solid #334155', borderRadius: 8 }}
-                labelStyle={{ color: '#e2e8f0' }}
+                contentStyle={{ background: '#0f1011', border: '1px solid #23252a', borderRadius: 8 }}
+                labelStyle={{ color: '#d0d6e0' }}
                 formatter={(v: number, name: string) => [name === 'net' ? fmtMoney(v) : v, name === 'net' ? 'Net P&L' : 'Trades']}
               />
               <Bar dataKey="net" name="Net P&L" radius={[4, 4, 0, 0]}>
                 {emotionBars.map((e) => (
-                  <Cell key={e.name} fill={e.net >= 0 ? '#10b981' : '#ef4444'} />
+                  <Cell key={e.name} fill={e.net >= 0 ? '#27a644' : '#d64545'} />
                 ))}
               </Bar>
             </BarChart>
