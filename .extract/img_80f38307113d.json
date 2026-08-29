@@ -1,0 +1,178 @@
+[
+ {
+  "open_time": "08.25 17:00",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4618.89,
+  "close_time": "08.25 17:01",
+  "close_price": 4619.09,
+  "profit": -0.6,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:00",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4619.15,
+  "close_time": "08.25 17:01",
+  "close_price": 4619.09,
+  "profit": 0.18,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:00",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4620.23,
+  "close_time": "08.25 17:01",
+  "close_price": 4619.07,
+  "profit": 3.48,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:00",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4620.18,
+  "close_time": "08.25 17:01",
+  "close_price": 4619.07,
+  "profit": 3.33,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:00",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4620.01,
+  "close_time": "08.25 17:01",
+  "close_price": 4619.07,
+  "profit": 2.82,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:00",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4620.12,
+  "close_time": "08.25 17:01",
+  "close_price": 4619.07,
+  "profit": 3.15,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:00",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4620.24,
+  "close_time": "08.25 17:01",
+  "close_price": 4619.07,
+  "profit": 3.51,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4618.88,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -9.18,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4619.12,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -8.46,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4618.88,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -9.18,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4618.9,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -9.12,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4619.04,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -8.7,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4619.03,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -8.73,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4619.26,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -8.04,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4619.04,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -8.7,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.25 17:02",
+  "type": "sell",
+  "volume": 0.03,
+  "open_price": 4619.04,
+  "close_time": "08.25 17:06",
+  "close_price": 4621.94,
+  "profit": -8.7,
+  "image": "img_80f38307113d.jpg",
+  "source": "vision"
+ }
+]

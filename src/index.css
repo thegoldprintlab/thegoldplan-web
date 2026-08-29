@@ -43,9 +43,18 @@ html, body {
   letter-spacing: -0.05px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-#root { min-height: 100vh; }
+img, svg, canvas, video {
+  max-width: 100%;
+  height: auto;
+}
+
+#root { min-height: 100vh; min-width: 0; }
+body { overflow-wrap: break-word; }
 
 code {
   background: var(--surface-2);
@@ -78,7 +87,8 @@ p { margin: 0; }
 .buy { color: var(--green); font-weight: 600; }
 .sell { color: var(--red); font-weight: 600; }
 
-.app-shell { max-width: 1280px; margin: 0 auto; padding: 0 24px 48px; }
+.app-shell { max-width: 1280px; margin: 0 auto; padding: 0 16px 48px; width: 100%; min-width: 0; }
+@media (min-width: 768px) { .app-shell { padding: 0 24px 48px; } }
 
 /* ---------- Top bar ---------- */
 .topbar {
@@ -143,7 +153,7 @@ p { margin: 0; }
 }
 
 /* ---------- Stats ---------- */
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
 .stat-card {
   background: var(--surface-1);
   border: 1px solid var(--hairline);
@@ -154,8 +164,13 @@ p { margin: 0; }
 .stat-value { font-size: 1.35rem; font-weight: 600; margin-top: 6px; letter-spacing: -0.5px; }
 
 /* ---------- Tables ---------- */
-.table-wrap { overflow-x: auto; }
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
 .tbl { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.tbl--wide { min-width: 720px; }
 .tbl th {
   text-align: left;
   padding: 8px 12px;
@@ -389,4 +404,23 @@ textarea { resize: vertical; }
 @media (max-width: 640px) {
   .stat-grid { grid-template-columns: repeat(2, 1fr); }
   .topbar { height: auto; padding: 12px 0; flex-wrap: wrap; }
+  .topbar .userbox { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+  .nav { width: 100%; }
+  .nav-links { width: 100%; }
+  .nav-link { flex: 1 1 auto; text-align: center; }
+  .panel { padding: 16px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .span2 { grid-column: span 1; }
+  .share-card { padding: 24px 20px; }
+  .share-net { font-size: 2.4rem; }
+  .live-calc { gap: 10px; }
+}
+
+/* Small phones */
+@media (max-width: 400px) {
+  html, body { font-size: 14px; }
+  .stat-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card { padding: 12px 14px; }
+  .stat-value { font-size: 1.15rem; }
+  .app-shell { padding: 0 12px 40px; }
 }

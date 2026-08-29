@@ -1,0 +1,134 @@
+[
+ {
+  "open_time": "08.27 16:01",
+  "type": "buy",
+  "volume": 0.01,
+  "open_price": 4581.33,
+  "close_time": "08.27 16:01",
+  "close_price": 4586.59,
+  "profit": 5.26,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:01",
+  "type": "buy",
+  "volume": 0.01,
+  "open_price": 4581.2,
+  "close_time": "08.27 16:01",
+  "close_price": 4586.59,
+  "profit": 5.39,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4587.59,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 1.79,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4586.76,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 0.96,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4587.86,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 2.06,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4587.91,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 2.11,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4587.72,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 1.92,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4587.64,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 1.84,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4587.58,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 1.78,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4589.14,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 3.34,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4588.84,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 3.04,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ },
+ {
+  "open_time": "08.27 16:32",
+  "type": "sell",
+  "volume": 0.01,
+  "open_price": 4588.69,
+  "close_time": "08.27 16:32",
+  "close_price": 4585.8,
+  "profit": 2.89,
+  "image": "img_33370152fd87.jpg",
+  "source": "vision"
+ }
+]
