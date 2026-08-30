@@ -28,6 +28,8 @@ export interface Settings {
   api_token?: string | null
   /** account name -> starting capital ($). Missing entries treated as 0 (unset). */
   account_capitals?: Record<string, number> | null
+  /** account name -> daily loss limit ($). Missing entries fall back to max_daily_loss. */
+  account_daily_loss_limits?: Record<string, number> | null
 }
 
 export interface DashboardStats {

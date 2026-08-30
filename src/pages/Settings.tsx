@@ -7,6 +7,7 @@ export default function SettingsPage() {
   const [form, setForm] = useState<Settings>({
     ...settings,
     account_capitals: settings.account_capitals ?? {},
+    account_daily_loss_limits: settings.account_daily_loss_limits ?? {},
   })
   const [saved, setSaved] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -24,6 +25,17 @@ export default function SettingsPage() {
       caps[account] = n
     }
     setForm({ ...form, account_capitals: caps })
+  }
+
+  function setDailyLimit(account: string, value: string) {
+    const limits = { ...(form.account_daily_loss_limits ?? {}) }
+    const n = parseFloat(value)
+    if (!Number.isFinite(n) || n <= 0) {
+      delete limits[account]
+    } else {
+      limits[account] = n
+    }
+    setForm({ ...form, account_daily_loss_limits: limits })
   }
 
   async function save(e: React.FormEvent) {
@@ -90,6 +102,32 @@ export default function SettingsPage() {
             Anon key boleh diambil dari halaman ini: <b>Settings → API → anon public</b>.
           </div>
         </div>
+      </div>
+
+      <div className="panel">
+        <h2>Daily Loss Limit per Account ($)</h2>
+        <p className="muted" style={{ fontSize: 0.82, margin: '0 0 10px' }}>
+          Limit harian untuk setiap akaun. Kosongkan = guna nilai <b>Max Daily Loss Limit</b> global.
+        </p>
+        {form.accounts.length === 0 && (
+          <p className="muted">Tiada akaun lagi — tambah akaun di atas dulu.</p>
+        )}
+        {form.accounts.map((a) => (
+          <div key={a} className="cap-row">
+            <span className="cap-name">{a}</span>
+            <span className="cap-input-wrap">
+              <span className="cap-dollar">$</span>
+              <input
+                type="number"
+                min="0"
+                step="10"
+                placeholder="Default"
+                value={form.account_daily_loss_limits?.[a] ?? ''}
+                onChange={(e) => setDailyLimit(a, e.target.value)}
+              />
+            </span>
+          </div>
+        ))}
       </div>
 
       <form onSubmit={save} className="panel form-grid">

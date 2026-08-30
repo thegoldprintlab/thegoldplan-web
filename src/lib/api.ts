@@ -103,6 +103,7 @@ export async function fetchSettings(): Promise<Settings> {
       max_daily_loss: data.max_daily_loss ?? DEFAULT_SETTINGS.max_daily_loss,
       api_token: data.api_token ?? null,
       account_capitals: normalizeCapitals(data.account_capitals),
+      account_daily_loss_limits: normalizeCapitals(data.account_daily_loss_limits),
     }
   }
   return { ...DEFAULT_SETTINGS, user_id: userId ?? '' }
@@ -132,6 +133,7 @@ export async function saveSettings(s: Settings): Promise<void> {
     accounts: s.accounts,
     max_daily_loss: s.max_daily_loss,
     account_capitals: s.account_capitals ?? {},
+    account_daily_loss_limits: s.account_daily_loss_limits ?? {},
   }
   const { data: existing } = await sb.from('settings').select('id').eq('user_id', userId).maybeSingle()
   if (existing) {
