@@ -43,13 +43,24 @@ export function currentVolatility(): string {
 
 export async function fetchTrades(): Promise<Trade[]> {
   const sb = getSupabase()
-  const { data, error } = await sb
-    .from('trades')
-    .select('*')
-    .order('trade_date', { ascending: false })
-    .order('created_at', { ascending: false })
-  if (error) throw error
-  return (data ?? []) as Trade[]
+  // Supabase/PostgREST caps at 1000 rows per request — paginate to get all.
+  const PAGE = 1000
+  const out: Trade[] = []
+  let from = 0
+  for (;;) {
+    const { data, error } = await sb
+      .from('trades')
+      .select('*')
+      .order('trade_date', { ascending: false })
+      .order('id', { ascending: false })
+      .range(from, from + PAGE - 1)
+    if (error) throw error
+    if (!data || data.length === 0) break
+    out.push(...(data as Trade[]))
+    if (data.length < PAGE) break
+    from += PAGE
+  }
+  return out
 }
 
 export async function insertTrade(t: NewTrade): Promise<Trade> {
