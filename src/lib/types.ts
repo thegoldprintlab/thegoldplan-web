@@ -16,6 +16,7 @@ export interface Trade {
   emotion: string
   notes: string
   volatility: string
+  volume?: number | null
 }
 
 export interface Settings {
