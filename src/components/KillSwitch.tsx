@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { useData } from '../context/DataContext'
 import { fmtPnl } from '../lib/stats'
+import type { Trade } from '../lib/types'
 
-export default function KillSwitch() {
-  const { trades, settings } = useData()
+export default function KillSwitch({ trades }: { trades: Trade[] }) {
+  const { settings } = useData()
 
   const status = useMemo(() => {
     const today = new Date()

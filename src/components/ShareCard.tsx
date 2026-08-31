@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react'
-import { useData } from '../context/DataContext'
 import { fmtMoney, fmtPnl } from '../lib/stats'
 import { toScoreboard, groupStats } from '../lib/stats'
+import type { Trade } from '../lib/types'
 
-export default function ShareCard() {
-  const { trades } = useData()
+export default function ShareCard({ trades }: { trades: Trade[] }) {
   const [mode, setMode] = useState<'money' | 'percent'>('money')
   const [show, setShow] = useState(false)
 
