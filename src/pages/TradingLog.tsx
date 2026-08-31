@@ -65,6 +65,7 @@ export default function TradingLog() {
                 <th>Dir</th>
                 <th className="num">Entry</th>
                 <th className="num">Exit</th>
+                <th className="num">Volume</th>
                 <th className="num">Pips</th>
                 <th className="num">P&L</th>
                 <th>Emotion</th>
@@ -83,6 +84,7 @@ export default function TradingLog() {
                   <td className={t.direction === 'BUY' ? 'buy' : 'sell'}>{t.direction}</td>
                   <td className="num">{t.entry_price}</td>
                   <td className="num">{t.exit_price}</td>
+                  <td className="num">{t.volume ?? '—'}</td>
                   <td className={`num ${t.pips >= 0 ? 'green' : 'red'}`}>{t.pips}</td>
                   <td className={`num ${t.profit_loss >= 0 ? 'green' : 'red'}`}>{fmtPnl(t.profit_loss)}</td>
                   <td>{t.emotion}</td>

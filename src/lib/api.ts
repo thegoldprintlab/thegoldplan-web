@@ -9,6 +9,7 @@ export interface NewTrade {
   direction: Direction
   entry_price: number
   exit_price: number
+  volume: number
   pips: number
   profit_loss: number
   emotion: string
@@ -80,6 +81,7 @@ export async function insertTrade(t: NewTrade): Promise<Trade> {
       direction: t.direction,
       entry_price: t.entry_price,
       exit_price: t.exit_price,
+      volume: t.volume,
       pips: t.pips,
       profit_loss: t.profit_loss,
       emotion: t.emotion,
