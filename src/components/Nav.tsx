@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
 
 const links = [
-  { to: '/', label: 'Dashboard' },
-  { to: '/log', label: 'Trading Log' },
-  { to: '/input', label: 'Input Form' },
-  { to: '/settings', label: 'Settings' },
+  { to: '/app', label: 'Dashboard' },
+  { to: '/app/log', label: 'Trading Log' },
+  { to: '/app/input', label: 'Input Form' },
+  { to: '/app/settings', label: 'Settings' },
+  { to: '/app/account', label: 'Account' },
 ]
 
 export default function Nav() {
@@ -24,7 +25,7 @@ export default function Nav() {
           <NavLink
             key={l.to}
             to={l.to}
-            end={l.to === '/'}
+            end={l.to === '/app'}
             className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             {l.label}

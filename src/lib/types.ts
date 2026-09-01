@@ -58,3 +58,25 @@ export interface DailyPnl {
   pnl: number
   cumulative: number
 }
+
+export type PlanId = 'monthly' | 'lifetime'
+
+export type SubscriptionStatus =
+  | 'trialing'
+  | 'active'
+  | 'past_due'
+  | 'canceled'
+  | 'incomplete'
+  | 'unpaid'
+
+export interface Subscription {
+  id: string
+  user_id: string
+  plan: PlanId
+  status: SubscriptionStatus
+  current_period_end: string | null
+  stripe_customer_id?: string | null
+  stripe_subscription_id?: string | null
+  created_at: string
+  updated_at: string
+}

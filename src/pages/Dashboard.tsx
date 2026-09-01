@@ -4,6 +4,7 @@ import { toScoreboard, groupStats, fmtMoney, fmtPnl, capitalOf, roiPct } from '.
 import type { DashboardStats, DailyPnl } from '../lib/types'
 import KillSwitch from '../components/KillSwitch'
 import ShareCard from '../components/ShareCard'
+import UpgradeGate from '../components/UpgradeGate'
 import {
   ResponsiveContainer,
   LineChart,
@@ -131,7 +132,9 @@ export default function Dashboard() {
       </div>
 
       <KillSwitch trades={filtered} />
-      <ShareCard trades={filtered} />
+      <UpgradeGate feature="Share Card">
+        <ShareCard trades={filtered} />
+      </UpgradeGate>
 
       {!stats ? (
         <div className="empty-state">No trades in this view.</div>
