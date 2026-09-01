@@ -7,8 +7,22 @@
     <meta name="description" content="The Gold Plan Trading Journey — XAUUSD trading journal and analytics dashboard" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
     <title>The Gold Plan Trading Journey</title>
+    <script>
+      // Apply design + theme before first paint to avoid flash.
+      (function () {
+        try {
+          var p = new URLSearchParams(location.search)
+          var design = p.get('design') || localStorage.getItem('gp-design') || 'gold'
+          var theme = p.get('theme') || localStorage.getItem('gp-theme')
+          if (!theme) theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+          document.documentElement.setAttribute('data-design', design)
+          document.documentElement.setAttribute('data-theme', theme)
+          document.documentElement.style.colorScheme = theme
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

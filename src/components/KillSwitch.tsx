@@ -40,27 +40,23 @@ export default function KillSwitch({ trades }: { trades: Trade[] }) {
     return 'ok'
   }
 
-  function levelClass(level: string) {
-    return `kill-switch ${level}`
-  }
-
   function levelTitle(level: string) {
     switch (level) {
-      case 'blown': return '⛔ ACCOUNT PROTECTED'
-      case 'danger': return '🔴 WALK AWAY'
-      case 'warn': return '⚠️ AMARAN'
-      default: return '🛡️ Jurulatih Akaun'
+      case 'blown': return 'Account Protected'
+      case 'danger': return 'Walk Away'
+      case 'warn': return 'Warning'
+      default: return 'Risk Coach'
     }
   }
 
   function levelText(level: string, pnl: number, limit: number, usedPct: number) {
     switch (level) {
       case 'blown':
-        return '⛔ LIMIT HIT. Stop trading this account. Walk away from the screen now.'
+        return 'Limit hit. Stop trading this account. Walk away from the screen now.'
       case 'danger':
-        return `WALK AWAY. You are ${Math.max(1, Math.round((limit - Math.abs(pnl)) / limit * 100))}% away from blowing this account.`
+        return `Walk away. You are ${Math.max(1, Math.round(((limit - Math.abs(pnl)) / limit) * 100))}% away from blowing this account.`
       case 'warn':
-        return '⚠️ Separuh daily loss limit dah guna. Jangan revenge trade.'
+        return 'Half of the daily loss limit is used. Do not revenge trade.'
       default:
         return `Daily loss used: ${usedPct.toFixed(0)}%. Still within plan.`
     }
@@ -71,8 +67,8 @@ export default function KillSwitch({ trades }: { trades: Trade[] }) {
     return (
       <div className="kill-switch safe">
         <div>
-          <div className="ks-title">🛡️ Jurulatih Akaun</div>
-          <div className="ks-text">✅ Trading in profit — stay disciplined.</div>
+          <div className="ks-title">Risk Coach</div>
+          <div className="ks-text">Trading in profit — stay disciplined.</div>
         </div>
         <div className="ks-num">$0 used</div>
       </div>
@@ -80,18 +76,17 @@ export default function KillSwitch({ trades }: { trades: Trade[] }) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       {rows.map((r) => {
         const level = levelFor(r.pnl, r.usedPct, r.limit)
-        const sign = r.pnl >= 0 ? '' : '-'
         return (
-          <div key={r.account} className={levelClass(level)}>
+          <div key={r.account} className={`kill-switch ${level}`}>
             <div>
               <div className="ks-title">{levelTitle(level)} · {r.account}</div>
               <div className="ks-text">{levelText(level, r.pnl, r.limit, r.usedPct)}</div>
             </div>
             <div className="ks-num">
-              {level === 'blown' ? '-100%' : `${sign}${Math.abs(r.usedPct).toFixed(0)}% · ${fmtPnl(r.remaining)} left`}
+              {level === 'blown' ? '-100%' : `-${Math.abs(r.usedPct).toFixed(0)}% · ${fmtPnl(r.remaining)} left`}
             </div>
           </div>
         )

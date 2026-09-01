@@ -4,7 +4,7 @@ import { deleteTrade } from '../lib/api'
 import { fmtPnl, fmtMoney, capitalOf, roiPct } from '../lib/stats'
 
 export default function TradingLog() {
-  const { trades, settings, reload } = useData()
+  const { trades, settings, reload, demoMode } = useData()
   const [filter, setFilter] = useState('All Accounts')
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
@@ -23,6 +23,10 @@ export default function TradingLog() {
   const roi = useMemo(() => roiPct(net, capital), [net, capital])
 
   async function doDelete(id: string) {
+    if (demoMode) {
+      setConfirmDelete(null)
+      return
+    }
     try {
       await deleteTrade(id)
       setConfirmDelete(null)
@@ -35,19 +39,25 @@ export default function TradingLog() {
   return (
     <div>
       <div className="page-head">
-        <h1>Trading Log</h1>
-        <p className="muted">
-          {filtered.length} trades · {wins}W / {losses}L · Net {fmtPnl(net)}
-          {filter !== 'All Accounts' && (
-            <> · Starting {capital ? fmtMoney(capital) : '—'} · ROI {roi == null ? '—' : `${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%`}</>
-          )}
-        </p>
+        <div>
+          <div className="kicker">Trade History</div>
+          <h1>Trading Log</h1>
+          <p className="page-sub">
+            {filtered.length} trades · {wins}W / {losses}L · Net <span className={net >= 0 ? 'green' : 'red'}>{fmtPnl(net)}</span>
+            {filter !== 'All Accounts' && (
+              <>
+                {' '}· Capital {capital ? fmtMoney(capital) : '—'} · ROI{' '}
+                {roi == null ? '—' : `${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%`}
+              </>
+            )}
+          </p>
+        </div>
       </div>
 
       <div className="panel">
         <div className="toolbar">
-          <label>Account filter:</label>
-          <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+          <label htmlFor="log-filter">Account</label>
+          <select id="log-filter" className="select" value={filter} onChange={(e) => setFilter(e.target.value)}>
             {accounts.map((a) => (
               <option key={a} value={a}>{a}</option>
             ))}
@@ -65,7 +75,7 @@ export default function TradingLog() {
                 <th>Dir</th>
                 <th className="num">Entry</th>
                 <th className="num">Exit</th>
-                <th className="num">Volume</th>
+                <th className="num">Vol</th>
                 <th className="num">Pips</th>
                 <th className="num">P&L</th>
                 <th>Emotion</th>
@@ -90,7 +100,7 @@ export default function TradingLog() {
                   <td>{t.emotion}</td>
                   <td>
                     <span className={t.volatility === 'High Volatility' ? 'badge-volatile' : 'badge-normal'}>
-                      {t.volatility === 'High Volatility' ? '⚡ High Volatility' : 'Normal'}
+                      {t.volatility === 'High Volatility' ? 'High Volatility' : 'Normal'}
                     </span>
                   </td>
                   <td className="notes-cell">{t.notes}</td>
@@ -98,10 +108,18 @@ export default function TradingLog() {
                     {confirmDelete === t.id ? (
                       <span className="confirm-del">
                         <button className="btn btn-danger btn-sm" onClick={() => doDelete(t.id)}>Confirm</button>
-                        <button className="btn btn-ghost btn-sm" onClick={() => setConfirmDelete(null)}>✕</button>
+                        <button className="btn btn-ghost btn-sm" onClick={() => setConfirmDelete(null)} aria-label="Cancel delete">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M5 5l14 14M19 5 5 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                          </svg>
+                        </button>
                       </span>
                     ) : (
-                      <button className="btn btn-ghost btn-sm" onClick={() => setConfirmDelete(t.id)}>🗑</button>
+                      <button className="btn btn-ghost btn-sm" onClick={() => setConfirmDelete(t.id)} aria-label="Delete trade">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </button>
                     )}
                   </td>
                 </tr>
