@@ -51,7 +51,12 @@ export default function ShareCard({ trades }: { trades: Trade[] }) {
     canvas.width = 1080
     canvas.height = 1350
     const ctx = canvas.getContext('2d')!
-    ctx.fillStyle = '#010102'
+    const cs = getComputedStyle(document.documentElement)
+    const bg = cs.getPropertyValue('--surface').trim() || '#0f1011'
+    const fg = cs.getPropertyValue('--ink').trim() || '#f7f8f8'
+    const primary = cs.getPropertyValue('--primary').trim() || '#5e6ad2'
+    const subtle = cs.getPropertyValue('--ink-subtle').trim() || '#8a8f98'
+    ctx.fillStyle = bg
     ctx.fillRect(0, 0, 1080, 1350)
 
     const img = new Image()
@@ -59,11 +64,10 @@ export default function ShareCard({ trades }: { trades: Trade[] }) {
     const url = URL.createObjectURL(svgBlob)
     img.onload = () => {
       ctx.drawImage(img, 0, 0, 1080, 1350)
-      // Watermark
-      ctx.fillStyle = '#5e6ad2'
+      ctx.fillStyle = primary
       ctx.font = '600 28px Inter, system-ui, sans-serif'
-      ctx.fillText('◈ The Gold Plan', 48, 1280)
-      ctx.fillStyle = '#8a8f98'
+      ctx.fillText('The Gold Plan', 48, 1280)
+      ctx.fillStyle = subtle
       ctx.font = '400 20px Inter, system-ui, sans-serif'
       ctx.fillText('thegoldplan.app', 48, 1312)
       const a = document.createElement('a')
@@ -80,31 +84,41 @@ export default function ShareCard({ trades }: { trades: Trade[] }) {
       <div className="share-head">
         <div>
           <h2>Share Daily Result</h2>
-          <p className="muted">Spotify Wrapped style — jana kad prestasi untuk kongsi di media sosial.</p>
+          <p className="muted" style={{ fontSize: '0.88rem' }}>
+            A social-ready performance card for today.
+          </p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShow(true)}>Buka Kad</button>
+        <button className="btn btn-primary" onClick={() => setShow(true)}>Open Card</button>
       </div>
 
       {show && (
         <div className="share-overlay">
           <div className="share-modal">
             <div className="share-toolbar">
-              <div className="seg" style={{ maxWidth: 220 }}>
+              <div className="seg" style={{ maxWidth: 230 }}>
                 <button className={mode === 'money' ? 'seg-btn active buy' : 'seg-btn'} onClick={() => setMode('money')}>$ Money</button>
                 <button className={mode === 'percent' ? 'seg-btn active buy' : 'seg-btn'} onClick={() => setMode('percent')}>% Percent</button>
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button className="btn btn-primary" onClick={download}>Download PNG</button>
-                <button className="btn btn-ghost" onClick={() => setShow(false)}>Tutup</button>
+                <button className="btn btn-ghost" onClick={() => setShow(false)}>Close</button>
               </div>
             </div>
 
             <div id="share-card" className="share-card">
-              <div className="share-brand">◈ The Gold Plan</div>
+              <div className="share-brand">
+                <span className="nav-logo" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2.5 21 7v10l-9 4.5L3 17V7l9-4.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                    <path d="M3 7l9 4.5L21 7M12 11.5V21.5" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                The Gold Plan
+              </div>
               <div className="share-date">{today}</div>
 
               <div className="share-net">{value(card.net)}</div>
-              <div className="share-net-label">{mode === 'money' ? 'Net P&L Hari Ini' : 'Pulangan Harian (normalized)'}</div>
+              <div className="share-net-label">{mode === 'money' ? 'Net P&L Today' : 'Daily Return (normalized)'}</div>
 
               <div className="share-stats">
                 <div className="share-stat">
@@ -113,7 +127,7 @@ export default function ShareCard({ trades }: { trades: Trade[] }) {
                 </div>
                 <div className="share-stat">
                   <div className="share-stat-num">{card.wins}W / {card.losses}L</div>
-                  <div className="share-stat-label">Rekod</div>
+                  <div className="share-stat-label">Record</div>
                 </div>
                 <div className="share-stat">
                   <div className="share-stat-num">{card.winRate.toFixed(0)}%</div>
@@ -122,11 +136,11 @@ export default function ShareCard({ trades }: { trades: Trade[] }) {
               </div>
 
               <div className="share-row">
-                <span className="muted">Setup Terbaik</span>
+                <span className="muted">Best Setup</span>
                 <span className="share-row-val">{card.bestSetup} {fmtPnl(card.bestSetupNet)}</span>
               </div>
               <div className="share-row">
-                <span className="muted">Emosi Dominan</span>
+                <span className="muted">Dominant Emotion</span>
                 <span className="share-row-val">{card.dominantEmotion}</span>
               </div>
               <div className="share-row">
@@ -134,7 +148,7 @@ export default function ShareCard({ trades }: { trades: Trade[] }) {
                 <span className="share-row-val">{card.pips >= 0 ? '+' : ''}{card.pips}</span>
               </div>
 
-              <div className="share-footer">Disiplin adalah edge. Trade seperti jurulatih memerhati. 🏆</div>
+              <div className="share-footer">Discipline is the edge. Trade like a coach is watching.</div>
             </div>
           </div>
         </div>

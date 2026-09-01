@@ -15,7 +15,6 @@ import {
   BarChart,
   Bar,
   Cell,
-  Legend,
 } from 'recharts'
 
 function StatCard({ label, value, tone }: { label: string; value: string; tone?: 'pos' | 'neg' }) {
@@ -29,7 +28,7 @@ function StatCard({ label, value, tone }: { label: string; value: string; tone?:
 }
 
 export default function Dashboard() {
-  const { trades, settings, loading } = useData()
+  const { trades, settings, loading, demoMode } = useData()
   const [account, setAccount] = useState('All Accounts')
 
   const accounts = useMemo(() => ['All Accounts', ...settings.accounts], [settings.accounts])
@@ -92,26 +91,46 @@ export default function Dashboard() {
     }))
   }, [byEmotion])
 
+  const todayLabel = useMemo(
+    () =>
+      new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+    [],
+  )
+
   if (loading) return <div className="page-loading">Loading dashboard…</div>
 
   return (
     <div>
       <div className="page-head">
-        <h1>Dashboard</h1>
-        <p className="muted">Your command center for growth.</p>
+        <div>
+          <div className="kicker">Command Center</div>
+          <h1>Dashboard</h1>
+          <p className="page-sub">A calm, disciplined view of your XAUUSD journey.</p>
+        </div>
+        <div className="head-date">{todayLabel}</div>
       </div>
 
+      {demoMode && (
+        <div className="panel" style={{ padding: '14px 18px', marginBottom: 18 }}>
+          <span style={{ fontWeight: 600 }}>Preview mode</span>{' '}
+          <span className="muted" style={{ fontSize: '0.88rem' }}>
+            — showing sample data so you can explore the design. Use the pill on the top-right to switch designs &amp; theme.
+          </span>
+        </div>
+      )}
+
       <div className="toolbar">
-        <label>Account filter:</label>
-        <select value={account} onChange={(e) => setAccount(e.target.value)}>
+        <label>Account</label>
+        <select className="select" value={account} onChange={(e) => setAccount(e.target.value)}>
           {accounts.map((a) => (
-            <option key={a} value={a}>{a}</option>
+            <option key={a} value={a}>
+              {a}
+            </option>
           ))}
         </select>
       </div>
 
       <KillSwitch trades={filtered} />
-
       <ShareCard trades={filtered} />
 
       {!stats ? (
@@ -119,10 +138,10 @@ export default function Dashboard() {
       ) : (
         <>
           <div className="stat-grid">
-            <StatCard label="Total Net P&L" value={fmtMoney(stats.totalNet)} tone={stats.totalNet >= 0 ? 'pos' : 'neg'} />
+            <StatCard label="Net P&L" value={fmtMoney(stats.totalNet)} tone={stats.totalNet >= 0 ? 'pos' : 'neg'} />
             <StatCard label="Win Rate" value={`${stats.winRate.toFixed(1)}%`} />
             <StatCard label="Profit Factor" value={stats.profitFactor.toFixed(2)} />
-            <StatCard label="Trades" value={`${stats.totalTrades} (${stats.wins}W / ${stats.losses}L)`} />
+            <StatCard label="Trades" value={`${stats.totalTrades}`} />
             <StatCard label="Avg Win" value={fmtMoney(stats.avgWin)} tone="pos" />
             <StatCard label="Avg Loss" value={fmtMoney(stats.avgLoss)} tone="neg" />
             <StatCard label="Best Trade" value={fmtMoney(stats.bestTrade)} tone="pos" />
@@ -130,21 +149,37 @@ export default function Dashboard() {
           </div>
 
           <div className="panel">
-            <h2>Daily Equity Growth</h2>
+            <div className="share-head">
+              <h2>Daily Equity Growth</h2>
+              <div className="chart-legend" aria-hidden="true">
+                <span>
+                  <i className="chart-dot" style={{ background: 'var(--primary)' }} />
+                  Cumulative P&amp;L
+                </span>
+                <span>
+                  <i className="chart-dot" style={{ background: 'var(--primary-hover)', opacity: 0.7 }} />
+                  Daily P&amp;L
+                </span>
+              </div>
+            </div>
             <div className="chart" style={{ height: 260 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={equity}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#23252a" />
-                  <XAxis dataKey="date" stroke="#8a8f98" fontSize={11} />
-                  <YAxis stroke="#8a8f98" fontSize={11} tickFormatter={(v) => `$${v}`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--hairline)" />
+                  <XAxis dataKey="date" stroke="var(--ink-subtle)" fontSize={11} tickLine={false} axisLine={{ stroke: 'var(--hairline)' }} />
+                  <YAxis stroke="var(--ink-subtle)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
                   <Tooltip
-                    contentStyle={{ background: '#0f1011', border: '1px solid #23252a', borderRadius: 8 }}
-                    labelStyle={{ color: '#d0d6e0' }}
+                    contentStyle={{
+                      background: 'var(--surface-2)',
+                      border: '1px solid var(--hairline-strong)',
+                      borderRadius: 10,
+                      color: 'var(--ink)',
+                    }}
+                    labelStyle={{ color: 'var(--ink-muted)' }}
                     formatter={(v: number, name: string) => [fmtMoney(v), name === 'cumulative' ? 'Cumulative P&L' : 'Daily P&L']}
                   />
-                  <Legend />
-                  <Line type="monotone" dataKey="cumulative" name="Cumulative P&L" stroke="#5e6ad2" strokeWidth={2} dot={false} />
-                  <Line type="monotone" dataKey="pnl" name="Daily P&L" stroke="#828fff" strokeWidth={1.5} dot={false} />
+                  <Line type="monotone" dataKey="cumulative" name="Cumulative P&L" stroke="var(--primary)" strokeWidth={2.2} dot={false} />
+                  <Line type="monotone" dataKey="pnl" name="Daily P&L" stroke="var(--primary-hover)" strokeWidth={1.4} strokeOpacity={0.6} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -155,17 +190,22 @@ export default function Dashboard() {
             <div className="chart" style={{ height: 220 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={emotionBars}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#23252a" />
-                  <XAxis dataKey="name" stroke="#8a8f98" fontSize={10} interval={0} />
-                  <YAxis stroke="#8a8f98" fontSize={11} tickFormatter={(v) => `$${v}`} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--hairline)" vertical={false} />
+                  <XAxis dataKey="name" stroke="var(--ink-subtle)" fontSize={10} interval={0} tickLine={false} axisLine={{ stroke: 'var(--hairline)' }} />
+                  <YAxis stroke="var(--ink-subtle)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v}`} />
                   <Tooltip
-                    contentStyle={{ background: '#0f1011', border: '1px solid #23252a', borderRadius: 8 }}
-                    labelStyle={{ color: '#d0d6e0' }}
+                    contentStyle={{
+                      background: 'var(--surface-2)',
+                      border: '1px solid var(--hairline-strong)',
+                      borderRadius: 10,
+                      color: 'var(--ink)',
+                    }}
+                    labelStyle={{ color: 'var(--ink-muted)' }}
                     formatter={(v: number, name: string) => [name === 'net' ? fmtMoney(v) : v, name === 'net' ? 'Net P&L' : 'Trades']}
                   />
                   <Bar dataKey="net" name="Net P&L" radius={[4, 4, 0, 0]}>
                     {emotionBars.map((e) => (
-                      <Cell key={e.name} fill={e.net >= 0 ? '#27a644' : '#d64545'} />
+                      <Cell key={e.name} fill={e.net >= 0 ? 'var(--green)' : 'var(--red)'} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -183,44 +223,54 @@ export default function Dashboard() {
   )
 }
 
-function Scoreboard({ title, rows, accounts = false }: { title: string; rows: Array<{ label: string; trades: number; net: number; winRate: number } & Partial<{ capital: number; roi: number | null }>>; accounts?: boolean }) {
+function Scoreboard({
+  title,
+  rows,
+  accounts = false,
+}: {
+  title: string
+  rows: Array<{ label: string; trades: number; net: number; winRate: number } & Partial<{ capital: number; roi: number | null }>>
+  accounts?: boolean
+}) {
   return (
     <div className="panel">
       <h2>{title}</h2>
-      <table className="tbl">
-        <thead>
-          <tr>
-            <th>{title.split(' ')[0]}</th>
-            <th className="num">Trades</th>
-            <th className="num">Win Rate</th>
-            <th className="num">Net P&L</th>
-            {accounts && (
-              <>
-                <th className="num">Starting Capital</th>
-                <th className="num">ROI</th>
-              </>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.label}>
-              <td>{r.label}</td>
-              <td className="num">{r.trades}</td>
-              <td className="num">{r.winRate.toFixed(1)}%</td>
-              <td className={`num ${r.net >= 0 ? 'green' : 'red'}`}>{fmtPnl(r.net)}</td>
+      <div className="table-wrap">
+        <table className="tbl">
+          <thead>
+            <tr>
+              <th>{title.split(' ')[0]}</th>
+              <th className="num">Trades</th>
+              <th className="num">Win Rate</th>
+              <th className="num">Net P&L</th>
               {accounts && (
                 <>
-                  <td className="num">{r.capital ? fmtMoney(r.capital) : '—'}</td>
-                  <td className={`num ${(r.roi ?? 0) >= 0 ? 'green' : 'red'}`}>
-                    {r.roi == null ? '—' : `${r.roi >= 0 ? '+' : ''}${r.roi.toFixed(1)}%`}
-                  </td>
+                  <th className="num">Capital</th>
+                  <th className="num">ROI</th>
                 </>
               )}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.label}>
+                <td>{r.label}</td>
+                <td className="num">{r.trades}</td>
+                <td className="num">{r.winRate.toFixed(1)}%</td>
+                <td className={`num ${r.net >= 0 ? 'green' : 'red'}`}>{fmtPnl(r.net)}</td>
+                {accounts && (
+                  <>
+                    <td className="num">{r.capital ? fmtMoney(r.capital) : '—'}</td>
+                    <td className={`num ${(r.roi ?? 0) >= 0 ? 'green' : 'red'}`}>
+                      {r.roi == null ? '—' : `${r.roi >= 0 ? '+' : ''}${r.roi.toFixed(1)}%`}
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

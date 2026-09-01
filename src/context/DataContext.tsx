@@ -1,12 +1,15 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Trade, Settings } from '../lib/types'
 import { fetchTrades, fetchSettings, saveSettings, useConfigured } from '../lib/api'
+import { isDemoPreview } from '../lib/demo'
+import { DEMO_TRADES, DEMO_SETTINGS } from '../demo/seed'
 
 interface DataCtx {
   trades: Trade[]
   settings: Settings
   loading: boolean
   configured: boolean
+  demoMode: boolean
   error: string | null
   reload: () => Promise<void>
   updateSettings: (s: Settings) => Promise<void>
@@ -17,6 +20,7 @@ const Ctx = createContext<DataCtx>({
   settings: { user_id: '', setups: [], sessions: [], emotions: [], accounts: [], max_daily_loss: 100, account_capitals: {} },
   loading: true,
   configured: false,
+  demoMode: true,
   error: null,
   reload: async () => {},
   updateSettings: async () => {},
@@ -24,13 +28,16 @@ const Ctx = createContext<DataCtx>({
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const configured = useConfigured()
-  const [trades, setTrades] = useState<Trade[]>([])
-  const [settings, setSettings] = useState<Settings>({ user_id: '', setups: [], sessions: [], emotions: [], accounts: [], max_daily_loss: 100, account_capitals: {} })
-  const [loading, setLoading] = useState(true)
+  const demoMode = !configured || isDemoPreview()
+  const [trades, setTrades] = useState<Trade[]>(demoMode ? DEMO_TRADES : [])
+  const [settings, setSettings] = useState<Settings>(demoMode ? DEMO_SETTINGS : { user_id: '', setups: [], sessions: [], emotions: [], accounts: [], max_daily_loss: 100, account_capitals: {} })
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function reload() {
-    if (!configured) {
+    if (demoMode) {
+      setTrades(DEMO_TRADES)
+      setSettings(DEMO_SETTINGS)
       setLoading(false)
       return
     }
@@ -48,6 +55,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }
 
   async function updateSettings(s: Settings) {
+    if (demoMode) {
+      setSettings(s)
+      return
+    }
     await saveSettings(s)
     setSettings(s)
   }
@@ -58,7 +69,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, [configured])
 
   return (
-    <Ctx.Provider value={{ trades, settings, loading, configured, error, reload, updateSettings }}>
+    <Ctx.Provider value={{ trades, settings, loading, configured, demoMode, error, reload, updateSettings }}>
       {children}
     </Ctx.Provider>
   )

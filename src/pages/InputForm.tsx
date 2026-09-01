@@ -5,7 +5,7 @@ import { todayISO } from '../lib/stats'
 import type { Direction } from '../lib/types'
 
 export default function InputForm() {
-  const { settings, reload } = useData()
+  const { settings, reload, demoMode } = useData()
   const [tradeDate, setTradeDate] = useState(todayISO())
   const [account, setAccount] = useState(settings.accounts[0] ?? '')
   const [session, setSession] = useState(settings.sessions[0] ?? '')
@@ -35,7 +35,10 @@ export default function InputForm() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
-    if (!valid) return
+    if (!valid || demoMode) {
+      setMsg({ ok: true, text: 'Preview mode — trades are not saved. Connect Supabase to log live trades.' })
+      return
+    }
     setBusy(true)
     setMsg(null)
     try {
@@ -58,7 +61,7 @@ export default function InputForm() {
       setVolume('')
       setProfit('')
       setNotes('')
-      setMsg({ ok: true, text: 'Trade submitted successfully ✅' })
+      setMsg({ ok: true, text: 'Trade submitted successfully' })
       await reload()
     } catch (err) {
       setMsg({ ok: false, text: err instanceof Error ? err.message : String(err) })
@@ -70,34 +73,37 @@ export default function InputForm() {
   return (
     <div>
       <div className="page-head">
-        <h1>Input Form</h1>
-        <p className="muted">Log a new trade — entry, exit, volume &amp; profit are manual.</p>
+        <div>
+          <div className="kicker">Journal Entry</div>
+          <h1>Input Form</h1>
+          <p className="page-sub">Log a new trade — entry, exit, volume &amp; profit are manual.</p>
+        </div>
       </div>
 
       <form onSubmit={submit} className="panel form-grid">
         <div className="field">
-          <label>Date</label>
-          <input type="date" required value={tradeDate} onChange={(e) => setTradeDate(e.target.value)} />
+          <label htmlFor="f-date">Date</label>
+          <input id="f-date" type="date" required value={tradeDate} onChange={(e) => setTradeDate(e.target.value)} />
         </div>
         <div className="field">
-          <label>Account</label>
-          <select required value={account} onChange={(e) => setAccount(e.target.value)}>
+          <label htmlFor="f-account">Account</label>
+          <select id="f-account" className="select" required value={account} onChange={(e) => setAccount(e.target.value)}>
             {settings.accounts.map((a) => (
               <option key={a} value={a}>{a}</option>
             ))}
           </select>
         </div>
         <div className="field">
-          <label>Session</label>
-          <select required value={session} onChange={(e) => setSession(e.target.value)}>
+          <label htmlFor="f-session">Session</label>
+          <select id="f-session" className="select" required value={session} onChange={(e) => setSession(e.target.value)}>
             {settings.sessions.map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
         </div>
         <div className="field">
-          <label>Trading Setup</label>
-          <select required value={setup} onChange={(e) => setSetup(e.target.value)}>
+          <label htmlFor="f-setup">Trading Setup</label>
+          <select id="f-setup" className="select" required value={setup} onChange={(e) => setSetup(e.target.value)}>
             {settings.setups.map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
@@ -111,47 +117,53 @@ export default function InputForm() {
           </div>
         </div>
         <div className="field">
-          <label>Entry Price</label>
-          <input type="number" required step="0.01" min="0" value={entry} onChange={(e) => setEntry(e.target.value)} placeholder="e.g. 2325.50" />
+          <label htmlFor="f-entry">Entry Price</label>
+          <input id="f-entry" type="number" required step="0.01" min="0" value={entry} onChange={(e) => setEntry(e.target.value)} placeholder="e.g. 2325.50" />
         </div>
         <div className="field">
-          <label>Exit Price</label>
-          <input type="number" required step="0.01" min="0" value={exit} onChange={(e) => setExit(e.target.value)} placeholder="e.g. 2330.50" />
+          <label htmlFor="f-exit">Exit Price</label>
+          <input id="f-exit" type="number" required step="0.01" min="0" value={exit} onChange={(e) => setExit(e.target.value)} placeholder="e.g. 2330.50" />
         </div>
         <div className="field">
-          <label>Volume (lots)</label>
-          <input type="number" required step="0.01" min="0" value={volume} onChange={(e) => setVolume(e.target.value)} placeholder="e.g. 0.30" />
+          <label htmlFor="f-volume">Volume (lots)</label>
+          <input id="f-volume" type="number" required step="0.01" min="0" value={volume} onChange={(e) => setVolume(e.target.value)} placeholder="e.g. 0.30" />
         </div>
         <div className="field">
-          <label>Profit / Loss ($)</label>
-          <input type="number" required step="0.01" value={profit} onChange={(e) => setProfit(e.target.value)} placeholder="e.g. 200.00 (negatif untuk loss)" />
+          <label htmlFor="f-profit">Profit / Loss ($)</label>
+          <input id="f-profit" type="number" required step="0.01" value={profit} onChange={(e) => setProfit(e.target.value)} placeholder="e.g. 200.00 (negative for loss)" />
         </div>
         <div className="field">
-          <label>Emotion</label>
-          <select required value={emotion} onChange={(e) => setEmotion(e.target.value)}>
+          <label htmlFor="f-emotion">Emotion</label>
+          <select id="f-emotion" className="select" required value={emotion} onChange={(e) => setEmotion(e.target.value)}>
             {settings.emotions.map((em) => (
               <option key={em} value={em}>{em}</option>
             ))}
           </select>
         </div>
         <div className="field span2">
-          <label>Notes / Comment</label>
-          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Trade thesis, TradingView link, what went right/wrong…" />
+          <label htmlFor="f-notes">Notes / Comment</label>
+          <textarea id="f-notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Trade thesis, TradingView link, what went right/wrong…" />
         </div>
 
         <div className="field span2 live-calc">
           {valid ? (
             <>
-              <span>Pips: <b className={pips >= 0 ? 'green' : 'red'}>{pips}</b></span>
-              <span>Volume: <b>{volumeNum}</b></span>
-              <span>P&L: <b className={profitNum >= 0 ? 'green' : 'red'}>{profitNum >= 0 ? '+' : '-'}${Math.abs(profitNum).toFixed(2)}</b></span>
-              <span className={vol === 'High Volatility' ? 'badge-volatile' : 'badge-normal'}>
-                {vol === 'High Volatility' ? '⚡ High Volatility (London-NY overlap)' : 'Normal Volatility'}
+              <span>
+                Pips: <b className={pips >= 0 ? 'green' : 'red'}>{pips}</b>
               </span>
-              <span className="ready">✅ READY</span>
+              <span>
+                Volume: <b>{volumeNum}</b>
+              </span>
+              <span>
+                P&L: <b className={profitNum >= 0 ? 'green' : 'red'}>{profitNum >= 0 ? '+' : '-'}${Math.abs(profitNum).toFixed(2)}</b>
+              </span>
+              <span className={vol === 'High Volatility' ? 'badge-volatile' : 'badge-normal'}>
+                {vol === 'High Volatility' ? 'High Volatility (London–NY overlap)' : 'Normal Volatility'}
+              </span>
+              <span className="ready">READY</span>
             </>
           ) : (
-            <span>⚠️ DATA INCOMPLETE — fill entry, exit, volume and profit.</span>
+            <span>DATA INCOMPLETE — fill entry, exit, volume and profit.</span>
           )}
         </div>
 

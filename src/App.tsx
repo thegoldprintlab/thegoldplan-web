@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { DataProvider } from './context/DataContext'
 import Auth from './components/Auth'
 import Nav from './components/Nav'
+import ThemeSwitcher from './components/ThemeSwitcher'
 import Dashboard from './pages/Dashboard'
 import InputForm from './pages/InputForm'
 import TradingLog from './pages/TradingLog'
@@ -16,7 +17,13 @@ function Shell() {
     return (
       <div className="auth-wrap">
         <div className="auth-card">
-          <div className="auth-title">◈ The Gold Plan</div>
+          <div className="auth-mark" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2.5 21 7v10l-9 4.5L3 17V7l9-4.5Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+              <path d="M3 7l9 4.5L21 7M12 11.5V21.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h1 className="auth-title">The Gold Plan</h1>
           <p className="auth-sub">
             App is not connected to Supabase yet. Add <code>VITE_SUPABASE_URL</code> and{' '}
             <code>VITE_SUPABASE_ANON_KEY</code> to your <code>.env</code> file, then rebuild.
@@ -39,7 +46,10 @@ function Shell() {
       <div className="topbar">
         <Nav />
         <div className="userbox">
-          <span className="muted">{session.user.email}</span>
+          <span className="avatar" aria-hidden="true">
+            {session.user.email?.[0]?.toUpperCase() ?? 'G'}
+          </span>
+          <span className="user-email">{session.user.email}</span>
           <button
             className="btn btn-ghost btn-sm"
             onClick={async () => {
@@ -48,6 +58,7 @@ function Shell() {
           >
             Log out
           </button>
+          <ThemeSwitcher />
         </div>
       </div>
       <main className="main">

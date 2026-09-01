@@ -68,49 +68,54 @@ export default function SettingsPage() {
   return (
     <div>
       <div className="page-head">
-        <h1>Settings</h1>
-        <p className="muted">Configure setups, sessions, emotions, accounts, daily loss limit, dan Quick Log API.</p>
+        <div>
+          <div className="kicker">Configuration</div>
+          <h1>Settings</h1>
+          <p className="page-sub">Setups, sessions, emotions, accounts, daily loss limits, and the Quick Log API.</p>
+        </div>
       </div>
 
       <div className="panel">
-        <h2>⚡ Quick Log API (iOS Shortcuts)</h2>
-        <p className="muted" style={{ marginBottom: 16 }}>
-          Guna token ini untuk log trade terus dari Home Screen tanpa buka app. Bina Shortcut dengan blok
-          "Get Contents of URL" (POST) ke endpoint di bawah.
+        <h2>Quick Log API (iOS Shortcuts)</h2>
+        <p className="muted" style={{ marginBottom: 18, fontSize: '0.88rem' }}>
+          Use this token to log a trade straight from your Home Screen without opening the app. Build a Shortcut with
+          a “Get Contents of URL” block (POST) to the endpoint below.
         </p>
         <div className="field">
-          <label>Endpoint (POST JSON)</label>
-          <input readOnly value="https://gtblmwijohoetczqngpr.supabase.co/rest/v1/rpc/api_log_trade" onFocus={(e) => e.target.select()} />
+          <label htmlFor="endpoint">Endpoint (POST JSON)</label>
+          <input id="endpoint" readOnly value="https://gtblmwijohoetczqngpr.supabase.co/rest/v1/rpc/api_log_trade" onFocus={(e) => e.target.select()} />
         </div>
-        <div className="field" style={{ marginTop: 12 }}>
-          <label>API Token anda</label>
+        <div className="field" style={{ marginTop: 14 }}>
+          <label htmlFor="api-token">Your API Token</label>
           <div style={{ display: 'flex', gap: 8 }}>
-            <input readOnly value={settings.api_token ?? 'Menjana…'} onFocus={(e) => e.target.select()} />
-            <button className="btn btn-secondary" onClick={copyToken}>{copied ? '✓ Copied' : 'Copy'}</button>
+            <input id="api-token" readOnly value={settings.api_token ?? 'Generating…'} onFocus={(e) => e.target.select()} />
+            <button className="btn" onClick={copyToken}>{copied ? 'Copied' : 'Copy'}</button>
           </div>
         </div>
-        <div className="field" style={{ marginTop: 12 }}>
-          <label>Contoh JSON Body (untuk Shortcut)</label>
-          <textarea readOnly rows={5} value={shortcutBody} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 0.82 }} />
+        <div className="field" style={{ marginTop: 14 }}>
+          <label htmlFor="json-sample">Example JSON Body (for Shortcut)</label>
+          <textarea id="json-sample" readOnly rows={5} value={shortcutBody} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }} />
         </div>
-        <div style={{ marginTop: 12, background: 'var(--surface-2)', border: '1px solid var(--hairline)', borderRadius: 8, padding: 12 }}>
-          <div style={{ fontSize: 0.85, color: 'var(--ink-muted)', marginBottom: 8 }}>Header yang diperlukan:</div>
-          <code>apikey: &lt;anon-key&gt;</code><br />
-          <code>Authorization: Bearer &lt;anon-key&gt;</code><br />
+        <div style={{ marginTop: 14, background: 'var(--surface-2)', border: '1px solid var(--hairline)', borderRadius: 'var(--radius-md)', padding: 14 }}>
+          <div style={{ fontSize: '0.82rem', color: 'var(--ink-muted)', marginBottom: 8, fontWeight: 600 }}>Required headers:</div>
+          <code>apikey: &lt;anon key&gt;</code>
+          <br />
+          <code>Authorization: Bearer &lt;anon key&gt;</code>
+          <br />
           <code>Content-Type: application/json</code>
-          <div style={{ fontSize: 0.82, color: 'var(--ink-subtle)', marginTop: 8 }}>
-            Anon key boleh diambil dari halaman ini: <b>Settings → API → anon public</b>.
+          <div style={{ fontSize: '0.8rem', color: 'var(--ink-subtle)', marginTop: 8 }}>
+            The anon key is available from this page: <b>Settings → API → anon public</b>.
           </div>
         </div>
       </div>
 
       <div className="panel">
         <h2>Daily Loss Limit per Account ($)</h2>
-        <p className="muted" style={{ fontSize: 0.82, margin: '0 0 10px' }}>
-          Limit harian untuk setiap akaun. Kosongkan = guna nilai <b>Max Daily Loss Limit</b> global.
+        <p className="muted" style={{ fontSize: '0.82rem', margin: '0 0 12px' }}>
+          Per-account daily limit. Leave empty to use the global <b>Max Daily Loss Limit</b>.
         </p>
         {form.accounts.length === 0 && (
-          <p className="muted">Tiada akaun lagi — tambah akaun di atas dulu.</p>
+          <p className="muted">No accounts yet — add an account below first.</p>
         )}
         {form.accounts.map((a) => (
           <div key={a} className="cap-row">
@@ -122,6 +127,7 @@ export default function SettingsPage() {
                 min="0"
                 step="10"
                 placeholder="Default"
+                aria-label={`Daily loss limit for ${a}`}
                 value={form.account_daily_loss_limits?.[a] ?? ''}
                 onChange={(e) => setDailyLimit(a, e.target.value)}
               />
@@ -132,30 +138,28 @@ export default function SettingsPage() {
 
       <form onSubmit={save} className="panel form-grid">
         <div className="field">
-          <label>Trading Setups (one per line)</label>
-          <textarea rows={6} value={form.setups.join('\n')} onChange={(e) => updateList('setups', e.target.value)} />
+          <label htmlFor="setups">Trading Setups (one per line)</label>
+          <textarea id="setups" rows={6} value={form.setups.join('\n')} onChange={(e) => updateList('setups', e.target.value)} />
         </div>
         <div className="field">
-          <label>Sessions (one per line)</label>
-          <textarea rows={6} value={form.sessions.join('\n')} onChange={(e) => updateList('sessions', e.target.value)} />
+          <label htmlFor="sessions">Sessions (one per line)</label>
+          <textarea id="sessions" rows={6} value={form.sessions.join('\n')} onChange={(e) => updateList('sessions', e.target.value)} />
         </div>
         <div className="field">
-          <label>Emotional States (one per line)</label>
-          <textarea rows={6} value={form.emotions.join('\n')} onChange={(e) => updateList('emotions', e.target.value)} />
+          <label htmlFor="emotions">Emotional States (one per line)</label>
+          <textarea id="emotions" rows={6} value={form.emotions.join('\n')} onChange={(e) => updateList('emotions', e.target.value)} />
         </div>
         <div className="field">
-          <label>Trading Accounts (one per line)</label>
-          <textarea rows={6} value={form.accounts.join('\n')} onChange={(e) => updateList('accounts', e.target.value)} />
+          <label htmlFor="accounts">Trading Accounts (one per line)</label>
+          <textarea id="accounts" rows={6} value={form.accounts.join('\n')} onChange={(e) => updateList('accounts', e.target.value)} />
         </div>
         <div className="field">
           <label>Starting Capital per Account ($)</label>
-          <p className="muted" style={{ fontSize: 0.82, margin: '0 0 10px' }}>
-            Set modal permulaan untuk setiap akaun — ROI dikira sebagai Net P&amp;L ÷ starting capital.
-            Kosongkan = tiada ROI untuk akaun itu.
+          <p className="muted" style={{ fontSize: '0.82rem', margin: '0 0 10px' }}>
+            Starting capital per account — ROI is calculated as Net P&amp;L ÷ starting capital. Empty = no ROI for that
+            account.
           </p>
-          {form.accounts.length === 0 && (
-            <p className="muted">Tiada akaun lagi — tambah akaun di kotak di atas.</p>
-          )}
+          {form.accounts.length === 0 && <p className="muted">No accounts yet — add an account above.</p>}
           {form.accounts.map((a) => (
             <div key={a} className="cap-row">
               <span className="cap-name">{a}</span>
@@ -165,7 +169,8 @@ export default function SettingsPage() {
                   type="number"
                   min="0"
                   step="100"
-                  placeholder="cth. 10000"
+                  placeholder="e.g. 10000"
+                  aria-label={`Starting capital for ${a}`}
                   value={form.account_capitals?.[a] ?? ''}
                   onChange={(e) => setCapital(a, e.target.value)}
                 />
@@ -174,12 +179,12 @@ export default function SettingsPage() {
           ))}
         </div>
         <div className="field">
-          <label>Max Daily Loss Limit ($)</label>
-          <input type="number" min="0" step="1" value={form.max_daily_loss} onChange={(e) => setForm({ ...form, max_daily_loss: Number(e.target.value) })} />
+          <label htmlFor="max-loss">Max Daily Loss Limit ($)</label>
+          <input id="max-loss" type="number" min="0" step="1" value={form.max_daily_loss} onChange={(e) => setForm({ ...form, max_daily_loss: Number(e.target.value) })} />
         </div>
         <div className="field span2">
           <button className="btn btn-primary" type="submit">Save Settings</button>
-          {saved && <span className="form-ok">Saved ✅</span>}
+          {saved && <span className="form-ok">Saved</span>}
         </div>
       </form>
     </div>
