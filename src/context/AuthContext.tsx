@@ -7,9 +7,19 @@ interface AuthCtx {
   session: Session | null
   loading: boolean
   configured: boolean
+  isAdmin: boolean
+  disabled: boolean
+  refreshRole: () => Promise<void>
 }
 
-const Ctx = createContext<AuthCtx>({ session: null, loading: true, configured: false })
+const Ctx = createContext<AuthCtx>({
+  session: null,
+  loading: true,
+  configured: false,
+  isAdmin: false,
+  disabled: false,
+  refreshRole: async () => {},
+})
 
 const DEMO_SESSION = {
   user: { id: 'demo-user', email: DEMO_EMAIL },
@@ -20,10 +30,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const demoPreview = isDemoPreview()
   const [session, setSession] = useState<Session | null>(demoPreview ? DEMO_SESSION : null)
   const [loading, setLoading] = useState(!demoPreview)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [disabled, setDisabled] = useState(false)
+
+  async function refreshRole() {
+    const userId = session?.user?.id
+    if (!configured || !userId) {
+      setIsAdmin(false)
+      setDisabled(false)
+      return
+    }
+    const sb = getSupabase()
+    try {
+      const [{ data: a }, { data: d }] = await Promise.all([
+        sb.rpc('is_admin'),
+        sb.rpc('current_user_disabled'),
+      ])
+      setIsAdmin(Boolean(a))
+      setDisabled(Boolean(d))
+    } catch {
+      // RPCs not deployed yet — fail open to non-admin.
+      setIsAdmin(false)
+      setDisabled(false)
+    }
+  }
 
   useEffect(() => {
     if (demoPreview) {
       setLoading(false)
+      setIsAdmin(true)
+      setDisabled(false)
       return
     }
     if (!configured) {
@@ -43,7 +79,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe()
   }, [configured, demoPreview])
 
-  return <Ctx.Provider value={{ session, loading, configured }}>{children}</Ctx.Provider>
+  useEffect(() => {
+    refreshRole()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user?.id, configured])
+
+  return (
+    <Ctx.Provider value={{ session, loading, configured, isAdmin, disabled, refreshRole }}>
+      {children}
+    </Ctx.Provider>
+  )
 }
 
 export function useAuth() {
