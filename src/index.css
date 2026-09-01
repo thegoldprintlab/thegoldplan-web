@@ -1132,3 +1132,115 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   .landing-hero-inner { padding-top: 8px; }
   .landing-cta-card { padding: 40px 20px; }
 }
+
+/* ── Pricing (B1) ─────────────────────────────────────── */
+.pricing {
+  min-height: 100vh;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 20px 64px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pricing-hero {
+  text-align: center;
+  padding: 24px 0 40px;
+}
+
+.pricing-hero .landing-title { margin: 8px 0 12px; font-size: clamp(2rem, 5vw, 3rem); }
+.pricing-hero .landing-sub { max-width: 520px; margin: 0 auto; }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 780px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px 24px;
+}
+
+.pricing-card.featured {
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 0 1px var(--primary), 0 12px 40px -12px var(--primary-glow, rgba(94, 106, 210, 0.25));
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.pricing-card h2 { font-size: 1.05rem; letter-spacing: 0.01em; }
+
+.pricing-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.pricing-num { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.03em; }
+.pricing-int { color: var(--ink-subtle); font-size: 0.9rem; }
+
+.pricing-tagline { font-size: 0.9rem; margin: -4px 0 4px; }
+
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.pricing-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.pricing-features svg { color: var(--green); flex-shrink: 0; }
+
+.pricing-foot { margin-top: 40px; display: flex; flex-direction: column; gap: 10px; }
+
+/* ── Upgrade gate (B3) ─────────────────────────────────── */
+.upgrade-gate {
+  border: 1px dashed var(--primary);
+  border-radius: var(--radius-lg, 14px);
+  padding: 22px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+.upgrade-gate h3 { margin: 0 0 4px; font-size: 1rem; }
+.upgrade-gate .muted { margin: 0; font-size: 0.88rem; }
+
+@media (max-width: 560px) {
+  .upgrade-gate { flex-direction: column; align-items: flex-start; }
+}

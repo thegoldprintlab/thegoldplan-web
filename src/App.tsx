@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { DataProvider } from './context/DataContext'
+import { BillingProvider } from './context/BillingContext'
 import Auth from './components/Auth'
 import Nav from './components/Nav'
 import ThemeSwitcher from './components/ThemeSwitcher'
@@ -8,7 +9,9 @@ import Dashboard from './pages/Dashboard'
 import InputForm from './pages/InputForm'
 import TradingLog from './pages/TradingLog'
 import SettingsPage from './pages/Settings'
+import AccountPage from './pages/Account'
 import Landing from './pages/Landing'
+import Pricing from './pages/Pricing'
 import { getSupabase } from './lib/supabase'
 
 function Shell() {
@@ -64,12 +67,16 @@ function Shell() {
       </div>
       <main className="main">
         <DataProvider>
-          <Routes>
-            <Route path="/input" element={<InputForm />} />
-            <Route path="/log" element={<TradingLog />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<Dashboard />} />
-          </Routes>
+          <BillingProvider>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/input" element={<InputForm />} />
+              <Route path="/log" element={<TradingLog />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/account" element={<AccountPage />} />
+              <Route path="*" element={<Dashboard />} />
+            </Routes>
+          </BillingProvider>
         </DataProvider>
       </main>
     </div>
@@ -83,6 +90,8 @@ export default function App() {
         <Routes>
           {/* Public landing page — no login needed */}
           <Route path="/" element={<Landing />} />
+          {/* Public pricing page — no login needed */}
+          <Route path="/pricing" element={<Pricing />} />
           {/* The authenticated app */}
           <Route path="/app/*" element={<Shell />} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useData } from '../context/DataContext'
+import UpgradeGate from '../components/UpgradeGate'
 import type { Settings } from '../lib/types'
 
 export default function SettingsPage() {
@@ -75,8 +76,9 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="panel">
-        <h2>Quick Log API (iOS Shortcuts)</h2>
+      <UpgradeGate feature="Quick Log API">
+        <div className="panel">
+          <h2>Quick Log API (iOS Shortcuts)</h2>
         <p className="muted" style={{ marginBottom: 18, fontSize: '0.88rem' }}>
           Use this token to log a trade straight from your Home Screen without opening the app. Build a Shortcut with
           a “Get Contents of URL” block (POST) to the endpoint below.
@@ -108,6 +110,7 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+      </UpgradeGate>
 
       <div className="panel">
         <h2>Daily Loss Limit per Account ($)</h2>

@@ -16,6 +16,9 @@ export default function Landing() {
             The Gold Plan
           </span>
           <div className="landing-cta">
+            <Link className="btn btn-ghost" to="/pricing">
+              Pricing
+            </Link>
             <Link className="btn btn-ghost" to="/app">
               Log in
             </Link>
@@ -41,8 +44,8 @@ export default function Landing() {
             <Link className="btn btn-primary btn-lg" to="/app?demo=1">
               Explore the demo
             </Link>
-            <Link className="btn btn-ghost btn-lg" to="/app">
-              Create your account
+            <Link className="btn btn-ghost btn-lg" to="/pricing">
+              See pricing
             </Link>
           </div>
         </div>
@@ -158,8 +161,8 @@ export default function Landing() {
             <Link className="btn btn-primary btn-lg" to="/app?demo=1">
               Explore the demo
             </Link>
-            <Link className="btn btn-ghost btn-lg" to="/app">
-              Create your account
+            <Link className="btn btn-ghost btn-lg" to="/pricing">
+              See pricing
             </Link>
           </div>
         </div>
