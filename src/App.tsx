@@ -10,12 +10,13 @@ import InputForm from './pages/InputForm'
 import TradingLog from './pages/TradingLog'
 import SettingsPage from './pages/Settings'
 import AccountPage from './pages/Account'
+import AdminPage from './pages/Admin'
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
 import { getSupabase } from './lib/supabase'
 
 function Shell() {
-  const { session, loading, configured } = useAuth()
+  const { session, loading, configured, disabled } = useAuth()
 
   if (!configured) {
     return (
@@ -43,6 +44,24 @@ function Shell() {
 
   if (!session) {
     return <Auth />
+  }
+
+  if (disabled) {
+    return (
+      <div className="auth-wrap">
+        <div className="auth-card">
+          <div className="auth-mark" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3l7 3v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h1 className="auth-title">Account disabled</h1>
+          <p className="auth-sub">
+            Your access has been paused. Contact support to restore it.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -74,6 +93,7 @@ function Shell() {
               <Route path="/log" element={<TradingLog />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/account" element={<AccountPage />} />
+              <Route path="/admin" element={<AdminPage />} />
               <Route path="*" element={<Dashboard />} />
             </Routes>
           </BillingProvider>

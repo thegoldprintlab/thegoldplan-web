@@ -1,14 +1,18 @@
 import { NavLink } from 'react-router-dom'
-
-const links = [
-  { to: '/app', label: 'Dashboard' },
-  { to: '/app/log', label: 'Trading Log' },
-  { to: '/app/input', label: 'Input Form' },
-  { to: '/app/settings', label: 'Settings' },
-  { to: '/app/account', label: 'Account' },
-]
+import { useAuth } from '../context/AuthContext'
 
 export default function Nav() {
+  const { isAdmin } = useAuth()
+
+  const links = [
+    { to: '/app', label: 'Dashboard' },
+    { to: '/app/log', label: 'Trading Log' },
+    { to: '/app/input', label: 'Input Form' },
+    { to: '/app/settings', label: 'Settings' },
+    { to: '/app/account', label: 'Account' },
+    ...(isAdmin ? [{ to: '/app/admin', label: 'Admin' }] : []),
+  ]
+
   return (
     <nav className="nav">
       <div className="nav-brand">
