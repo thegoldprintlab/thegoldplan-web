@@ -14,7 +14,7 @@
       (function () {
         try {
           var p = new URLSearchParams(location.search)
-          var design = p.get('design') || localStorage.getItem('gp-design') || 'gold'
+          var design = p.get('design') || localStorage.getItem('gp-design') || 'linear'
           var theme = p.get('theme') || localStorage.getItem('gp-theme')
           if (!theme) theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
           document.documentElement.setAttribute('data-design', design)
