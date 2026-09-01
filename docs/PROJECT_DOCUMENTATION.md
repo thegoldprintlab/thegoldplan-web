@@ -1,7 +1,7 @@
 # ◈ The Gold Plan — Dokumentasi Penuh
 
 > Trading journal web app untuk XAUUSD. Dari Google Sheets → web app → live di Vercel.
-> Last updated: 2026-08-30
+> Last updated: 2026-08-30 (v3 — account filter, manual volume/profit, pagination fix, token discipline)
 
 ---
 
@@ -99,7 +99,8 @@ gold-plan-web/
 | entry_price | numeric(12,2) | |
 | exit_price | numeric(12,2) | |
 | pips | numeric(12,1) | |
-| profit_loss | numeric(12,2) | NET (profit + commission + swap) |
+| volume | numeric(12,2) | Lots (null untuk trade import lama) |
+| profit_loss | numeric(12,2) | NET (profit + commission + swap) — untuk trade manual = nilai yang user taip |
 | emotion | text | |
 | notes | text | |
 | volatility | text | "High Volatility" / "Normal" |
@@ -142,19 +143,23 @@ Pooler region **ap-northeast-2 (Tokyo)**. Kalau host pooler lain bagi "tenant no
 - Gate: kalau `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` takde → tunjuk "App is not connected to Supabase yet"
 
 ### 6.2 Dashboard
+- **Account filter** (dropdown atas): All Accounts / Cent / Prop 5k / Prop 10k — SEMUA stat, chart, kill switch & share card ikut akaun yang dipilih
 - **Stat cards**: Total Net P&L, Win Rate, Profit Factor, Trades (W/L), Avg Win, Avg Loss, Best Trade, Worst Trade
 - **Daily Equity Growth** (line chart, Recharts)
 - **Emotion vs Net P&L** (bar chart)
 - **4 Scoreboards**: Setup, Session, Account Performance (dengan ROI = net ÷ starting capital), Emotion
 - **Kill Switch** (lihat 6.6)
 - **Share Card** (lihat 6.7)
+- Nota: scoreboard "Account Performance" cuma muncul bila pilih **All Accounts**
 
 ### 6.3 Input Form
-- Date, Account, Session, Trading Setup, Direction (BUY/SELL), Entry/Exit price, Emotion, Notes
-- Live calc: Pips + P&L + volatility badge (Blood Zone: High Volatility masa London-NY overlap 12:00–16:00 UTC)
+- Date, Account, Session, Trading Setup, Direction (BUY/SELL), Entry/Exit price, **Volume (lots)**, **Profit / Loss ($)**, Emotion, Notes
+- **Volume & Profit = MANUAL input** (bukan auto-kira). Pips auto-kira dari entry/exit, tapi profit ikut apa yang user taip
+- Live calc: Pips + volatility badge (Blood Zone: High Volatility masa London-NY overlap 12:00–16:00 UTC)
 
 ### 6.4 Trading Log
 - Filter by account, table penuh, delete trade (dengan confirm)
+- Lajur: Date, Account, Session, Setup, Dir, Entry, Exit, **Volume**, Pips, P&L, Emotion, Volatility, Notes
 
 ### 6.5 Settings
 - Setups / Sessions / Emotions / Accounts (satu per line)
@@ -194,6 +199,7 @@ Diimport dari **MT5 Trade History Report** (bukan screenshot). 100% exact.
 - Cent = akaun real, XAUUSDc, zero commission & swap → profit = net
 - Prop 5k & Prop 10k = ada commission → net = profit + commission + swap
 - Date coverage: Cent 08-17 s/d 08-28; Prop 5k 06-30 s/d 08-28; Prop 10k 08-06 s/d 08-26
+- **IMPORTANT (mapping fail Drive):** `cent.xlsx` = akaun Cent (bukan 5k!), `10k.xlsx` = Prop 10k, `5k.xlsx` = Prop 5k. Jangan terbalik masa download — semak saiz fail: cent.xlsx ~637KB, 10k.xlsx ~122KB, 5k.xlsx ~98KB
 
 ---
 
@@ -203,6 +209,9 @@ Diimport dari **MT5 Trade History Report** (bukan screenshot). 100% exact.
 |---|---|
 | `scripts/import_cent_full.cjs` | Import Cent (1182 trade) dari `5k.xlsx` report — delete lama + bulk insert |
 | `scripts/reimport_5k_10k_net.cjs` | Import Prop 5k + Prop 10k dengan net = profit+comm+swap |
+| `scripts/import_5k_10k.cjs` | Import Prop 5k + Prop 10k (versi awal) |
+| `scripts/add_volume_column.cjs` | Migration: tambah column `volume` numeric(12,2) |
+| `scripts/compare_db_excel.cjs` | Banding DB vs Excel report per akaun |
 | `scripts/dump_db.py` | Dump semua trades via Supabase API (guna `order=trade_date.desc,id.desc`) |
 | `scripts/import_mt5.py` | LEGACY — import dari screenshot (jangan guna lagi) |
 | `scripts/import_mt5_cent.py` | LEGACY — import Cent dari screenshot |
@@ -282,6 +291,7 @@ Git commit author: `Jarbi <jarbi@users.noreply.github.com>`.
 - Screenshot MT5 mobile Deals tab cuma tunjuk **close time**, bukan open time
 - Screenshot termerge antara halaman scroll → ada baris yang tertinggal/duplikat
 - Full report Excel adalah **gold standard** — guna report, bukan screenshot
+- **Punca "data tak sama" dalam app**: Supabase/PostgREST default cap 1000 row per request. App ada 1517 trade tapi cuma fetch 1000. Dah fix dengan pagination loop dalam `fetchTrades()` (§6.4)
 
 ---
 
@@ -293,6 +303,9 @@ Git commit author: `Jarbi <jarbi@users.noreply.github.com>`.
 | 08-30 | iOS date input overflow | `-webkit-appearance:none` + `min-width:0` + `max-width:100%` untuk `input[type=date]` |
 | 08-30 | Per-account daily loss | Column `account_daily_loss_limits` jsonb + UI Settings + KillSwitch per-account |
 | 08-30 | Supabase env Vercel | Re-add `VITE_*` guna `--type config` |
+| 08-30 | **Trades pagination** | Supabase cap 1000 row → `fetchTrades()` loop `range()` sehingga habis (fix "data tak sama") |
+| 08-30 | **Dashboard account filter** | Dropdown pilih akaun — semua stat/chart/kill switch/share card ikut pilihan |
+| 08-30 | **Input Form manual volume+profit** | Buang auto-calc profit (`pips×10` salah). Tambah field Volume (lots) + Profit/Loss ($) manual + column `volume` DB |
 
 ---
 
@@ -306,6 +319,24 @@ Git commit author: `Jarbi <jarbi@users.noreply.github.com>`.
 | dump_db.py net tak betul | Pastikan `order=trade_date.desc,id.desc` (stable pagination) |
 | IPC timeout Python MT5 API | Version mismatch terminal (build 6140) vs API (6147) — guna report Excel instead |
 | "App is not connected to Supabase" | Env var `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` tak masuk build → check Vercel env + redeploy |
+| Dashboard cuma tunjuk 1000 trade | Dah fix (pagination). Kalau jadi balik, check `fetchTrades()` guna `range()` loop |
+| Profit lari bila log trade | Jangan auto-kira profit. Guna field manual Profit/Loss ($) dalam Input Form |
+
+---
+
+## 13b. Token Discipline (PENTING — jangan repeat)
+
+Bos pernah komplen: **150M token burn dalam 12 jam**. Punca & peraturan untuk elak:
+
+| Punca burn | Peraturan |
+|---|---|
+| Fan-out 6 subagent untuk vision extract 52 screenshot | ❌ Jangan fan-out subagent untuk vision. Guna **MT5 Excel report** sebagai sumber (100% exact, murah) |
+| `vision_analyze` pada imej besar (iPhone 1170×2532) | ❌ Elak vision untuk extract data. Kalau perlu, crop dulu ke region kecil |
+| `session_search` return output persisted besar | ✅ Baca fail spillover guna `read_file`, jangan re-run search |
+| Session dumps + delegation logs menimbun | ✅ Clean old `~/.hermes/sessions/req-*.json` + delegation logs selepas kerja siap |
+| Re-read fail penuh berulang kali | ✅ Baca sekali, simpan ke variable, patch ikut keperluan |
+
+**Golden rule:** Untuk data MT5, sentiasa guna Excel report dari Google Drive (§8). Screenshot hanya untuk rujukan visual, bukan sumber data.
 
 ---
 
