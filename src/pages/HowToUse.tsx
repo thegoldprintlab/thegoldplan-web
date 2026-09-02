@@ -75,54 +75,54 @@ export default function HowToUse() {
         <h3>FAQ</h3>
         <div className="faq-grid">
           <div className="faq-item">
-            <h4>Adakah data saya private?</h4>
+            <h4>Is my data private?</h4>
             <p>
-              Ya. Setiap akaun diasingkan dengan row-level security — hanya anda nampak trade &amp;
-              analitik anda sendiri.
+              Yes. Every account is isolated with row-level security — only you can see your own
+              trades and analytics.
             </p>
           </div>
           <div className="faq-item">
-            <h4>Macam mana cara import data lama?</h4>
+            <h4>How do I import old data?</h4>
             <p>
-              Guna <b>Import MT5</b> — export report Excel dari MT5 (History → Report → Excel) dan
-              muat naik. Semua trade di-parse automatik.
+              Use <b>Import MT5</b> — export the Excel report from MT5 (History → Report → Excel) and
+              upload it. All trades are parsed automatically.
             </p>
           </div>
           <div className="faq-item">
-            <h4>Boleh guna di phone?</h4>
+            <h4>Can I use it on my phone?</h4>
             <p>
-              Ya — app responsif penuh. Buka URL sama di browser phone. Untuk log cepat, guna{' '}
-              <b>Quick Log API</b> (iOS Shortcuts).
+              Yes — the app is fully responsive. Open the same URL in your phone browser. For quick
+              logging, use the <b>Quick Log API</b> (iOS Shortcuts).
             </p>
           </div>
           <div className="faq-item">
-            <h4>Macam mana nak cancel langganan?</h4>
+            <h4>How do I cancel my subscription?</h4>
             <p>
-              Pergi ke <b>Account &amp; Billing</b>. Langganan bulanan boleh diurus dari situ —
-              cancel bila-bila masa.
+              Go to <b>Account &amp; Billing</b>. Monthly plans can be managed from there — cancel
+              anytime.
             </p>
           </div>
           <div className="faq-item">
-            <h4>Adakah percubaan percuma?</h4>
+            <h4>Is there a free trial?</h4>
             <p>
-              Ya — buka <a href="/app?demo=1">demo</a> untuk cuba semua fitur dengan data sample,
-              tanpa perlu daftar. Kalau ada kod promo, redeem di Account &amp; Billing.
+              Yes — open the <a href="/app?demo=1">demo</a> to try every feature with sample data, no
+              signup needed. If you have a promo code, redeem it in Account &amp; Billing.
             </p>
           </div>
           <div className="faq-item">
-            <h4>Kenapa profit kena taip manual?</h4>
+            <h4>Why is profit entered manually?</h4>
             <p>
-              Supaya angka tepat 100% — termasuk commission &amp; swap. Volume + profit manual
-              elak auto-kira yang boleh silap.
+              So the number is 100% accurate — including commission &amp; swap. Manual volume + profit
+              avoids auto-calculations that can be wrong.
             </p>
           </div>
         </div>
       </div>
 
       <div className="panel support-panel" style={{ marginTop: 16 }}>
-        <h3>Perlukan bantuan?</h3>
+        <h3>Need help?</h3>
         <p className="muted" style={{ marginBottom: 12 }}>
-          Ada soalan, masalah teknikal, atau nak bagi feedback — hubungi terus:
+          Questions, technical issues, or feedback — reach out directly:
         </p>
         <div className="support-links">
           <a className="btn btn-primary" href="mailto:thegoldprintlab@gmail.com">
