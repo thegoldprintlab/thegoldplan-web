@@ -15,7 +15,7 @@ export default function ImportPage() {
   async function doImport(e: React.FormEvent) {
     e.preventDefault()
     if (!file || !account) {
-      setMsg({ ok: false, text: 'Pilih fail Excel dan akaun.' })
+      setMsg({ ok: false, text: 'Please select an Excel file and an account.' })
       return
     }
     setBusy(true)
@@ -23,13 +23,13 @@ export default function ImportPage() {
     try {
       const rows = await parseMt5Excel(file, account)
       if (rows.length === 0) {
-        setMsg({ ok: false, text: 'Tiada baris trade dijumpai. Pastikan ini fail report MT5 (Excel) yang betul.' })
+        setMsg({ ok: false, text: 'No trades found. Make sure this is a valid MT5 report (Excel).' })
         setBusy(false)
         return
       }
 
       if (isDemoPreview()) {
-        setMsg({ ok: true, text: `Demo mode — ${rows.length} trade dibaca, tapi tak disimpan.` })
+        setMsg({ ok: true, text: `Demo mode — ${rows.length} trades read, but not saved.` })
         setBusy(false)
         return
       }
@@ -48,7 +48,7 @@ export default function ImportPage() {
       }
 
       const nets = rows.reduce((a, r) => a + r.profit_loss, 0)
-      setMsg({ ok: true, text: `Berjaya import ${rows.length} trade (net ${nets.toFixed(2)}) ke akaun "${account}".` })
+      setMsg({ ok: true, text: `Successfully imported ${rows.length} trades (net ${nets.toFixed(2)}) into "${account}".` })
       setFile(null)
       await reload()
     } catch (err) {
@@ -63,8 +63,8 @@ export default function ImportPage() {
       <div className="page-head">
         <h1>Import MT5</h1>
         <p className="muted">
-          Muat naik fail Excel report MT5 (<code>History → Report → Excel/XLSX</code>) dan pilih akaun.
-          Trade akan di-parse &amp; dimasukkan automatik.
+          Upload your MT5 Excel report (<code>History → Report → Excel/XLSX</code>) and pick an account.
+          Trades are parsed &amp; inserted automatically.
         </p>
       </div>
 
@@ -78,7 +78,7 @@ export default function ImportPage() {
           </select>
         </div>
         <div className="field">
-          <label>Fail Excel MT5 (.xlsx)</label>
+          <label>MT5 Excel file (.xlsx)</label>
           <input
             type="file"
             accept=".xlsx"
@@ -88,7 +88,7 @@ export default function ImportPage() {
         </div>
         <div className="field span2">
           <button className="btn btn-primary" disabled={busy} type="submit">
-            {busy ? 'Memproses…' : 'Import sekarang'}
+            {busy ? 'Processing…' : 'Import now'}
           </button>
         </div>
         {msg && (
@@ -99,14 +99,14 @@ export default function ImportPage() {
       </form>
 
       <div className="panel" style={{ marginTop: 16, maxWidth: 560 }}>
-        <h3>Macam mana nak dapatkan report?</h3>
+        <h3>How to get the report?</h3>
         <ol style={{ paddingLeft: 20 }}>
-          <li>Buka MT5 (desktop) → tab <b>History</b></li>
-          <li>Right-click dalam senarai → <b>Report</b> → pilih <b>Excel (XLSX)</b></li>
-          <li>Simpan fail, pastu muat naik kat sini.</li>
+          <li>Open MT5 (desktop) → <b>History</b> tab</li>
+          <li>Right-click in the list → <b>Report</b> → choose <b>Excel (XLSX)</b></li>
+          <li>Save the file, then upload it here.</li>
         </ol>
         <p className="muted">
-          Nota: import akan <b>tambah</b> trade baru. Kalau nak ganti data lama, hapus dulu dalam Trading Log.
+          Note: import <b>adds</b> new trades. To replace old data, delete them first in Trading Log.
         </p>
       </div>
     </div>
