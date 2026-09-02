@@ -1083,6 +1083,27 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   justify-content: center;
 }
 
+/* How-to-use page (public /help + in-app) */
+.howto {
+  max-width: 1040px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 56px 20px 72px;
+}
+
+.howto-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.howto .panel h3 { margin: 0 0 8px; font-size: 1.02rem; font-weight: 600; }
+.howto .panel p { color: var(--ink-muted); font-size: 0.9rem; line-height: 1.55; margin: 0; }
+
+@media (max-width: 768px) {
+  .howto-grid { grid-template-columns: 1fr; }
+}
+
 /* CTA band */
 .landing-cta-band {
   padding-top: 20px;

@@ -8,6 +8,8 @@ export default function Nav() {
     { to: '/app', label: 'Dashboard' },
     { to: '/app/log', label: 'Trading Log' },
     { to: '/app/input', label: 'Input Form' },
+    { to: '/app/import', label: 'Import MT5' },
+    { to: '/app/help', label: 'How to use' },
     { to: '/app/settings', label: 'Settings' },
     { to: '/app/account', label: 'Account' },
     ...(isAdmin ? [{ to: '/app/admin', label: 'Admin' }] : []),

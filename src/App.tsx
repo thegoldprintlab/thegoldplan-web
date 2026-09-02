@@ -11,6 +11,8 @@ import TradingLog from './pages/TradingLog'
 import SettingsPage from './pages/Settings'
 import AccountPage from './pages/Account'
 import AdminPage from './pages/Admin'
+import HowToUse from './pages/HowToUse'
+import ImportPage from './pages/Import'
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
 import { getSupabase } from './lib/supabase'
@@ -91,6 +93,8 @@ function Shell() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/input" element={<InputForm />} />
               <Route path="/log" element={<TradingLog />} />
+              <Route path="/import" element={<ImportPage />} />
+              <Route path="/help" element={<HowToUse />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/account" element={<AccountPage />} />
               <Route path="/admin" element={<AdminPage />} />
@@ -112,6 +116,8 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           {/* Public pricing page — no login needed */}
           <Route path="/pricing" element={<Pricing />} />
+          {/* Public how-to-use — no login needed */}
+          <Route path="/help" element={<HowToUse />} />
           {/* The authenticated app */}
           <Route path="/app/*" element={<Shell />} />
           <Route path="*" element={<Navigate to="/" replace />} />
