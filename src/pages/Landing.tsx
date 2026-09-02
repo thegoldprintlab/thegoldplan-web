@@ -164,6 +164,9 @@ export default function Landing() {
             <Link className="btn btn-ghost btn-lg" to="/pricing">
               See pricing
             </Link>
+            <Link className="btn btn-ghost btn-lg" to="/help">
+              How to use
+            </Link>
           </div>
         </div>
       </section>
