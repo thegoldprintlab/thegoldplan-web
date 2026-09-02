@@ -2,15 +2,40 @@ import { useAuth } from '../context/AuthContext'
 import { useBilling } from '../context/BillingContext'
 import { planById } from '../lib/plans'
 import { checkoutUrl } from '../lib/billing'
+import { redeemPromo } from '../lib/promo'
+import { useState } from 'react'
 
-/** Account / subscription management (B1 + B3 support). */
+/** Account / subscription management (B1 + B3 support + promo redemption). */
 export default function AccountPage() {
   const { session } = useAuth()
   const { enabled, loading, subscription, active, refresh } = useBilling()
+  const [promoCode, setPromoCode] = useState('')
+  const [promoBusy, setPromoBusy] = useState(false)
+  const [promoMsg, setPromoMsg] = useState<{ ok: boolean; text: string } | null>(null)
 
   if (!session) return <div className="empty-state">Not signed in.</div>
 
   const plan = subscription ? planById(subscription.plan) : null
+
+  async function redeem(e: React.FormEvent) {
+    e.preventDefault()
+    if (!promoCode.trim()) return
+    setPromoBusy(true)
+    setPromoMsg(null)
+    try {
+      const r = await redeemPromo(promoCode.trim())
+      setPromoMsg({
+        ok: true,
+        text: `Promo activated — ${r.plan} until ${r.current_period_end ? new Date(r.current_period_end).toLocaleDateString('en-US') : '—'}.`,
+      })
+      setPromoCode('')
+      await refresh()
+    } catch (err) {
+      setPromoMsg({ ok: false, text: err instanceof Error ? err.message : String(err) })
+    } finally {
+      setPromoBusy(false)
+    }
+  }
 
   return (
     <div>
@@ -27,6 +52,31 @@ export default function AccountPage() {
         <p className="muted">
           Signed in as <b>{session.user.email}</b>
         </p>
+      </div>
+
+      <div className="panel">
+        <h2>Have a promo code?</h2>
+        <p className="muted" style={{ fontSize: '0.88rem', marginBottom: 12 }}>
+          Enter your code to activate your free month. Your account email is used automatically.
+        </p>
+        <form onSubmit={redeem} style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <input
+            type="text"
+            value={promoCode}
+            onChange={(e) => setPromoCode(e.target.value)}
+            placeholder="e.g. TG15-XXXXX-XXXXX"
+            style={{ maxWidth: 260, fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}
+            aria-label="Promo code"
+          />
+          <button className="btn btn-primary" disabled={promoBusy || !promoCode.trim()}>
+            {promoBusy ? 'Activating…' : 'Activate'}
+          </button>
+        </form>
+        {promoMsg && (
+          <div className={promoMsg.ok ? 'form-ok' : 'form-err'} style={{ marginTop: 10 }}>
+            {promoMsg.text}
+          </div>
+        )}
       </div>
 
       <div className="panel">

@@ -10,3 +10,5 @@ dist
 docs/SECRETS_LOCAL.md
 scripts/migrate_billing_admin.cjs
 scripts/verify_admin.cjs
+scripts/seed_promos.cjs
+scripts/verify_promo.cjs
