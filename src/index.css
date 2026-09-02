@@ -1100,8 +1100,24 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 .howto .panel h3 { margin: 0 0 8px; font-size: 1.02rem; font-weight: 600; }
 .howto .panel p { color: var(--ink-muted); font-size: 0.9rem; line-height: 1.55; margin: 0; }
 
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.faq-item h4 { margin: 0 0 6px; font-size: 0.92rem; font-weight: 600; }
+.faq-item p { color: var(--ink-muted); font-size: 0.87rem; line-height: 1.55; margin: 0; }
+.faq-item a { color: var(--primary); text-decoration: none; }
+.faq-item a:hover { text-decoration: underline; }
+
+.support-panel { background: color-mix(in srgb, var(--primary) 5%, var(--surface)); }
+.support-links { display: flex; gap: 10px; flex-wrap: wrap; }
+
 @media (max-width: 768px) {
   .howto-grid { grid-template-columns: 1fr; }
+  .faq-grid { grid-template-columns: 1fr; }
 }
 
 /* CTA band */
