@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useAuth } from './AuthContext'
 import { billingEnabled, fetchSubscription, isSubActive } from '../lib/billing'
+import { isDemoPreview } from '../lib/demo'
 import type { Subscription } from '../lib/types'
 
 interface BillingCtx {
@@ -22,11 +23,16 @@ const Ctx = createContext<BillingCtx>({
 export function BillingProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth()
   const enabled = billingEnabled()
+  const demoPreview = isDemoPreview()
   const userId = session?.user?.id
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(false)
 
   const refresh = useCallback(async () => {
+    if (demoPreview) {
+      setSubscription(null)
+      return
+    }
     if (!enabled || !userId) {
       setSubscription(null)
       return
@@ -39,7 +45,7 @@ export function BillingProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false)
     }
-  }, [enabled, userId])
+  }, [enabled, userId, demoPreview])
 
   useEffect(() => {
     refresh()
@@ -51,7 +57,7 @@ export function BillingProvider({ children }: { children: ReactNode }) {
         enabled,
         loading,
         subscription,
-        active: isSubActive(subscription),
+        active: demoPreview || isSubActive(subscription),
         refresh,
       }}
     >
