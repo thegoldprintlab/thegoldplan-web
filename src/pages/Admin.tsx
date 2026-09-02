@@ -1,18 +1,22 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { adminListUsers, adminSetUser, type AdminUser } from '../lib/admin'
+import { adminListPromos, type PromoRow } from '../lib/promo'
 
-/** Admin panel (Fasa C) — list users, promote/demote admin, disable/enable, view plans. */
+/** Admin panel (Fasa C) — list users, promote/demote admin, disable/enable, view plans + promos. */
 export default function AdminPage() {
   const { isAdmin } = useAuth()
   const [users, setUsers] = useState<AdminUser[] | null>(null)
+  const [promos, setPromos] = useState<PromoRow[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setError(null)
     try {
-      setUsers(await adminListUsers())
+      const [u, p] = await Promise.all([adminListUsers(), adminListPromos()])
+      setUsers(u)
+      setPromos(p)
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e))
     }
@@ -65,6 +69,39 @@ export default function AdminPage() {
       </div>
 
       {error && <div className="form-err" style={{ marginBottom: 14 }}>{error}</div>}
+
+      <div className="panel">
+        <div className="share-head">
+          <h2>Promo Codes ({promos?.length ?? 0})</h2>
+          <button className="btn" onClick={load}>Refresh</button>
+        </div>
+
+        <div className="table-wrap">
+          <table className="tbl tbl--wide">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th className="num">Used</th>
+                <th className="num">Days</th>
+                <th>Status</th>
+                <th>Redeemed By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {promos?.map((p) => (
+                <tr key={p.code}>
+                  <td style={{ fontFamily: 'var(--font-mono)' }}>{p.code}</td>
+                  <td className="num">{p.used_count}/{p.max_uses}</td>
+                  <td className="num">{p.duration_days}</td>
+                  <td className={p.active ? 'green' : 'muted'}>{p.active ? 'active' : 'inactive'}</td>
+                  <td>{p.redeemed_by ?? '—'}</td>
+                </tr>
+              ))}
+              {promos && !promos.length && <tr><td colSpan={5} className="empty-state">No promo codes.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div className="panel">
         <div className="share-head">
