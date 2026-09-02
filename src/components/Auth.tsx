@@ -31,7 +31,7 @@ export default function Auth() {
             <path d="M3 7l9 4.5L21 7M12 11.5V21.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
           </svg>
         </div>
-        <h1 className="auth-title">The Gold Plan Trading Journey</h1>
+        <h1 className="auth-title">The Gold Plan</h1>
         <p className="auth-sub">XAUUSD journal · dashboard · discipline tracking</p>
         <form onSubmit={submit} className="auth-form">
           <label htmlFor="email">Email</label>
