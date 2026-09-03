@@ -52,6 +52,7 @@ export async function fetchTrades(): Promise<Trade[]> {
     const { data, error } = await sb
       .from('trades')
       .select('*')
+      .order('created_at', { ascending: false })
       .order('trade_date', { ascending: false })
       .order('id', { ascending: false })
       .range(from, from + PAGE - 1)
