@@ -1,17 +1,40 @@
-// Vercel serverless function — signup without Supabase's built-in mailer.
+// Vercel serverless function — interim signup path.
 //
-// WHY: Supabase's built-in SMTP is capped at ~2 emails/hour and is documented as
-// testing-only. Real customers were hitting `over_email_send_rate_limit` (HTTP 429)
-// and never received a confirmation link, so they could not log in after signing up.
+// ─────────────────────────────────────────────────────────────────────────────
+// WHY THIS EXISTS (and why it should go away)
 //
-// This endpoint creates the user server-side via the GoTrue admin API with
-// email_confirm: true, so no confirmation email is required at all.
+// Supabase's built-in mailer is capped at ~2 emails/hour and is documented as
+// testing-only. Real signups were hitting `over_email_send_rate_limit` (429),
+// never received a confirmation link, and could not log in.
 //
-// SECURITY NOTE: this endpoint is intentionally public (it is the signup path) and
-// email addresses are therefore NOT verified. That is an accepted tradeoff here
-// because feature access is gated by payment/promo, not by email ownership.
-// Guards applied below: email shape validation, password length, payload cap, and
-// a per-email cooldown to blunt scripted abuse.
+// This endpoint is a STOPGAP: it creates the user server-side so signup is not
+// blocked on that mailer. It is NOT the desired end state.
+//
+// END STATE: configure Custom SMTP in Supabase (Auth → SMTP Settings). Once that
+// is live, set VITE_REQUIRE_EMAIL_VERIFICATION=true and the frontend goes back to
+// the native sb.auth.signUp() flow (which sends a real confirmation email). This
+// file then becomes dead code and should be deleted.
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// SECURITY: this is a PUBLIC endpoint holding the service_role key, so it is an
+// account-creation faucet by definition. Mitigations:
+//   - durable rate limit in Postgres (per-email + per-IP). An in-memory counter
+//     is useless on serverless: each instance has its own memory and it resets
+//     on cold start, so the previous version had effectively NO limit.
+//   - email shape + password length validation
+//   - payload size cap
+// It intentionally does NOT verify email ownership — that is exactly the gap the
+// Custom SMTP migration closes.
+
+import pg from 'pg'
+
+const { Pool } = pg
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL || '',
+  ssl: { rejectUnauthorized: false },
+  max: 2,
+})
 
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || ''
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
@@ -19,10 +42,9 @@ const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 const MAX_BODY = 4096
 
-// Per-instance cooldown. Not a hard guarantee across lambda instances, just a cheap
-// brake on repeated hits with the same address.
-const recent = new Map()
-const COOLDOWN_MS = 5000
+// Per-hour caps.
+const MAX_PER_EMAIL = 3
+const MAX_PER_IP = 15
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -37,19 +59,26 @@ function readBody(req) {
   })
 }
 
+function clientIp(req) {
+  const fwd = req.headers['x-forwarded-for']
+  if (typeof fwd === 'string' && fwd.length > 0) return fwd.split(',')[0].trim().slice(0, 64)
+  return String(req.socket?.remoteAddress || 'unknown').slice(0, 64)
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  if (!SUPABASE_URL || !SERVICE_KEY) {
+  if (!SUPABASE_URL || !SERVICE_KEY || !process.env.DATABASE_URL) {
     return res.status(500).json({ error: 'Signup is not configured on the server.' })
   }
 
   let payload
   try {
-    const raw = typeof req.body === 'string' || req.body === undefined ? await readBody(req) : JSON.stringify(req.body)
+    const raw =
+      typeof req.body === 'string' || req.body === undefined ? await readBody(req) : JSON.stringify(req.body)
     payload = JSON.parse(raw || '{}')
   } catch {
     return res.status(400).json({ error: 'Invalid request.' })
@@ -57,23 +86,41 @@ export default async function handler(req, res) {
 
   const email = String(payload.email || '').trim().toLowerCase()
   const password = String(payload.password || '')
+  const ip = clientIp(req)
 
-  if (!EMAIL_RE.test(email)) {
+  if (!EMAIL_RE.test(email) || email.length > 320) {
     return res.status(400).json({ error: 'Please enter a valid email address.' })
   }
-  if (password.length < 6) {
-    return res.status(400).json({ error: 'Password must be at least 6 characters.' })
+  if (password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters.' })
   }
 
-  const now = Date.now()
-  const last = recent.get(email)
-  if (last && now - last < COOLDOWN_MS) {
-    return res.status(429).json({ error: 'Please wait a moment and try again.' })
-  }
-  recent.set(email, now)
-  if (recent.size > 500) recent.clear()
-
+  const client = await pool.connect()
   try {
+    // Durable rate limit — survives cold starts and is shared across instances.
+    const { rows } = await client.query(
+      `select
+         (select count(*) from public.signup_attempts
+           where lower(email) = $1 and created_at > now() - interval '1 hour') as by_email,
+         (select count(*) from public.signup_attempts
+           where ip = $2 and created_at > now() - interval '1 hour') as by_ip`,
+      [email, ip]
+    )
+
+    const byEmail = Number(rows[0].by_email)
+    const byIp = Number(rows[0].by_ip)
+
+    if (byEmail >= MAX_PER_EMAIL || byIp >= MAX_PER_IP) {
+      return res.status(429).json({ error: 'Too many signup attempts. Please try again later.' })
+    }
+
+    await client.query('insert into public.signup_attempts (email, ip) values ($1, $2)', [email, ip])
+
+    // Opportunistic retention cleanup (IPs are personal data).
+    if (Math.random() < 0.02) {
+      client.query('select public.prune_signup_attempts()').catch(() => {})
+    }
+
     const r = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
       method: 'POST',
       headers: {
@@ -100,5 +147,7 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error('signup exception', err && err.message)
     return res.status(500).json({ error: 'Could not create the account. Please try again.' })
+  } finally {
+    client.release()
   }
 }

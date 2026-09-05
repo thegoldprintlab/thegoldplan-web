@@ -893,6 +893,7 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .auth-title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 650; color: var(--ink); letter-spacing: -0.03em; line-height: 1.15; }
 .auth-sub { color: var(--ink-subtle); margin: 8px 0 26px; font-size: 0.9rem; }
+.auth-hint { color: var(--ink-subtle); margin: -4px 0 4px; font-size: 0.78rem; }
 .auth-form { display: flex; flex-direction: column; gap: 8px; }
 .auth-form label { font-size: 0.8rem; color: var(--ink-muted); margin-top: 8px; font-weight: 500; }
 .auth-form .btn { margin-top: 18px; }
