@@ -13,13 +13,39 @@ export default function Auth() {
     setBusy(true)
     setMsg(null)
     const sb = getSupabase()
-    const { error } =
-      mode === 'signup'
-        ? await sb.auth.signUp({ email, password })
-        : await sb.auth.signInWithPassword({ email, password })
-    setBusy(false)
-    if (error) setMsg(error.message)
-    else if (mode === 'signup') setMsg('Account created! Check your email to confirm, then log in.')
+
+    if (mode === 'login') {
+      const { error } = await sb.auth.signInWithPassword({ email, password })
+      setBusy(false)
+      if (error) setMsg(error.message)
+      return
+    }
+
+    // Signup goes through our own endpoint so it does not depend on Supabase's
+    // built-in mailer (capped at ~2 emails/hour — customers were getting stuck
+    // waiting for a confirmation link that never arrived).
+    try {
+      const r = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      const body = await r.json().catch(() => ({}))
+
+      if (!r.ok) {
+        setBusy(false)
+        setMsg(body.error || 'Could not create the account. Please try again.')
+        return
+      }
+
+      // Account is created already confirmed — log straight in.
+      const { error } = await sb.auth.signInWithPassword({ email, password })
+      setBusy(false)
+      if (error) setMsg('Account created. Please log in.')
+    } catch {
+      setBusy(false)
+      setMsg('Network error. Please try again.')
+    }
   }
 
   return (
