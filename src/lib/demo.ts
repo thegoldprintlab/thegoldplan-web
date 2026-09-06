@@ -2,10 +2,19 @@
 export function isDemoPreview(): boolean {
   try {
     const p = new URLSearchParams(window.location.search)
-    return p.get('demo') === '1' || localStorage.getItem('gp-demo') === '1'
+    if (p.get('demo') === '1') {
+      // Persist so demo survives in-app navigation (Link to /log etc. drops the query string).
+      try { localStorage.setItem('gp-demo', '1') } catch {}
+      return true
+    }
+    return localStorage.getItem('gp-demo') === '1'
   } catch {
     return false
   }
+}
+
+export function exitDemoPreview(): void {
+  try { localStorage.removeItem('gp-demo') } catch {}
 }
 
 export const DEMO_EMAIL = 'gold@preview.app'

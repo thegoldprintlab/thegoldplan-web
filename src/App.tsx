@@ -16,6 +16,7 @@ import ImportPage from './pages/Import'
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
 import { getSupabase } from './lib/supabase'
+import { exitDemoPreview } from './lib/demo'
 
 function Shell() {
   const { session, loading, configured, disabled } = useAuth()
@@ -78,6 +79,7 @@ function Shell() {
           <button
             className="btn btn-ghost btn-sm"
             onClick={async () => {
+              exitDemoPreview()
               await getSupabase().auth.signOut()
             }}
           >
