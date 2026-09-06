@@ -12,6 +12,7 @@ export default function SettingsPage() {
   })
   const [saved, setSaved] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
 
   function updateList(key: 'setups' | 'sessions' | 'emotions' | 'accounts', value: string) {
     setForm({ ...form, [key]: value.split('\n').map((s) => s.trim()).filter(Boolean) })
@@ -41,13 +42,19 @@ export default function SettingsPage() {
 
   async function save(e: React.FormEvent) {
     e.preventDefault()
-    await updateSettings({
-      ...form,
-      max_daily_loss: Number(form.max_daily_loss) || 0,
-      account_capitals: form.account_capitals ?? {},
-    })
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    setErr(null)
+    setSaved(false)
+    try {
+      await updateSettings({
+        ...form,
+        max_daily_loss: Number(form.max_daily_loss) || 0,
+        account_capitals: form.account_capitals ?? {},
+      })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e))
+    }
   }
 
   async function copyToken() {
@@ -188,6 +195,7 @@ export default function SettingsPage() {
         <div className="field span2">
           <button className="btn btn-primary" type="submit">Save Settings</button>
           {saved && <span className="form-ok">Saved</span>}
+          {err && <span className="form-err" style={{ marginLeft: 10 }}>Save failed: {err}</span>}
         </div>
       </form>
     </div>

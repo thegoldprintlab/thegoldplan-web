@@ -1,9 +1,9 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useData } from '../context/DataContext'
 import { useBilling } from '../context/BillingContext'
 import { insertTrade, computePips, currentVolatility } from '../lib/api'
 import { todayISO } from '../lib/stats'
-import UpgradeGate from '../components/UpgradeGate'
 import type { Direction } from '../lib/types'
 
 export default function InputForm() {
@@ -78,9 +78,8 @@ export default function InputForm() {
   }
 
   return (
-    <UpgradeGate feature="Trade logging">
-      <div>
-        <div className="page-head">
+    <div>
+      <div className="page-head">
         <div>
           <div className="kicker">Journal Entry</div>
           <h1>Input Form</h1>
@@ -180,9 +179,23 @@ export default function InputForm() {
             {busy ? 'Submitting…' : 'Submit Trade'}
           </button>
         </div>
-        {msg && <div className={`field span2 ${msg.ok ? 'form-ok' : 'form-err'}`}>{msg.text}</div>}
+        {msg && (
+          <div className={`field span2 ${msg.ok ? 'form-ok' : 'form-err'}`}>
+            {msg.text}
+          </div>
+        )}
+        {!subActive && billingEnabled && !demoMode && (
+          <div className="field span2 upgrade-prompt">
+            <p>
+              <b>Trading is a Pro feature.</b> Subscribe for $19/mo or $149 lifetime to save
+              trades to your journal. Your form input is preserved.
+            </p>
+            <Link className="btn btn-primary" to="/pricing">
+              See pricing
+            </Link>
+          </div>
+        )}
       </form>
-      </div>
-    </UpgradeGate>
+    </div>
   )
 }
