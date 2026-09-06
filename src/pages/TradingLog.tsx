@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useData } from '../context/DataContext'
 import { deleteTrade } from '../lib/api'
 import { fmtPnl, fmtMoney, capitalOf, roiPct } from '../lib/stats'
+import UpgradeGate from '../components/UpgradeGate'
 
 export default function TradingLog() {
   const { trades, settings, reload, demoMode } = useData()
@@ -37,6 +38,7 @@ export default function TradingLog() {
   }
 
   return (
+    <UpgradeGate feature="Trading log">
     <div>
       <div className="page-head">
         <div>
@@ -130,5 +132,6 @@ export default function TradingLog() {
         </div>
       </div>
     </div>
+    </UpgradeGate>
   )
 }

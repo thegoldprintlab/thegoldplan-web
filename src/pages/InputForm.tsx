@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useData } from '../context/DataContext'
+import { useBilling } from '../context/BillingContext'
 import { insertTrade, computePips, currentVolatility } from '../lib/api'
 import { todayISO } from '../lib/stats'
+import UpgradeGate from '../components/UpgradeGate'
 import type { Direction } from '../lib/types'
 
 export default function InputForm() {
   const { settings, reload, demoMode } = useData()
+  const { enabled: billingEnabled, active: subActive } = useBilling()
   const [tradeDate, setTradeDate] = useState(todayISO())
   const [account, setAccount] = useState(settings.accounts[0] ?? '')
   const [session, setSession] = useState(settings.sessions[0] ?? '')
@@ -37,6 +40,10 @@ export default function InputForm() {
     e.preventDefault()
     if (!valid || demoMode) {
       setMsg({ ok: true, text: 'Preview mode — trades are not saved. Connect Supabase to log live trades.' })
+      return
+    }
+    if (billingEnabled && !subActive) {
+      setMsg({ ok: false, text: 'Subscribing required to save trades. Open /pricing to upgrade.' })
       return
     }
     setBusy(true)
@@ -71,8 +78,9 @@ export default function InputForm() {
   }
 
   return (
-    <div>
-      <div className="page-head">
+    <UpgradeGate feature="Trade logging">
+      <div>
+        <div className="page-head">
         <div>
           <div className="kicker">Journal Entry</div>
           <h1>Input Form</h1>
@@ -174,6 +182,7 @@ export default function InputForm() {
         </div>
         {msg && <div className={`field span2 ${msg.ok ? 'form-ok' : 'form-err'}`}>{msg.text}</div>}
       </form>
-    </div>
+      </div>
+    </UpgradeGate>
   )
 }
