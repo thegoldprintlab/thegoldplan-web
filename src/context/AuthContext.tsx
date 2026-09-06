@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase'
-import { isDemoPreview, DEMO_EMAIL } from '../lib/demo'
+import { isDemoPreview, exitDemoPreview, DEMO_EMAIL } from '../lib/demo'
 import type { Session } from '@supabase/supabase-js'
 
 interface AuthCtx {
@@ -69,12 +69,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const sb = getSupabase()
     sb.auth
       .getSession()
-      .then(({ data }) => setSession(data.session))
+      .then(({ data }) => {
+        // A real session always supersedes a stale demo flag — leftover from preview.
+        if (data.session) exitDemoPreview()
+        setSession(data.session)
+      })
       .finally(() => setLoading(false))
 
     const {
       data: { subscription },
-    } = sb.auth.onAuthStateChange((_event, s) => setSession(s))
+    } = sb.auth.onAuthStateChange((_event, s) => {
+      if (s) exitDemoPreview()
+      setSession(s)
+    })
 
     return () => subscription.unsubscribe()
   }, [configured, demoPreview])
