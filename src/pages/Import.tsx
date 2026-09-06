@@ -3,6 +3,7 @@ import { useData } from '../context/DataContext'
 import { parseMt5Excel } from '../lib/mt5Import'
 import { getSupabase } from '../lib/supabase'
 import { isDemoPreview } from '../lib/demo'
+import UpgradeGate from '../components/UpgradeGate'
 
 /** Import MT5 Excel report → parse → bulk insert trades. */
 export default function ImportPage() {
@@ -59,6 +60,7 @@ export default function ImportPage() {
   }
 
   return (
+    <UpgradeGate feature="MT5 import">
     <div>
       <div className="page-head">
         <h1>Import MT5</h1>
@@ -110,5 +112,6 @@ export default function ImportPage() {
         </p>
       </div>
     </div>
+    </UpgradeGate>
   )
 }
