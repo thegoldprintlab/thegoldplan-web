@@ -14,8 +14,22 @@ export default function SettingsPage() {
   const [copied, setCopied] = useState(false)
   const [err, setErr] = useState<string | null>(null)
 
+  const DEFAULT_SETUPS = ['SNR Breakout', 'SND Rejection', 'SNR + SND', 'Others']
+  const DEFAULT_SESSIONS = ['Australia (Aus)', 'Tokyo (Tok)', 'London (Lon)', 'New York (NY)']
+  const DEFAULT_EMOTIONS = ['Calm & Focused', 'FOMO / Chasing Price', 'Revenge Trading', 'Hesitant']
+  const MAX_ACCOUNTS = 4
+
   function updateList(key: 'setups' | 'sessions' | 'emotions' | 'accounts', value: string) {
-    setForm({ ...form, [key]: value.split('\n').map((s) => s.trim()).filter(Boolean) })
+    const parsed = value.split('\n').map((s) => s.trim()).filter(Boolean)
+    if (key === 'accounts') {
+      // hard cap: free users can manage up to 4 accounts regardless of tier.
+      if (parsed.length > MAX_ACCOUNTS) return
+    } else {
+      // setups/sessions/emotions are fixed lists — ignore any user edits so
+      // every user sees the same canonical options in their dropdowns.
+      return
+    }
+    setForm({ ...form, [key]: parsed })
   }
 
   function setCapital(account: string, value: string) {
@@ -47,6 +61,9 @@ export default function SettingsPage() {
     try {
       await updateSettings({
         ...form,
+        setups: DEFAULT_SETUPS,
+        sessions: DEFAULT_SESSIONS,
+        emotions: DEFAULT_EMOTIONS,
         max_daily_loss: Number(form.max_daily_loss) || 0,
         account_capitals: form.account_capitals ?? {},
       })
@@ -149,19 +166,48 @@ export default function SettingsPage() {
       <form onSubmit={save} className="panel form-grid">
         <div className="field">
           <label htmlFor="setups">Trading Setups (one per line)</label>
-          <textarea id="setups" rows={6} value={form.setups.join('\n')} onChange={(e) => updateList('setups', e.target.value)} />
+          <textarea
+            id="setups"
+            rows={2}
+            value={DEFAULT_SETUPS.join('\n')}
+            readOnly
+            onChange={() => {}}
+          />
         </div>
         <div className="field">
           <label htmlFor="sessions">Sessions (one per line)</label>
-          <textarea id="sessions" rows={6} value={form.sessions.join('\n')} onChange={(e) => updateList('sessions', e.target.value)} />
+          <textarea
+            id="sessions"
+            rows={4}
+            value={DEFAULT_SESSIONS.join('\n')}
+            readOnly
+            onChange={() => {}}
+          />
         </div>
         <div className="field">
           <label htmlFor="emotions">Emotional States (one per line)</label>
-          <textarea id="emotions" rows={6} value={form.emotions.join('\n')} onChange={(e) => updateList('emotions', e.target.value)} />
+          <textarea
+            id="emotions"
+            rows={4}
+            value={DEFAULT_EMOTIONS.join('\n')}
+            readOnly
+            onChange={() => {}}
+          />
         </div>
         <div className="field">
-          <label htmlFor="accounts">Trading Accounts (one per line)</label>
-          <textarea id="accounts" rows={6} value={form.accounts.join('\n')} onChange={(e) => updateList('accounts', e.target.value)} />
+          <label htmlFor="accounts">
+            Trading Accounts (one per line · max {MAX_ACCOUNTS})
+          </label>
+          <textarea
+            id="accounts"
+            rows={Math.max(2, Math.min(MAX_ACCOUNTS + 1, form.accounts.length + 1))}
+            placeholder={'e.g.\nPersonal Account\nProp Firm 1\nProp Firm 2'}
+            value={form.accounts.join('\n')}
+            onChange={(e) => updateList('accounts', e.target.value)}
+          />
+          <p className="muted" style={{ fontSize: '0.78rem', marginTop: 6 }}>
+            Up to {MAX_ACCOUNTS} accounts. Press <kbd>Enter</kbd> for a new line.
+          </p>
         </div>
         <div className="field">
           <label>Starting Capital per Account ($)</label>
