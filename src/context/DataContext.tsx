@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import type { Trade, Settings } from '../lib/types'
 import { fetchTrades, fetchSettings, saveSettings, useConfigured } from '../lib/api'
 import { isDemoPreview } from '../lib/demo'
@@ -28,7 +29,8 @@ const Ctx = createContext<DataCtx>({
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const configured = useConfigured()
-  const demoMode = !configured || isDemoPreview()
+  const location = useLocation()
+  const demoMode = !configured || isDemoPreview(location.search)
   const [trades, setTrades] = useState<Trade[]>(demoMode ? DEMO_TRADES : [])
   const [settings, setSettings] = useState<Settings>(demoMode ? DEMO_SETTINGS : { user_id: '', setups: [], sessions: [], emotions: [], accounts: [], max_daily_loss: 100, account_capitals: {} })
   const [loading, setLoading] = useState(false)
@@ -66,7 +68,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     reload()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [configured])
+  }, [configured, demoMode])
 
   return (
     <Ctx.Provider value={{ trades, settings, loading, configured, demoMode, error, reload, updateSettings }}>

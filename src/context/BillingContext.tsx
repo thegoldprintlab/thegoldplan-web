@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 import { billingEnabled, fetchSubscription, isSubActive } from '../lib/billing'
 import { isDemoPreview } from '../lib/demo'
@@ -23,7 +24,8 @@ const Ctx = createContext<BillingCtx>({
 export function BillingProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth()
   const enabled = billingEnabled()
-  const demoPreview = isDemoPreview()
+  const location = useLocation()
+  const demoPreview = isDemoPreview(location.search)
   const userId = session?.user?.id
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(false)

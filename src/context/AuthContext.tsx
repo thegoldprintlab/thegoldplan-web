@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase'
 import { isDemoPreview, exitDemoPreview, DEMO_EMAIL } from '../lib/demo'
 import type { Session } from '@supabase/supabase-js'
@@ -27,11 +28,19 @@ const DEMO_SESSION = {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const configured = isSupabaseConfigured()
-  const demoPreview = isDemoPreview()
-  const [session, setSession] = useState<Session | null>(demoPreview ? DEMO_SESSION : null)
-  const [loading, setLoading] = useState(!demoPreview)
+  // Subscribe to the router so client-side Link to /app?demo=1 re-renders this
+  // provider. Without useLocation, AuthProvider stays on the landing-page state
+  // (session=null) and Shell shows the login form until a full refresh.
+  const location = useLocation()
+  const demoPreview = isDemoPreview(location.search)
+  const [session, setSession] = useState<Session | null>(null)
+  const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [disabled, setDisabled] = useState(false)
+  const effectiveSession = demoPreview ? DEMO_SESSION : session
+  const effectiveLoading = demoPreview ? false : loading
+  const effectiveAdmin = demoPreview ? true : isAdmin
+  const effectiveDisabled = demoPreview ? false : disabled
 
   async function refreshRole() {
     const userId = session?.user?.id
@@ -58,8 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (demoPreview) {
       setLoading(false)
-      setIsAdmin(true)
-      setDisabled(false)
       return
     }
     if (!configured) {
@@ -70,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sb.auth
       .getSession()
       .then(({ data }) => {
-        // A real session always supersedes a stale demo flag — leftover from preview.
+        // A real session always supersedes a leftover demo flag (no ?demo=1).
         if (data.session) exitDemoPreview()
         setSession(data.session)
       })
@@ -92,7 +99,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [session?.user?.id, configured])
 
   return (
-    <Ctx.Provider value={{ session, loading, configured, isAdmin, disabled, refreshRole }}>
+    <Ctx.Provider
+      value={{
+        session: effectiveSession,
+        loading: effectiveLoading,
+        configured,
+        isAdmin: effectiveAdmin,
+        disabled: effectiveDisabled,
+        refreshRole,
+      }}
+    >
       {children}
     </Ctx.Provider>
   )
