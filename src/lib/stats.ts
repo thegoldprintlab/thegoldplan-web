@@ -53,12 +53,12 @@ export function toScoreboard(map: Map<string, GroupedStats>): Array<{ label: str
 
 export function fmtMoney(v: number): string {
   const sign = v < 0 ? '-' : ''
-  return `${sign}$${Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+  return `${sign}$${Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 export function fmtPnl(v: number): string {
   const sign = v > 0 ? '+' : v < 0 ? '-' : ''
-  return `${sign}$${Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+  return `${sign}$${Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 export function todayISO(): string {
