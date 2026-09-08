@@ -14,3 +14,5 @@ scripts/seed_promos.cjs
 scripts/verify_promo.cjs
 scripts/import_aug31_sep02.cjs
 scripts/check_recent.cjs
+.extract*
+scripts/dbg_check.py
