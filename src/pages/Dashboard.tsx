@@ -87,7 +87,7 @@ export default function Dashboard() {
   const emotionBars = useMemo(() => {
     return byEmotion.map((e) => ({
       name: e.label,
-      net: Math.round(e.net),
+      net: e.net,
       trades: e.trades,
     }))
   }, [byEmotion])
