@@ -1,146 +1,89 @@
-# 🚀 The Gold Plan — Worldwide Marketing Plan
+# ◈ The Gold Plan — Plan Eksekusi RM200/Hari
 
-> **Product:** The Gold Plan — the discipline-first trading journal for XAUUSD traders.
-> **Target:** Global retail gold traders + prop firm traders.
-> **Positioning:** "The journal that keeps you funded."
-
----
-
-## 1. The Problem We Solve
-
-Gold (XAUUSD) is the #1 traded instrument in the world. Millions trade it daily. But **most blow their accounts** — not because their strategy is bad, but because of:
-
-- ❌ No journaling → repeating the same mistakes
-- ❌ No emotion tracking → revenge trading
-- ❌ No daily loss limit → one bad day kills the account
-- ❌ Spreadsheets are boring → nobody sticks with them
-
-**The Gold Plan fixes all four** with a beautiful, gamified, mobile-first journal that makes discipline addictive.
+> Matlamat: **RM200/hari = RM6,000/bulan ≈ $1,430/bln** (andaian kadar ~RM4.2/$).
+> Produk DAH LIVE: $19/bln + $149 lifetime. Stripe + webhook + gating semua ON.
+> Plan ni bukan "someday" — ini yang bos buat SETIAP hari, hari ni juga.
 
 ---
 
-## 2. Target Audience (3 Segments)
+## 1. Math Jujur (tak perlu 2,000 signup)
 
-| Segment | Who they are | Pain point | Our hook |
+Berapa jualan sebulan untuk capai $1,430:
+
+| Campuran | Jumlah | Hasil |
+|---|---|---|
+| 10 × lifetime ($149) | 10 | $1,490 ✓ |
+| 6 × lifetime + 28 × monthly ($19) | 34 | $894 + $532 = $1,426 ✓ |
+| 5 × lifetime + 36 × monthly | 41 | $745 + $684 = $1,429 ✓ |
+
+**Target minimum: 10 lifetime sebulan** (≈ 2.4 seminggu), ATAU campuran 6 lifetime + 28 monthly.
+
+Ini nombor kecik. Bukan 2,000 signup, bukan 500 WAU. Ini 2-3 jualan seminggu.
+
+---
+
+## 2. Funnel Sebenar (dari impression → duit)
+
+```
+Post X / reply komuniti  →  klik link  →  cuba demo  →  signup  →  bayar
+     (100%)                 (5-15%)       (30-50%)      (20-40%)   (5-15%)
+```
+
+Realiti kasar: **100 post relevan ≈ 1-3 jualan**. Nak 10 jualan/bln = kena aktif setiap hari, bukan tunggu viral.
+
+---
+
+## 3. 3 Aksi Harian (total ~45 minit)
+
+| # | Aksi | Kenapa | Sasaran |
 |---|---|---|---|
-| **Prop Firm Traders** | Trading FTMO, FundingPips, E8, Alpha Capital | Daily drawdown rules — one mistake = fail the challenge | "Kill Switch = never blow your prop account" |
-| **Retail Gold Traders** | Everyday XAUUSD traders | No consistency, emotional trading | "See exactly where your money leaks" |
-| **Trading Educators** | Coaches, Discord/TG community owners | Need a tool for students | White-label / group plan for their community |
+| 1 | **1 Share Card/hari** di X | Kau dah ada tool. P&L sebenar kau = content. Percuma, branded auto. | 1 card → 200-500 impression |
+| 2 | **1 value post/hari** di X | Angle: kill switch, daily loss limit, revenge trading, prop firm rules | 1 post → bina trust |
+| 3 | **3-5 reply/hari** dalam komuniti prop firm (Discord FTMO/FundingPips, r/Forex) | Ini conversion tertinggi — orang tengah cari tool | 3-5 reply bernilai |
 
-**Priority: Prop firm traders first** — they have the strongest pain (they pay for challenges) and are willing to pay for tools.
-
----
-
-## 3. Unique Selling Proposition (USP)
-
-> **"The only XAUUSD journal with a built-in Kill Switch — discipline as a product, not an afterthought."**
-
-One-liner:
-> *"Your strategy makes you money. Your discipline keeps it. The Gold Plan does both."*
+**JANGAN buat 7 channel sekaligus.** Fokus X + komuniti prop firm. Channel lain tunggu bila dah ada 10 jualan pertama.
 
 ---
 
-## 4. Channels & Tactics
+## 4. Killer Pitch (guna copy ni, jangan reka sendiri)
 
-### A. Organic Social (free, high-leverage)
-- **X/Twitter** — post daily Share Cards with P&L + lessons. Gold trading Twitter (#XAUUSD) is massive. 1 card/day = compounding following.
-- **Instagram** — Share Cards as 4:5 posts + Reels of the dashboard.
-- **TikTok** — "I built a Kill Switch that stops me blowing my account" — story-driven, 30-sec clips.
-- **Telegram** — free channel: "XAUUSD Journal" posting daily discipline tips + cards.
-- **YouTube** — 1 video: "The free tool that stopped me blowing my prop account" (tutorial + results).
+> "Your strategy makes you money. Your discipline keeps it. The Gold Plan does both."
 
-### B. Prop Firm Communities (highest conversion)
-- Post in **FTMO / FundingPips / E8 Discord servers** — "How do you track your daily drawdown? I built a free tool."
-- Answer questions in **Reddit** r/Forex, r/PropTrading, r/DayTrading — provide value, mention the tool when relevant.
-- **Facebook groups** (Prop Firm, XAUUSD) — English + international groups.
+> "One avoided bad trade pays for the whole year. $149, once. Stop blowing your prop account."
 
-### C. Content Engine (SEO + authority)
-- **Blog/landing page** (thegoldplan.app):
-  - "XAUUSD Daily Loss Limit: Why You Keep Blowing Your Account"
-  - "Prop Firm Rules Explained: FTMO vs FundingPips (and how to pass)"
-  - "Trading Psychology: Why You Revenge Trade (and how to stop)"
-- Target keywords: *xauusd journal, prop firm daily loss calculator, gold trading journal, ftmo pass rate tool*
-- Build backlinks by guest-posting on trading blogs.
-
-### D. Product-Led Growth
-- **Free tier** → users post Share Cards → each card is branded "◈ The Gold Plan" → free referrals
-- **Referral program**: "Refer a trader, get 1 month of Premium free"
-- **Waitlist** for Premium (auto-sync MT5, advanced analytics)
-
-### E. Paid Ads (after organic validation)
-- **Google Ads**: keywords "prop firm journal", "xauusd journal", "trading journal app"
-- **Meta Ads**: target interests = Forex, Day Trading, FTMO, Gold Trading (global, English-speaking markets first: US, UK, EU, UAE, Singapore, Australia)
-- **X Ads**: promoted Share Card posts
+> "The only XAUUSD journal with a built-in kill switch."
 
 ---
 
-## 5. Monetization (SaaS pricing, USD)
+## 5. Apa Yang PERLU Fix (bukan buat baru)
 
-| Plan | Price | Features |
+1. **Beli domain `thegoldplan.app`** — $9.99/tahun. Watermark share card, footer & OG tags semua dah tuding ke domain ni tapi dia TAK wujud. Setiap share card yang orang klik sekarang → mati. Ini bug #1 yang bunuh conversion. Beli di Vercel:
+   ```bash
+   cd ~/gold-plan-web && vercel domains buy thegoldplan.app
+   vercel domains add thegoldplan.app thegoldplan-web
+   ```
+2. **Pasang OG image + URL betul** — supaya link share kau nampak cantik di X/Telegram.
+3. **Tracking** — supaya kau tahu post mana yang bawa jualan. (minimum: link pendek + kira sendiri)
+
+---
+
+## 6. Target Mingguan (honest, boleh diukur)
+
+| Minggu | Sasaran | Bukti |
 |---|---|---|
-| **Free** | $0 | 1 account, manual logging, dashboard, share card |
-| **Pro** | $9/mo (or $79/yr) | Unlimited accounts, auto-import MT5, advanced analytics, API |
-| **Team/Coach** | $49/mo | 20 seats, white-label, student management |
-
-> 💡 Validate with **lifetime deal (LTD)** first — $49 one-time for early adopters (AppSumo-style). This funds development and builds a user base fast.
-
----
-
-## 6. 90-Day Launch Plan
-
-| Week | Actions | Goal |
-|---|---|---|
-| 1–2 | Polish product, write landing page, set up social accounts | Ready to show |
-| 3–4 | Launch on X + Telegram, post 1 Share Card/day, join 10 prop Discord servers | First 100 users |
-| 5–6 | YouTube tutorial + TikTok clips + Reddit posts | 500 users |
-| 7–8 | Launch waitlist + LTD, start referral program | First revenue |
-| 9–12 | Iterate, testimonials, Google/Meta ads | 2,000 users |
+| 1 | Domain live + 5 share card + 10 reply komuniti | 5 post, 0-1 jualan |
+| 2 | 7 share card + 15 reply + 2 value post | 7 post, 1-2 jualan |
+| 3 | Kekal + mula repurpose post terbaik ke thread | 2-3 jualan |
+| 4 | 10 jualan kumulatif tercapai | RM200/hari runway |
 
 ---
 
-## 7. KPIs to Track
+## 7. Realiti (jangan tipu diri)
 
-| Metric | Target (90 days) |
-|---|---|
-| Sign-ups | 2,000 |
-| Weekly active users | 500 |
-| Share Cards posted | 1,000 |
-| Conversion to Pro | 3–5% |
-| Referral rate | 15% |
+- RM200/hari tak datang minggu pertama. Datang selepas ~3-4 minggu content konsisten.
+- Tiada shortcut. Produk siap, payment siap — yang kurang cuma **traffic harian**.
+- Kalau share card tak dipost hari ni, jualan hari ni = 0. Ini kerja content, bukan kerja produk.
 
 ---
 
-## 8. Brand Voice
-
-- **Confident, direct, no fluff** — speak like a profitable trader, not a marketer
-- **Discipline-first** — every message ties back to "don't blow your account"
-- **Numbers-driven** — show real P&L, real win rates
-- Tagline: **"Trade with a plan. Protect your capital. Grow with discipline."**
-
----
-
-## 9. What We Need to Build (Roadmap)
-
-1. **Landing page** — thegoldplan.app with clear pitch + screenshots
-2. **Sign-up flow** — public registration (currently private)
-3. **Auto-import** — connect MT5 report file → auto parse (we already have the parser)
-4. **Pro tier** — Stripe billing
-5. **Referral system** — unique links + rewards
-6. **Multi-language** — English first, then Spanish, Arabic, Chinese, Portuguese
-
----
-
-## 10. Competitive Landscape
-
-| Competitor | Weakness | Our edge |
-|---|---|---|
-| Edgewonk | Expensive, desktop, old UX | Free, mobile-first, Kill Switch |
-| Tradezella | US-stock focused | Built for XAUUSD + prop firms |
-| Notion/Sheets | No automation, no discipline | Purpose-built, gamified |
-| MyFxBook | Auto-stats only, no journaling | Journal + psychology + Kill Switch |
-
-**Our moat:** The **Kill Switch** + **Share Card** combo. Nobody else turns discipline into a social, shareable product.
-
----
-
-*Prepared for The Gold Plan — global launch.* ◈
+*Dikemas kini untuk padan dengan harga LIVE ($19/$149), bukan versi lama ($9/LTD $49).* ◈

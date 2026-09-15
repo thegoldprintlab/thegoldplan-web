@@ -181,7 +181,7 @@ export default function Landing() {
           </span>
           The Gold Plan
         </span>
-        <span className="landing-footer-note">thegoldplan.app — built for deliberate XAUUSD trading.</span>
+        <span className="landing-footer-note">thegoldplan-web.vercel.app — built for deliberate XAUUSD trading.</span>
       </footer>
     </div>
   )

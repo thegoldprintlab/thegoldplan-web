@@ -69,7 +69,7 @@ export default function ShareCard({ trades }: { trades: Trade[] }) {
       ctx.fillText('The Gold Plan', 48, 1280)
       ctx.fillStyle = subtle
       ctx.font = '400 20px Inter, system-ui, sans-serif'
-      ctx.fillText('thegoldplan.app', 48, 1312)
+      ctx.fillText('thegoldplan-web.vercel.app', 48, 1312)
       const a = document.createElement('a')
       a.download = `gold-plan-${today}.png`
       a.href = canvas.toDataURL('image/png')
