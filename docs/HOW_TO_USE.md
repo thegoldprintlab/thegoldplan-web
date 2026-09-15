@@ -19,7 +19,7 @@ The Gold Plan is a **web-based trading journal** for gold traders. It replaces m
 
 ## 2. Getting Started
 
-1. Go to **https://thegoldplan-web.vercel.app**
+1. Go to **https://thegoldplan.app** (or https://thegoldplan-web.vercel.app)
 2. **Log in** with your email & password (or sign up).
 3. You land on the **Dashboard** — your trading command center.
 
@@ -155,7 +155,7 @@ Create a Shortcut → "Get Contents of URL" → paste this. Now logging a trade 
 ## FAQ
 
 **Q: Is it free?**
-A: Yes, current version is free. Premium features (more accounts, advanced analytics) coming soon.
+A: There's a free demo (try every feature with sample data, no signup) plus a free month via promo code. Full access is $19/month or $149 lifetime.
 
 **Q: Does it connect to MT5 automatically?**
 A: No auto-sync yet. You log trades manually or import from your MT5 report. Auto-sync is on the roadmap.
