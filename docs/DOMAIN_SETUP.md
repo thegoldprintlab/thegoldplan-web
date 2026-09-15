@@ -1,6 +1,9 @@
 # 🌐 D1 — Domain Rasmi (thegoldplan.app)
 
-> Status: DOMAIN TERSEDIA. Tunggu bos beli & verify.
+> Status: DITANGGUHKAN — bos tak beli domain (kekangan kos).
+> Link hidup sekarang: **https://thegoldplan-web.vercel.app**
+> Sebab link mati bunuh conversion, SEMUA tempat dah ditukar ke URL hidup.
+> Rujuk `docs/URL_POLICY.md`. Beli domain bila ada bajet.
 
 ## Keputusan
 

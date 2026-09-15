@@ -57,11 +57,9 @@ Realiti kasar: **100 post relevan ≈ 1-3 jualan**. Nak 10 jualan/bln = kena akt
 
 ## 5. Apa Yang PERLU Fix (bukan buat baru)
 
-1. **Beli domain `thegoldplan.app`** — $9.99/tahun. Watermark share card, footer & OG tags semua dah tuding ke domain ni tapi dia TAK wujud. Setiap share card yang orang klik sekarang → mati. Ini bug #1 yang bunuh conversion. Beli di Vercel:
-   ```bash
-   cd ~/gold-plan-web && vercel domains buy thegoldplan.app
-   vercel domains add thegoldplan.app thegoldplan-web
-   ```
+1. **Domain belum dibeli** (DITANGGUHKAN — kekangan kos). Semua link guna
+   `thegoldplan-web.vercel.app`. Ni tak halang jualan — cuma URL nampak kurang
+   cantik. Beli bila ada duit, lepas tu tukar 4 tempat (rujuk `URL_POLICY.md`).
 2. **Pasang OG image + URL betul** — supaya link share kau nampak cantik di X/Telegram.
 3. **Tracking** — supaya kau tahu post mana yang bawa jualan. (minimum: link pendek + kira sendiri)
 

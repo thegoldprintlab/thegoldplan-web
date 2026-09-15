@@ -19,7 +19,7 @@ The Gold Plan is a **web-based trading journal** for gold traders. It replaces m
 
 ## 2. Getting Started
 
-1. Go to **https://thegoldplan.app** (or https://thegoldplan-web.vercel.app)
+1. Go to **https://thegoldplan-web.vercel.app**
 2. **Log in** with your email & password (or sign up).
 3. You land on the **Dashboard** — your trading command center.
 
