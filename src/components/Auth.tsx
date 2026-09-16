@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { getSupabase } from '../lib/supabase'
+import { trackEvent } from '../lib/analytics'
 
 // Email verification is gated behind a flag because it only works once Supabase
 // Custom SMTP is configured. With the built-in mailer (~2 emails/hour) turning this
@@ -77,6 +78,7 @@ export default function Auth() {
       const { error } = await sb.auth.signInWithPassword({ email, password })
       setBusy(false)
       if (error) setMsg('Account created. Please log in.')
+      else trackEvent('sign_up', { method: 'password' })
     } catch {
       setBusy(false)
       setMsg('Network error. Please try again.')

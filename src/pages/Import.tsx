@@ -4,6 +4,7 @@ import { parseMt5Excel } from '../lib/mt5Import'
 import { getSupabase } from '../lib/supabase'
 import { isDemoPreview } from '../lib/demo'
 import UpgradeGate from '../components/UpgradeGate'
+import { trackEvent } from '../lib/analytics'
 
 /** Import MT5 Excel report → parse → bulk insert trades. */
 export default function ImportPage() {
@@ -50,6 +51,9 @@ export default function ImportPage() {
 
       const nets = rows.reduce((a, r) => a + r.profit_loss, 0)
       setMsg({ ok: true, text: `Successfully imported ${rows.length} trades (net ${nets.toFixed(2)}) into "${account}".` })
+      // Activation signal — a paying user who actually imports is far likelier
+      // to stay. Tracked with count only; no trade data leaves the browser.
+      trackEvent('mt5_import_success', { trade_count: rows.length, account_count: settings.accounts.length })
       setFile(null)
       await reload()
     } catch (err) {

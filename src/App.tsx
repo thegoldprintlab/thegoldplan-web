@@ -5,6 +5,7 @@ import { BillingProvider } from './context/BillingContext'
 import Auth from './components/Auth'
 import Nav from './components/Nav'
 import ThemeSwitcher from './components/ThemeSwitcher'
+import AnalyticsRouteTracker from './components/AnalyticsRouteTracker'
 import Dashboard from './pages/Dashboard'
 import InputForm from './pages/InputForm'
 import TradingLog from './pages/TradingLog'
@@ -112,6 +113,7 @@ function Shell() {
 export default function App() {
   return (
     <BrowserRouter>
+      <AnalyticsRouteTracker />
       <AuthProvider>
         <Routes>
           {/* Public landing page — no login needed */}

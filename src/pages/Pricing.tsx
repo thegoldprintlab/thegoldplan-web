@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useBilling } from '../context/BillingContext'
 import { PLANS } from '../lib/plans'
 import { checkoutUrl } from '../lib/billing'
+import { trackEvent } from '../lib/analytics'
 
 /** Public pricing page (B1) — no login needed to browse. */
 export default function Pricing() {
@@ -13,10 +14,14 @@ export default function Pricing() {
 
   function go(paymentLink: string, planId: string) {
     if (!paymentLink) {
+      trackEvent('checkout_unavailable', { plan_id: planId })
       setBusy(planId)
       setTimeout(() => setBusy(null), 2500)
       return
     }
+    // Funnel step: the click that hands off to Stripe. Pair with Stripe's own
+    // checkout.session.completed webhook to measure click -> paid conversion.
+    trackEvent('begin_checkout', { plan_id: planId, currency: 'USD' })
     const url = checkoutUrl(paymentLink, session?.user?.email ?? null, session?.user?.id ?? null)
     window.location.href = url
   }
