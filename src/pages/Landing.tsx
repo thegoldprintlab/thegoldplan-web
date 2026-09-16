@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { CookieSettingsLink } from '../components/CookieBanner'
 
 export default function Landing() {
   return (
@@ -181,7 +182,12 @@ export default function Landing() {
           </span>
           The Gold Plan
         </span>
-        <span className="landing-footer-note">thegoldplan-web.vercel.app — built for deliberate XAUUSD trading.</span>
+        <span className="landing-footer-note">
+          thegoldplan-web.vercel.app — built for deliberate XAUUSD trading.
+        </span>
+        <span className="landing-footer-note">
+          <Link to="/privacy">Privacy</Link> · <CookieSettingsLink />
+        </span>
       </footer>
     </div>
   )

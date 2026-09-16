@@ -1,7 +1,19 @@
 // Sentry must initialise before any other app import so it can patch globals
 // and register handlers ahead of React and the router.
 import { initSentry, Sentry } from './lib/sentry'
+import { setDefaultConsent, restoreConsent } from './lib/consent'
 import { initAnalytics } from './lib/analytics'
+import CookieBanner, { CookieSettingsLink } from './components/CookieBanner'
+
+// ORDER IS LOAD-BEARING.
+// 1. Consent Mode defaults MUST be pushed before gtag('config') runs, otherwise
+//    the first page_view fires with no consent state and writes cookies to
+//    visitors who have not agreed — exactly what GDPR forbids.
+// 2. Then restore any prior choice so returning visitors aren't double-counted
+//    as cookieless pings.
+// 3. Only then load the Google tag.
+setDefaultConsent()
+restoreConsent()
 initSentry()
 initAnalytics()
 
@@ -31,6 +43,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       )}
     >
       <App />
+      <CookieBanner />
     </Sentry.ErrorBoundary>
   </React.StrictMode>,
 )

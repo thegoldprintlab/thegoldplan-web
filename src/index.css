@@ -1282,3 +1282,70 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 @media (max-width: 560px) {
   .upgrade-gate { flex-direction: column; align-items: flex-start; }
 }
+
+/* ── Cookie consent banner (GDPR) ────────────────────────── */
+.cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  padding: 14px 16px;
+  background: var(--surface, #14171f);
+  border-top: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.28);
+  animation: cookie-rise 0.28s ease-out;
+}
+
+@keyframes cookie-rise {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.cookie-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.cookie-text {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--text-muted, #9aa4b2);
+  flex: 1 1 380px;
+}
+
+.cookie-text a { color: var(--primary); text-decoration: underline; }
+
+.cookie-actions {
+  display: flex;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.cookie-actions .btn { padding: 8px 18px; font-size: 0.86rem; }
+
+.cookie-settings-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Respect users who ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  .cookie-banner { animation: none; }
+}
+
+@media (max-width: 560px) {
+  .cookie-actions { width: 100%; }
+  .cookie-actions .btn { flex: 1; }
+}

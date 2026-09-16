@@ -16,6 +16,7 @@ import HowToUse from './pages/HowToUse'
 import ImportPage from './pages/Import'
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
+import Privacy from './pages/Privacy'
 import { getSupabase } from './lib/supabase'
 import { exitDemoPreview } from './lib/demo'
 
@@ -120,6 +121,8 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           {/* Public pricing page — no login needed */}
           <Route path="/pricing" element={<Pricing />} />
+          {/* Privacy policy — public, linked from footer + cookie banner */}
+          <Route path="/privacy" element={<Privacy />} />
           {/* Public how-to-use — no login needed */}
           <Route path="/help" element={<HowToUse />} />
           {/* The authenticated app */}
