@@ -15,6 +15,15 @@ const GA_ID = import.meta.env.VITE_GA_ID as string | undefined
 /** True when the Google tag is actually on the page. */
 export const gaEnabled = Boolean(GA_ID) && import.meta.env.PROD
 
+/**
+ * Set once the gtag.js <script> has been injected. We must NOT use `window.gtag`
+ * as the "already initialised" signal: consent.ts creates a queue stub early
+ * (setDefaultConsent runs before this), so the presence of window.gtag says
+ * nothing about whether the tag itself has loaded. Using it as the guard made
+ * initAnalytics bail out and silently never load GA at all.
+ */
+let tagInjected = false
+
 declare global {
   interface Window {
     dataLayer?: unknown[]
@@ -28,18 +37,23 @@ declare global {
  */
 export function initAnalytics(): boolean {
   if (!gaEnabled) return false
-  if (typeof window === 'undefined' || window.gtag) return true
+  if (typeof window === 'undefined') return false
+  if (tagInjected) return true
 
   const script = document.createElement('script')
   script.async = true
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`
   document.head.appendChild(script)
+  tagInjected = true
 
+  // gtag stub may already exist (consent.ts creates it), so only define if absent.
   window.dataLayer = window.dataLayer || []
-  // gtag must push the `arguments` object itself, not a spread array.
-  window.gtag = function gtag() {
-    // eslint-disable-next-line prefer-rest-params
-    window.dataLayer!.push(arguments)
+  if (!window.gtag) {
+    // gtag must push the `arguments` object itself, not a spread array.
+    window.gtag = function gtag() {
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer!.push(arguments)
+    }
   }
   window.gtag('js', new Date())
   // send_page_view:false — we fire page_view ourselves on route change below.
