@@ -1,0 +1,13 @@
+import { chromium } from 'playwright'
+const b = await chromium.launch()
+const ctx = await b.newContext()
+const p = await ctx.newPage()
+p.on('pageerror', e => console.log('PAGE ERROR:', e.message.slice(0,200)))
+await p.goto('http://localhost:4173/', { waitUntil:'domcontentloaded' })
+await p.waitForTimeout(2500)
+console.log('PROD flag:', await p.evaluate(()=> import.meta?.env?.PROD))
+console.log('gtag type:', await p.evaluate(()=> typeof window.gtag))
+console.log('dataLayer len:', await p.evaluate(()=> (window.dataLayer||[]).length))
+console.log('full dataLayer:')
+console.log(JSON.stringify(await p.evaluate(()=> (window.dataLayer||[]).map(a=>Array.from(a)))))
+await b.close()
