@@ -43,6 +43,8 @@ export function initAnalytics(): boolean {
   }
   window.gtag('js', new Date())
   // send_page_view:false — we fire page_view ourselves on route change below.
+  // Consent Mode defaults were already pushed in main.tsx before this runs, so
+  // no cookie is written until the visitor accepts the banner.
   window.gtag('config', GA_ID, { send_page_view: false })
   return true
 }
