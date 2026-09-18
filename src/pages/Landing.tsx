@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { CookieSettingsLink } from '../components/CookieBanner'
+import { ProofSection, StepsSection, FaqSection } from '../components/Proof'
 
 export default function Landing() {
   return (
@@ -32,14 +33,14 @@ export default function Landing() {
         <div className="landing-hero-inner">
           <div className="kicker">XAUUSD Trading Journal</div>
           <h1 className="landing-title">
-            Trade gold with
+            Stop turning one red gold trade
             <br />
-            <span className="landing-title-accent">discipline &amp; clarity.</span>
+            <span className="landing-title-accent">into a failed daily drawdown.</span>
           </h1>
           <p className="landing-sub">
-            The Gold Plan is a trading journal built for XAUUSD — log every trade, track
-            your P&amp;L, win rate, sessions and emotions, and protect your account with a
-            daily loss kill switch.
+            The Gold Plan is a trading journal built for XAUUSD. Set one daily loss limit per
+            account, log every trade, and see exactly which sessions, setups and emotions are
+            costing you — before the account pays for it.
           </p>
           <div className="landing-hero-actions">
             <Link className="btn btn-primary btn-lg" to="/app?demo=1">
@@ -52,15 +53,15 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* ── Stats strip ──────────────────────────────────── */}
+      {/* ── Stats strip (product facts, not social proof) ── */}
       <section className="landing-strip">
         <div className="landing-strip-item">
-          <div className="landing-strip-num">1517</div>
-          <div className="landing-strip-label">trades analysed</div>
+          <div className="landing-strip-num">1,517</div>
+          <div className="landing-strip-label">trades in the demo dataset</div>
         </div>
         <div className="landing-strip-item">
           <div className="landing-strip-num">3</div>
-          <div className="landing-strip-label">accounts tracked</div>
+          <div className="landing-strip-label">accounts in the demo</div>
         </div>
         <div className="landing-strip-item">
           <div className="landing-strip-num">6</div>
@@ -71,6 +72,9 @@ export default function Landing() {
           <div className="landing-strip-label">your data, private</div>
         </div>
       </section>
+
+      {/* ── Problem / founder note / what this is not ────── */}
+      <ProofSection />
 
       {/* ── Features ─────────────────────────────────────── */}
       <section className="landing-section">
@@ -149,6 +153,23 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {/* ── How it works + FAQ ───────────────────────────── */}
+      <StepsSection />
+
+      <section className="landing-section">
+        <div className="panel landing-notice landing-honest" role="note">
+          <h3>No testimonials here yet — on purpose</h3>
+          <p>
+            This app is new and I would rather show you nothing than show you a quote I made up.
+            What you can check today: open the demo with real sample data, read the{' '}
+            <Link to="/help">full guide</Link>, or email me and ask me anything before you pay.
+            That is the honest version of proof.
+          </p>
+        </div>
+      </section>
+
+      <FaqSection />
 
       {/* ── CTA ──────────────────────────────────────────── */}
       <section className="landing-section landing-cta-band">

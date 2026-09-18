@@ -5,6 +5,7 @@ import { useBilling } from '../context/BillingContext'
 import { PLANS } from '../lib/plans'
 import { checkoutUrl } from '../lib/billing'
 import { trackEvent } from '../lib/analytics'
+import { FaqSection } from '../components/Proof'
 
 /** Public pricing page (B1) — no login needed to browse. */
 export default function Pricing() {
@@ -92,6 +93,8 @@ export default function Pricing() {
           Secure checkout by Stripe. Cancel anytime from your account page.
         </p>
       </section>
+
+      <FaqSection title="Before you pay" />
     </div>
   )
 }
