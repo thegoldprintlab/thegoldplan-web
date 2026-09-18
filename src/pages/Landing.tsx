@@ -53,15 +53,17 @@ export default function Landing() {
         </div>
       </header>
 
-      {/* ── Stats strip (product facts, not social proof) ── */}
+      {/* ── Stats strip — the author's own accounts, not the demo dataset.
+              NOTE: these are static copy. If the real numbers change, update
+              them here; they are not read from the database. ── */}
       <section className="landing-strip">
         <div className="landing-strip-item">
           <div className="landing-strip-num">1,517</div>
-          <div className="landing-strip-label">trades in the demo dataset</div>
+          <div className="landing-strip-label">trades logged in my own accounts</div>
         </div>
         <div className="landing-strip-item">
           <div className="landing-strip-num">3</div>
-          <div className="landing-strip-label">accounts in the demo</div>
+          <div className="landing-strip-label">accounts I run this journal on</div>
         </div>
         <div className="landing-strip-item">
           <div className="landing-strip-num">6</div>

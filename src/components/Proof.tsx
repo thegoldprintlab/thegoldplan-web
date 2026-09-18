@@ -6,8 +6,10 @@ import type { ReactNode } from 'react'
  *
  * Rules for this file (do not break them):
  *  - No invented testimonials, user counts, pass rates or P&L claims.
- *  - Any number shown must come from the demo dataset or be a plain product fact,
- *    and it must say so in the label.
+ *  - Numbers on the landing strip are the founder's OWN account figures,
+ *    labelled as such ("my own accounts") — never dressed up as customer
+ *    count or social proof. The demo dataset is separate (4 accounts / ~107
+ *    seeded trades) and must never be quoted as real user activity.
  *  - Compliance wording: journaling software, not signals, not a broker.
  *    The Kill Switch warns; it never closes a trade.
  */
@@ -36,9 +38,10 @@ export function ProofSection() {
         <div className="panel landing-card">
           <h3>Founder note</h3>
           <p>
-            Built by an XAUUSD trader, for XAUUSD traders. I got tired of spreadsheets that told me
-            my P&amp;L but never told me to <i>stop</i>. So the Kill Switch was built first and the
-            dashboard second. Everything here exists because I needed it on my own account.
+            Built by an XAUUSD trader, for XAUUSD traders. I run this journal on my own 3 accounts —
+            1,517 trades logged so far — and I got tired of spreadsheets that told me my P&amp;L but
+            never told me to <i>stop</i>. So the Kill Switch was built first and the dashboard
+            second. Everything here exists because I needed it on my own account.
           </p>
         </div>
       </div>
