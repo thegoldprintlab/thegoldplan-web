@@ -1157,15 +1157,80 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .landing-footer-note { color: var(--ink-subtle); font-size: 0.82rem; }
 
+/* Trust layer: problem / founder note / compliance / steps */
+.landing-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.landing-grid-2 .landing-card h3 { margin-top: 0; }
+
+.landing-notice {
+  margin-top: 14px;
+  background: color-mix(in srgb, var(--primary) 5%, var(--surface));
+  border-color: var(--hairline-strong);
+}
+
+.landing-notice h3 { margin: 0 0 10px; font-size: 1rem; font-weight: 600; }
+
+.landing-notice-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 20px;
+}
+
+.landing-notice-list li {
+  color: var(--ink-muted);
+  font-size: 0.87rem;
+  line-height: 1.55;
+  padding-left: 14px;
+  position: relative;
+}
+
+.landing-notice-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.landing-step-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-honest { text-align: center; }
+.landing-honest p { color: var(--ink-muted); font-size: 0.9rem; line-height: 1.6; margin: 0 auto; max-width: 640px; }
+.landing-honest a { color: var(--primary); text-decoration: none; }
+.landing-honest a:hover { text-decoration: underline; }
+
+.landing-section .landing-grid + .landing-hero-actions { margin-top: 32px; }
+
 /* Responsive */
 @media (max-width: 820px) {
   .landing-grid { grid-template-columns: repeat(2, 1fr); }
+  .landing-notice-list { grid-template-columns: 1fr; }
   .landing-strip { grid-template-columns: repeat(2, 1fr); margin-top: -20px; }
 }
 
 @media (max-width: 560px) {
   .landing-grid { grid-template-columns: 1fr; }
+  .landing-grid-2 { grid-template-columns: 1fr; }
   .landing-strip { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .landing-strip-num { font-size: 1.35rem; }
+  .landing-strip-label { font-size: 0.76rem; }
   .landing-hero { padding-top: 20px; }
   .landing-hero-inner { padding-top: 8px; }
   .landing-cta-card { padding: 40px 20px; }
