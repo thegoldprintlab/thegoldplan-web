@@ -6,11 +6,7 @@ const MAP = { cent: 'Cent', '10k': 'Prop 10k', '5k': 'Prop 5k' };
 
 async function main() {
   const client = new Client({
-    host: 'aws-0-ap-northeast-2.pooler.supabase.com',
-    port: 6543,
-    user: 'postgres.REMOVED_PROJECT_REF',
-    password: '***REMOVED-STILL-VALID-PASSWORD-ROTATE-NOW***',
-    database: 'postgres',
+    connectionString: process.env.DATABASE_URL,  // set dalam .env.local (jangan commit)
     ssl: { rejectUnauthorized: false },
   });
   await client.connect();
