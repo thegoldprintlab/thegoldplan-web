@@ -1,11 +1,12 @@
 # 🌐 D1 — Domain Rasmi The Gold Plan
 
-> Status (29 Sep 2026, 16:47): **DAH DIBELI — MENUNGGU PROPAGATION DNS.**
-> `thegoldplan.my` = ACTIVE di Porkbun + MYNIC. DNS Vercel dah diset di Porkbun.
-> Tapi registry `e.nic.my` belum delegate NS ke Porkbun → A record belum resolve
-> dari internet. Ini normal (minit → beberapa jam). URL rasmi KEKAL
-> `thegoldplan.my` sampai `curl -s -o /dev/null -w "%{http_code}"`
-> pulang 200. Rujuk `docs/URL_POLICY.md`.
+> Status (29 Sep 2026, 17:01): **✅ LIVE PENUH.**
+> `thegoldplan.my` + `www.thegoldplan.my` → HTTPS 200, cert Let's Encrypt sah.
+> Semua kod + docs dah tukar ke URL baru. `og:url` live =
+> `https://thegoldplan.my`. `thegoldplan-web.vercel.app` kekal jalan (fallback).
+>
+> Yang tinggal Cuma 2 kerja manual (perlu login, tak boleh automate):
+> Stripe webhook endpoint + Google Search Console.
 
 ## Fakta Pendaftaran (verified via Porkbun API + MYNIC RDAP)
 
