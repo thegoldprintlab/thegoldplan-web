@@ -6,12 +6,6 @@
       "has": [{ "type": "host", "value": "www.thegoldplan.my" }],
       "destination": "https://thegoldplan.my/$1",
       "permanent": true
-    },
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "thegoldplan-web.vercel.app" }],
-      "destination": "https://thegoldplan.my/$1",
-      "permanent": true
     }
   ],
   "rewrites": [
