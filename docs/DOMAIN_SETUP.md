@@ -1,75 +1,59 @@
 # 🌐 D1 — Domain Rasmi The Gold Plan
 
-> Status: **SIAP DIPILIH, TUNGGU BAYARAN** (29 Sep 2026).
-> Link hidup sekarang: **https://thegoldplan-web.vercel.app**
-> Semua link dalam kod/docs KEKAL guna URL hidup sampai domain betul-betul aktif.
-> Rujuk `docs/URL_POLICY.md`. Jangan tukar apa-apa sebelum domain pass HTTPS.
+> Status (29 Sep 2026, 16:47): **DAH DIBELI — MENUNGGU PROPAGATION DNS.**
+> `thegoldplan.my` = ACTIVE di Porkbun + MYNIC. DNS Vercel dah diset di Porkbun.
+> Tapi registry `e.nic.my` belum delegate NS ke Porkbun → A record belum resolve
+> dari internet. Ini normal (minit → beberapa jam). URL rasmi KEKAL
+> `thegoldplan-web.vercel.app` sampai `curl -s -o /dev/null -w "%{http_code}"`
+> pulang 200. Rujuk `docs/URL_POLICY.md`.
 
-## Keputusan (29 Sep 2026)
+## Fakta Pendaftaran (verified via Porkbun API + MYNIC RDAP)
 
-Calon: **`thegoldplan.my`** — daftar di **Porkbun** (sama akaun dengan `alunara.my`).
+| Perkara | Nilai |
+|---|---|
+| Domain | `thegoldplan.my` |
+| Registrar | Porkbun LLC (NS: curitiba/fortaleza/maceio/salvador.ns.porkbun.com) |
+| Didaftar | 2026-09-29 16:42 UTC |
+| Expire | 2027-09-29 |
+| Auto-renew | **ON** |
+| Harga thn 1 | $2.37 ≈ RM10.45 (termasuk 8% SST) |
+| Renewal | $26.06 ≈ RM115/tahun |
+| WHOIS privacy | **Tidak disokong `.my`** — nama + alamat registrant publik |
+| Security lock | ON (`client transfer prohibited` + `client delete prohibited`) |
 
-| Tempat beli | Harga tahun 1 | Renewal | Nota |
-|---|---|---|---|
-| **Porkbun** ⭐ | $2.37 (RM9.67, +SST ≈ RM10.45) | $26.06 (RM115) | promosi tahun pertama |
-| Vercel | $19.99 (RM88) | $38.99 (RM171) | **jangan** — 9x harga Porkbun |
-| Exabytes (MYNIC) | promo RM1–7.99 (Double Day je) | RM139 | promo tamat 16 Sep 2026 |
-
-Availability disahkan 29 Sep 2026 (bukan tebakan):
-- `thegoldplan.my` → MYNIC RDAP: *"available for registration"* + Porkbun API `avail=yes`
-- `goldplan.my` → available juga (backup)
-- `thegoldplan.com` / `goldplan.com` / `goldplan.info` / `goldplan.store` → **dah diambil** (parking Afternic, jual balik mahal)
-
-### ⚠️ Risiko kena tahu awal
-
-1. **Renewal cliff.** RM10 tahun pertama → RM115 tahun kedua. Bukan harga tetap.
-   Alternatif lari: `.com` @ Porkbun $11.08 flat (RM49 pertama DAN renewal) — tapi tak bawah RM10.
-2. **`.my` tiada WHOIS privacy** (`whoisPrivacySupported: false`). Nama + alamat registrant
-   jadi **publik** dalam WHOIS. Guna alamat bisnes, bukan alamat rumah.
-3. **MYNIC wajib dokumen.** Domain tak aktif sampai MyKad/passport dihantar & diverify
-   (Triple-I policy, biasa 24–48 jam). Bukan blocker, tapi ada langkah manual.
-
-## Cara Beli
-
-```bash
-# 1. Topup + verify — WAJIB. API/create akan gagal tanpa ni.
-#    Balance sekarang $0.00 (semak: python3 -c ... /account/balance)
-#    Verifikasi email + no. telefon akaun Porkbun (Dashboard → Account)
-#    Topup sekurang-kurangnya $2.37 (≈RM10)
-
-# 2. Beli (DUA pilihan)
-#    (a) Dashboard Porkbun — paling selamat, nampak harga & auto-renew toggle
-#    (b) CLI Vercel TIDAK BOLEH guna agent (purchase_requires_user):
-cd ~/gold-plan-web && vercel domains buy thegoldplan.my   # kena taip sendiri, interaktif
-
-# 3. Upload dokumen MyKad bila Porkbun/MYNIC minta (email, 24–48 jam)
-```
-
-> API Porkbun pun ada: `POST /domain/create/thegoldplan.my` dengan
-> `{"cost": 237, "agreeToTerms": "yes"}` (cost = US cents, kena padan quote
-> `/domain/checkDomain`). Tapi akaun kena verified + ada balance dulu.
-> Tool sedia ada: `~/tools/porkbun.py` (kredensial di `~/.config/porkbun/env`).
-
-## DNS (sama macam alunara.my — proven)
-
-Selepas beli, di Porkbun DNS:
+## DNS (dah diset di Porkbun)
 
 | Type | Host | Content |
 |---|---|---|
 | A | `@` | `76.76.21.21` |
 | CNAME | `www` | `cname.vercel-dns.com` |
 
-## Pasang ke Project
+> ⚠️ **Gotcha:** Porkbun auto-letak parking record masa beli —
+> `ALIAS @ → pixie.porkbun.com` + wildcard `CNAME * → pixie.porkbun.com`.
+> Wildcard CNAME tu **berkonflik** dengan A record (RFC 1034: CNAME tak boleh
+> wujud sama-sama dengan record lain pada nama sama) — Porkbun tolak A dengan
+> `RECORD_CONFLICT`. Kena delete parking dulu. Watcher handle ni automatik.
+
+## Vercel
 
 ```bash
 cd ~/gold-plan-web
-vercel domains add thegoldplan.my thegoldplan-web
-vercel domains verify thegoldplan.my
-vercel alias set thegoldplan.my thegoldplan-web
-curl -s -o /dev/null -w "%{http_code}\n" https://thegoldplan.my   # 200 = hidup
+vercel domains add thegoldplan.my thegoldplan-web   # ✅ dah buat
+vercel domains verify thegoldplan.my                # → invalid-configuration (tunggu propagate)
+vercel alias set thegoldplan.my thegoldplan-web     # ✅ dah buat
 ```
 
-## Selepas Domain Aktif — Checklist 7 Tempat
+`vercel domains verify` pulang `invalid-configuration` sekarang SEBAB A record
+belum resolve — bukan salah config. Re-run bila propagation siap.
+
+## Watcher automatik
+
+- `~/tools/watch-thegoldplan.py` — idempotent: tunggu ACTIVE → buang parking →
+  set DNS → `vercel alias set` → poll HTTPS 5x60s.
+- Cron `thegoldplan-live-watch` (`9ce3ac810298`, tiap 20 min, 72 kali) —
+  check HTTPS senyap; **hantar Telegram bila domain hidup**.
+
+## Selepas Domain Hidup — Checklist 7 Tempat
 
 Kod:
 1. `src/components/ShareCard.tsx` (~baris 72) — watermark share card
@@ -84,13 +68,11 @@ Docs dalam repo:
 
 Luar kod:
 7. **Google Search Console** (akaun `mozacsuck48@gmail.com` — sama macam alunara.my):
-   tambah property `thegoldplan.my`, verify guna TXT record Porkbun
-   (contoh TXT sedia ada di alunara.my: `google-site-verification=...`)
+   tambah property `thegoldplan.my`, verify guna TXT record Porkbun.
 
 ## Nota
 
-- Selepas domain hidup, `thegoldplan-web.vercel.app` kekal jalan sebagai fallback.
-  Set `thegoldplan.my` sebagai **primary** dalam Vercel → Settings → Domains.
-- Auto-renew: Porkbun default OFF (macam `alunara.my`, `autoRenew: 0`). Set ON
-  kalau tak nak domain mati — tapi sedar renewal RM115/tahun.
-- `securityLock` hidupkan selepas aktif (halang transfer tanpa kebenaran).
+- Selepas domain hidup, set `thegoldplan.my` sebagai **primary** dalam Vercel →
+  Settings → Domains. `.vercel.app` kekal sebagai fallback.
+- Auto-renew dah ON. Sedar renewal RM115/tahun pada 2027-09-29.
+- `securityLock` dah ON (clientTransferProhibited + clientDeleteProhibited).
