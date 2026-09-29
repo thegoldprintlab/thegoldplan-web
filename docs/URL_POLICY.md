@@ -1,22 +1,16 @@
-# ◈ The Gold Plan — Workflow Fix: Tiada Domain (Zero-Cost)
+# ◈ The Gold Plan — Polisi URL
 
-> Konteks: domain TAK dibeli lagi. Semua link kena guna URL hidup:
-> **https://thegoldplan.my**
-> Kalau ada duit nanti, tukar balik — tapi JANGAN tulis domain yang belum wujud.
->
-> **Kemaskini 29 Sep 2026:** calon dah dipilih — **`thegoldplan.my`** (Porkbun,
-> $2.37 ≈ RM10 tahun pertama). Langkah beli + checklist 7 tempat tukar URL ada
-> dalam `docs/DOMAIN_SETUP.md`. Peraturan kat bawah ni masih berkuatkuasa
-> SEHINGGA domain pass HTTPS (`curl` pulang 200).
+> Status (29 Sep 2026): domain **LIVE dan rasmi** — **https://thegoldplan.my**
+> Semua link dalam kod, docs, vault, dan bank caption mesti guna URL ni.
 
 ## Rule
 
-1. **Satu URL sahaja** dalam semua tempat: `thegoldplan.my`
+1. **Satu URL sahaja** dalam semua tempat: `https://thegoldplan.my`
    - ✅ Share card watermark
    - ✅ Landing footer
-   - ✅ `og:url` dalam `index.html`
-   - ✅ Docs (HOW_TO_USE, PROJECT_DOCUMENTATION)
-   - ❌ JANGAN tulis `thegoldplan.app` sebelum domain dibeli — link mati = bunuh conversion
+   - ✅ `og:url` + `<link rel="canonical">` dalam `index.html`
+   - ✅ Docs + vault + bank caption cron
+   - ❌ JANGAN tulis `thegoldplan.app` — domain tu tak wujud, link mati = bunuh conversion
 
 2. Sebelum commit apa-apa yang sentuh URL: verify ia hidup.
    ```bash
@@ -24,24 +18,27 @@
    # 200 = OK. 000 = domain tak wujud, JANGAN guna.
    ```
 
-3. Kalau nak beli domain kemudian, semak dulu:
-   ```bash
-   cd ~/gold-plan-web
-   vercel domains inspect thegoldplan.app   # "Domain not found" = belum beli
-   vercel domains buy thegoldplan.app
-   vercel domains add thegoldplan.app thegoldplan-web
-   ```
-   Lepas beli, update 4 tempat di atas + Stripe webhook URL.
-   (URL pendek lebih kredibel untuk produk berbayar — tapi tak wajib untuk mula jual.)
+3. **Canonical + redirect (dah diset, jangan usik):**
+   - `www.thegoldplan.my` → 308 redirect ke apex (dalam `vercel.json`)
+   - Canonical tag → `https://thegoldplan.my/` (statik + dinamik per-route)
+   - ❌ **JANGAN tambah redirect untuk `thegoldplan-web.vercel.app`** — ia pecahkan
+     Stripe webhook (POST jadi GET bila redirect). Duplicate-content dikendalikan
+     oleh canonical tag sahaja.
+
+4. `.vercel.app` = **fallback kekal**. Ia mesti terus berfungsi:
+   - Stripe webhook endpoint lama masih point ke situ (sehingga bos tukar manual)
+   - Jangan padam domain `.vercel.app` dari projek Vercel
 
 ## Nota env
 
-- Vercel inject `NEXT_PUBLIC_*` dan `POSTGRES_*` walaupun ni projek Vite.
+- Vercel inject `NEXT_PUBLIC_*` dan `POSTGRES_*` walaupun projek ni Vite.
   Vite hanya baca `VITE_*`. `NEXT_PUBLIC_*` dah dibuang dari `.env.production`
   (duplikat — nilai sama ada dalam `VITE_*`/`SUPABASE_*`). Jangan tambah balik.
+- Tiada URL hardcoded dalam `api/` — semua guna `VERCEL_URL` / relative path.
+  Jangan hardcode `thegoldplan.my` dalam fungsi server.
 
-## Kalau guna link pendek percuma (pilihan)
+## Sejarah (kenapa dokumen ni wujud)
 
-Alternatif domain berbayar: guna redirect percuma (cth. Cloudflare Pages /
-`bit.ly`) untuk link share, tapi kekalkan `.vercel.app` dalam card/OG tags
-sebagai canonical, sebab redirect boleh mati bila-bila masa.
+Dulu domain belum dibeli (kekangan kos), jadi semua link guna
+`thegoldplan-web.vercel.app` supaya tiada link mati. Domain dibeli 29 Sep 2026,
+go-live automatik lepas DNS propagate. Rujuk `docs/DOMAIN_SETUP.md` untuk detail penuh.

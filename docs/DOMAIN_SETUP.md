@@ -1,9 +1,8 @@
 # 🌐 D1 — Domain Rasmi The Gold Plan
 
-> Status (29 Sep 2026, 17:01): **✅ LIVE PENUH.**
-> `thegoldplan.my` + `www.thegoldplan.my` → HTTPS 200, cert Let's Encrypt sah.
-> Semua kod + docs dah tukar ke URL baru. `og:url` live =
-> `https://thegoldplan.my`. `thegoldplan-web.vercel.app` kekal jalan (fallback).
+> Status (29 Sep 2026, 17:35): **✅ LIVE + SEO SIAP.**
+> `thegoldplan.my` → HTTPS 200, cert Let's Encrypt sah. `www` → 308 redirect ke apex.
+> Canonical, robots.txt, sitemap.xml semua live. Kod + docs dah tukar ke URL baru.
 >
 > Yang tinggal Cuma 2 kerja manual (perlu login, tak boleh automate):
 > Stripe webhook endpoint + Google Search Console.
@@ -33,47 +32,58 @@
 > `ALIAS @ → pixie.porkbun.com` + wildcard `CNAME * → pixie.porkbun.com`.
 > Wildcard CNAME tu **berkonflik** dengan A record (RFC 1034: CNAME tak boleh
 > wujud sama-sama dengan record lain pada nama sama) — Porkbun tolak A dengan
-> `RECORD_CONFLICT`. Kena delete parking dulu. Watcher handle ni automatik.
+> `RECORD_CONFLICT`. Kena delete parking dulu.
+
+## SEO — dah siap (29 Sep 2026)
+
+| Item | Status | Nota |
+|---|---|---|
+| `<link rel="canonical">` | ✅ | Statik dalam `index.html` + dinamik per-route (`CanonicalRouteTracker.tsx`) |
+| `robots.txt` | ✅ | `public/robots.txt` — disallow `/app/`, `/admin`, `/api/` |
+| `sitemap.xml` | ✅ | `public/sitemap.xml` — 4 URL publik |
+| `www` → apex | ✅ | 308 redirect (Vercel guna 308, bukan 301 — kekal method, POST-safe) |
+| OG + Twitter meta | ✅ | og:site_name, twitter:card/title/description |
+
+> ⚠️ **JANGAN tambah redirect untuk `thegoldplan-web.vercel.app`.** Aku pernah cuba
+> dan ia **pecahkan Stripe webhook** — endpoint webhook terima POST, dan redirect
+> buat POST jadi GET. Apex tak redirect supaya webhook lama kekal berfungsi.
+> Duplicate-content vercel.app dikendalikan oleh canonical tag, bukan redirect.
 
 ## Vercel
 
 ```bash
 cd ~/gold-plan-web
-vercel domains add thegoldplan.my thegoldplan-web   # ✅ dah buat
-vercel domains verify thegoldplan.my                # → invalid-configuration (tunggu propagate)
-vercel alias set thegoldplan.my thegoldplan-web     # ✅ dah buat
+vercel domains add thegoldplan.my thegoldplan-web       # ✅ dah buat
+vercel domains add www.thegoldplan.my thegoldplan-web   # ✅ dah buat (perlu, kalau tak www = 000)
+vercel alias set thegoldplan.my thegoldplan-web         # ✅ dah buat
+vercel alias set www.thegoldplan.my thegoldplan-web     # ✅ dah buat
 ```
 
-`vercel domains verify` pulang `invalid-configuration` sekarang SEBAB A record
-belum resolve — bukan salah config. Re-run bila propagation siap.
+## Selepas Domain Hidup — Checklist (SUDAH SIAP)
 
-## Watcher automatik
+Kod (✅ semua dah tukar):
+1. `src/components/ShareCard.tsx` — watermark share card → `thegoldplan.my`
+2. `src/pages/Landing.tsx` — footer note → `thegoldplan.my`
+3. `index.html` — `og:url` + canonical + OG/Twitter meta
 
-- `~/tools/watch-thegoldplan.py` — idempotent: tunggu ACTIVE → buang parking →
-  set DNS → `vercel alias set` → poll HTTPS 5x60s.
-- Cron `thegoldplan-live-watch` (`9ce3ac810298`, tiap 20 min, 72 kali) —
-  check HTTPS senyap; **hantar Telegram bila domain hidup**.
+Docs dalam repo (✅ semua dah tukar):
+4. `docs/URL_POLICY.md`, `docs/DOMAIN_SETUP.md`
+5. `docs/MARKETING_PLAN.md`, `docs/X_CONTENT_PLAYBOOK.md`, `docs/X_CONTENT_WEEK1/2.md`
+6. `docs/BILLING_SETUP.md`, `docs/PROJECT_DOCUMENTATION.md`, `docs/HOW_TO_USE.md`
+   + Vault Obsidian (21 fail) + bank caption cron (`~/.hermes/scripts/data/*.json`)
 
-## Selepas Domain Hidup — Checklist 7 Tempat
+## ⚠️ 2 Kerja Manual Yang TINGGAL (perlu login — tak boleh automate)
 
-Kod:
-1. `src/components/ShareCard.tsx` (~baris 72) — watermark share card
-2. `src/pages/Landing.tsx` (~baris 209) — footer note
-3. `index.html` (~baris 13) — `og:url`
-
-Docs dalam repo:
-4. `docs/URL_POLICY.md`, `docs/DOMAIN_SETUP.md` (fail ni)
-5. `docs/MARKETING_PLAN.md`, `docs/X_CONTENT_PLAYBOOK.md`, `docs/X_CONTENT_WEEK2.md`
-6. `docs/BILLING_SETUP.md` + **Stripe Dashboard → webhook endpoint**:
-   `https://thegoldplan.my/api/stripe-webhook` → `https://thegoldplan.my/api/stripe-webhook`
-
-Luar kod:
-7. **Google Search Console** (akaun `mozacsuck48@gmail.com` — sama macam alunara.my):
-   tambah property `thegoldplan.my`, verify guna TXT record Porkbun.
+1. **Stripe webhook** — Dashboard → Developers → Webhooks → tambah endpoint
+   `https://thegoldplan.my/api/stripe-webhook`.
+   - Endpoint lama (`thegoldplan-web.vercel.app`) masih hidup — boleh tukar bila-bila.
+   - Selepas tukar, update `STRIPE_WEBHOOK_SECRET` di Vercel kalau signing secret berbeza.
+2. **Google Search Console** (akaun `mozacsuck48@gmail.com`) — tambah property
+   `thegoldplan.my`, verify guna TXT record Porkbun. Lepas verify, submit
+   `https://thegoldplan.my/sitemap.xml`.
 
 ## Nota
 
-- Selepas domain hidup, set `thegoldplan.my` sebagai **primary** dalam Vercel →
-  Settings → Domains. `.vercel.app` kekal sebagai fallback.
 - Auto-renew dah ON. Sedar renewal RM115/tahun pada 2027-09-29.
 - `securityLock` dah ON (clientTransferProhibited + clientDeleteProhibited).
+- `.vercel.app` kekal berfungsi sebagai fallback (dan untuk webhook Stripe lama).
