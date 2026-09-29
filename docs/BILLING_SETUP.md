@@ -10,7 +10,7 @@
 | Stripe account | `thegoldprintlab@gmail.com` (MY, charges + payouts enabled) |
 | Monthly plan | $19/month → https://buy.stripe.com/9B68wP8y89Svdp2eRP4ko00 |
 | Lifetime plan | $149 one-time → https://buy.stripe.com/cNi8wPeWw5CfacQ9xv4ko01 |
-| Webhook endpoint | https://thegoldplan-web.vercel.app/api/stripe-webhook |
+| Webhook endpoint | https://thegoldplan.my/api/stripe-webhook |
 | Webhook events | checkout.session.completed, customer.subscription.created/updated/deleted |
 | Gating | `VITE_BILLING_ENABLED=true` (production + preview + development) |
 | Publishable key | `VITE_STRIPE_PUBLISHABLE_KEY` (pk_live, public) |

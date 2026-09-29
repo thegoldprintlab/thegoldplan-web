@@ -1,9 +1,9 @@
 # ◈ The Gold Plan — Draf 7 Post X (Minggu 2)
 
 > Guna akaun **@TheGoldPrintApp**. Semua copy ENGLISH (audience global).
-> Link: https://thegoldplan-web.vercel.app
-> Demo (percuma, no signup): https://thegoldplan-web.vercel.app/app?demo=1
-> Pricing: https://thegoldplan-web.vercel.app/pricing
+> Link: https://thegoldplan.my
+> Demo (percuma, no signup): https://thegoldplan.my/app?demo=1
+> Pricing: https://thegoldplan.my/pricing
 >
 > **Tema Minggu 2: bukti & spesifik.** Minggu 1 jual idea. Minggu 2 tunjuk
 > angka, tunjuk mekanik, dan tanya soalan yang orang nak jawab.
@@ -84,7 +84,7 @@ Then I noticed: I only opened the spreadsheet on days I was up. Lose a day, clos
 
 The last bad trade I skipped because of a limit paid for this thing twice.
 
-https://thegoldplan-web.vercel.app
+https://thegoldplan.my
 
 ---
 
@@ -96,7 +96,7 @@ Short answer: every account is isolated with row-level security. You see your tr
 
 No signal sharing, no leaderboard, no "community feed". Your record is yours.
 
-https://thegoldplan-web.vercel.app
+https://thegoldplan.my
 
 ---
 

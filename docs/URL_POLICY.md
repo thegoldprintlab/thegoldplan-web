@@ -1,7 +1,7 @@
 # ◈ The Gold Plan — Workflow Fix: Tiada Domain (Zero-Cost)
 
 > Konteks: domain TAK dibeli lagi. Semua link kena guna URL hidup:
-> **https://thegoldplan-web.vercel.app**
+> **https://thegoldplan.my**
 > Kalau ada duit nanti, tukar balik — tapi JANGAN tulis domain yang belum wujud.
 >
 > **Kemaskini 29 Sep 2026:** calon dah dipilih — **`thegoldplan.my`** (Porkbun,
@@ -11,7 +11,7 @@
 
 ## Rule
 
-1. **Satu URL sahaja** dalam semua tempat: `thegoldplan-web.vercel.app`
+1. **Satu URL sahaja** dalam semua tempat: `thegoldplan.my`
    - ✅ Share card watermark
    - ✅ Landing footer
    - ✅ `og:url` dalam `index.html`
@@ -20,7 +20,7 @@
 
 2. Sebelum commit apa-apa yang sentuh URL: verify ia hidup.
    ```bash
-   curl -s -o /dev/null -w "%{http_code}" https://thegoldplan-web.vercel.app
+   curl -s -o /dev/null -w "%{http_code}" https://thegoldplan.my
    # 200 = OK. 000 = domain tak wujud, JANGAN guna.
    ```
 

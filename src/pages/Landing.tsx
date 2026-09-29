@@ -206,7 +206,7 @@ export default function Landing() {
           The Gold Plan
         </span>
         <span className="landing-footer-note">
-          thegoldplan-web.vercel.app — built for deliberate XAUUSD trading.
+          thegoldplan.my — built for deliberate XAUUSD trading.
         </span>
         <span className="landing-footer-note">
           <Link to="/privacy">Privacy</Link> · <CookieSettingsLink />

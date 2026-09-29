@@ -1,9 +1,9 @@
 # ◈ The Gold Plan — Draf 7 Post X (Minggu 1)
 
 > Guna akaun **@TheGoldPrintApp**. Semua copy ENGLISH (audience global).
-> Link: https://thegoldplan-web.vercel.app
-> Demo (percuma, no signup): https://thegoldplan-web.vercel.app/app?demo=1
-> Pricing: https://thegoldplan-web.vercel.app/pricing
+> Link: https://thegoldplan.my
+> Demo (percuma, no signup): https://thegoldplan.my/app?demo=1
+> Pricing: https://thegoldplan.my/pricing
 >
 > **Cara guna:** post SATU sehari. Jangan post semua sekali. Attach Share Card
 > PNG pada post yang ada [CARD]. Reply sendiri dalam thread 1-2 kali untuk
@@ -49,7 +49,7 @@ The rule was there. You just had nothing enforcing it.
 
 That's the whole reason I built this.
 
-https://thegoldplan-web.vercel.app
+https://thegoldplan.my
 
 ---
 
@@ -62,7 +62,7 @@ Not financial advice. Not a signal group. A mirror.
 Win rate, profit factor, which session actually makes you money, which emotion costs you the most.
 
 Try it with fake data first — no signup, no card:
-https://thegoldplan-web.vercel.app/app?demo=1
+https://thegoldplan.my/app?demo=1
 
 ---
 
@@ -89,7 +89,7 @@ Every gold journal I tried was either $50/month, a desktop app from 2016, or a s
 
 So I built one for XAUUSD only — kill switch, MT5 import, share card. $19/month or $149 once.
 
-https://thegoldplan-web.vercel.app
+https://thegoldplan.my
 
 ---
 
@@ -103,7 +103,7 @@ You can't see that in your head. You need the receipts.
 
 Week 2 starts tomorrow.
 
-https://thegoldplan-web.vercel.app
+https://thegoldplan.my
 
 ---
 

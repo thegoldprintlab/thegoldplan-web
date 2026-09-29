@@ -4,9 +4,9 @@
 >
 > | URL | Guna |
 > |---|---|
-> | https://thegoldplan-web.vercel.app | Landing / link umum |
-> | https://thegoldplan-web.vercel.app/app?demo=1 | Demo — no signup, no card |
-> | https://thegoldplan-web.vercel.app/pricing | Pricing ($19/mo, $149 lifetime) |
+> | https://thegoldplan.my | Landing / link umum |
+> | https://thegoldplan.my/app?demo=1 | Demo — no signup, no card |
+> | https://thegoldplan.my/pricing | Pricing ($19/mo, $149 lifetime) |
 
 ## Fail
 

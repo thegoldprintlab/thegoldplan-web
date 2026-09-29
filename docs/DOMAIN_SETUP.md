@@ -4,7 +4,7 @@
 > `thegoldplan.my` = ACTIVE di Porkbun + MYNIC. DNS Vercel dah diset di Porkbun.
 > Tapi registry `e.nic.my` belum delegate NS ke Porkbun → A record belum resolve
 > dari internet. Ini normal (minit → beberapa jam). URL rasmi KEKAL
-> `thegoldplan-web.vercel.app` sampai `curl -s -o /dev/null -w "%{http_code}"`
+> `thegoldplan.my` sampai `curl -s -o /dev/null -w "%{http_code}"`
 > pulang 200. Rujuk `docs/URL_POLICY.md`.
 
 ## Fakta Pendaftaran (verified via Porkbun API + MYNIC RDAP)
@@ -64,7 +64,7 @@ Docs dalam repo:
 4. `docs/URL_POLICY.md`, `docs/DOMAIN_SETUP.md` (fail ni)
 5. `docs/MARKETING_PLAN.md`, `docs/X_CONTENT_PLAYBOOK.md`, `docs/X_CONTENT_WEEK2.md`
 6. `docs/BILLING_SETUP.md` + **Stripe Dashboard → webhook endpoint**:
-   `https://thegoldplan-web.vercel.app/api/stripe-webhook` → `https://thegoldplan.my/api/stripe-webhook`
+   `https://thegoldplan.my/api/stripe-webhook` → `https://thegoldplan.my/api/stripe-webhook`
 
 Luar kod:
 7. **Google Search Console** (akaun `mozacsuck48@gmail.com` — sama macam alunara.my):

@@ -17,7 +17,7 @@
 
 | Perkara | Nilai |
 |---|---|
-| **Live URL** | https://thegoldplan-web.vercel.app |
+| **Live URL** | https://thegoldplan.my |
 | **GitHub repo** | https://github.com/thegoldprintlab/thegoldplan-web |
 | **Login app** | `arfasyrf@gmail.com` / `test123` |
 | **Vercel project** | `thegoldplan-web` (org `thegoldprintlab1`) |
@@ -231,7 +231,7 @@ File: `cent.xlsx`, `10k.xlsx`, `5k.xlsx` (download guna `/tmp/mt5_*.xlsx`).
 ### 9.1 Flow
 1. Push ke `main` di GitHub
 2. Vercel auto-detect → build `npm run build` → deploy production
-3. URL: `https://thegoldplan-web.vercel.app`
+3. URL: `https://thegoldplan.my`
 
 ### 9.2 Env Vars (Vercel)
 | Name | Type | Nota |

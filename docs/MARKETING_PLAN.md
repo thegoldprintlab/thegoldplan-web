@@ -58,7 +58,7 @@ Realiti kasar: **100 post relevan ≈ 1-3 jualan**. Nak 10 jualan/bln = kena akt
 ## 5. Apa Yang PERLU Fix (bukan buat baru)
 
 1. **Domain belum dibeli** (DITANGGUHKAN — kekangan kos). Semua link guna
-   `thegoldplan-web.vercel.app`. Ni tak halang jualan — cuma URL nampak kurang
+   `thegoldplan.my`. Ni tak halang jualan — cuma URL nampak kurang
    cantik. Beli bila ada duit, lepas tu tukar 4 tempat (rujuk `URL_POLICY.md`).
 2. **Pasang OG image + URL betul** — supaya link share kau nampak cantik di X/Telegram.
 3. **Tracking** — supaya kau tahu post mana yang bawa jualan. (minimum: link pendek + kira sendiri)
