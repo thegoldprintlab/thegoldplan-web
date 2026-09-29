@@ -1,8 +1,13 @@
 # ◈ The Gold Plan — Workflow Fix: Tiada Domain (Zero-Cost)
 
-> Konteks: domain `thegoldplan.app` TAK dibeli (kekangan kos). Semua link
-> kena guna URL hidup: **https://thegoldplan-web.vercel.app**
+> Konteks: domain TAK dibeli lagi. Semua link kena guna URL hidup:
+> **https://thegoldplan-web.vercel.app**
 > Kalau ada duit nanti, tukar balik — tapi JANGAN tulis domain yang belum wujud.
+>
+> **Kemaskini 29 Sep 2026:** calon dah dipilih — **`thegoldplan.my`** (Porkbun,
+> $2.37 ≈ RM10 tahun pertama). Langkah beli + checklist 7 tempat tukar URL ada
+> dalam `docs/DOMAIN_SETUP.md`. Peraturan kat bawah ni masih berkuatkuasa
+> SEHINGGA domain pass HTTPS (`curl` pulang 200).
 
 ## Rule
 
