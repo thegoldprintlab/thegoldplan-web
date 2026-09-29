@@ -6,6 +6,7 @@ import Auth from './components/Auth'
 import Nav from './components/Nav'
 import ThemeSwitcher from './components/ThemeSwitcher'
 import AnalyticsRouteTracker from './components/AnalyticsRouteTracker'
+import CanonicalRouteTracker from './components/CanonicalRouteTracker'
 import Dashboard from './pages/Dashboard'
 import InputForm from './pages/InputForm'
 import TradingLog from './pages/TradingLog'
@@ -115,6 +116,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <AnalyticsRouteTracker />
+      <CanonicalRouteTracker />
       <AuthProvider>
         <Routes>
           {/* Public landing page — no login needed */}

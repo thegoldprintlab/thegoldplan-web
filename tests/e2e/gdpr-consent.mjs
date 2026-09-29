@@ -7,7 +7,7 @@
  *  3. Declining leaves the visitor cookieless and the choice persists.
  *
  * Run against any URL:
- *   TEST_URL=https://thegoldplan-web.vercel.app/ node tests/e2e/gdpr-consent.mjs
+ *   TEST_URL=https://thegoldplan.my/ node tests/e2e/gdpr-consent.mjs
  *
  * Requires playwright (`npm i -D playwright && npx playwright install chromium`).
  */
