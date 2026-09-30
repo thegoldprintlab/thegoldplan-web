@@ -72,15 +72,16 @@ Docs dalam repo (✅ semua dah tukar):
 6. `docs/BILLING_SETUP.md`, `docs/PROJECT_DOCUMENTATION.md`, `docs/HOW_TO_USE.md`
    + Vault Obsidian (21 fail) + bank caption cron (`~/.hermes/scripts/data/*.json`)
 
-## ⚠️ 2 Kerja Manual Yang TINGGAL (perlu login — tak boleh automate)
+## ✅ 2 Kerja Manual — SUDAH SIAP (29 Sep 2026)
 
-1. **Stripe webhook** — Dashboard → Developers → Webhooks → tambah endpoint
-   `https://thegoldplan.my/api/stripe-webhook`.
-   - Endpoint lama (`thegoldplan-web.vercel.app`) masih hidup — boleh tukar bila-bila.
-   - Selepas tukar, update `STRIPE_WEBHOOK_SECRET` di Vercel kalau signing secret berbeza.
-2. **Google Search Console** (akaun `mozacsuck48@gmail.com`) — tambah property
-   `thegoldplan.my`, verify guna TXT record Porkbun. Lepas verify, submit
-   `https://thegoldplan.my/sitemap.xml`.
+1. **Stripe webhook** — endpoint `https://thegoldplan.my/api/stripe-webhook` ditambah.
+   - Endpoint lama (`thegoldplan-web.vercel.app`) kekal hidup sebagai fallback.
+   - ⚠️ Pengesahan sebenar = hantar **test event** dari Stripe Dashboard dan pastikan
+     ia pulang 200. Endpoint pulang 400 untuk POST tanpa signature (betul — itu
+     signature check, bukan error).
+2. **Google Search Console** — property `thegoldplan.my` ditambah + TXT verify.
+   - TXT live di DNS: `google-site-verification=0kUBueXDtrUiY-v_itQJfIBCPVMC0-L02WCqL-FITh8`
+   - Sitemap: `https://thegoldplan.my/sitemap.xml` (200, application/xml)
 
 ## Nota
 
