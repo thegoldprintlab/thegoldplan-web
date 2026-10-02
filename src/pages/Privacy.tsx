@@ -48,6 +48,12 @@ export default function Privacy() {
             location (country/city level), device and browser type, and referral source.
           </p>
           <p>
+            <b>Visitor counts</b> — we also use Vercel Web Analytics to count visits. It sets{' '}
+            <b>no cookies</b> and stores nothing on your device, so it runs without a consent
+            prompt. It records only the page path, referring site, country and device type, and the
+            data is aggregated — we cannot identify you from it.
+          </p>
+          <p>
             <b>Error reports</b> — if the app crashes, we send the error message and technical
             context to Sentry. We deliberately strip email addresses and IP addresses, and we do not
             record your screen or the contents of your trade table.
@@ -80,6 +86,10 @@ export default function Privacy() {
             tag runs in cookieless mode, so no identifier is stored on your device. You can change
             your mind at any time using <b>Cookie settings</b> in the footer. Declining does not
             restrict any feature of the app.
+          </p>
+          <p>
+            Vercel Web Analytics is <b>cookieless by design</b> and does not store anything on your
+            device, so it is not affected by the banner and keeps running if you decline.
           </p>
           <p>
             Strictly necessary cookies (keeping you logged in) are always set, because the app
