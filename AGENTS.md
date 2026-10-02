@@ -19,5 +19,13 @@ Repo: `thegoldprintlab/thegoldplan-web` · Branch: `main`
   Kekal 301 `www` sahaja.
 - README lama kata "GitHub Pages" — **basi**, sebenar Vercel.
 
+## Analytics (2026-10-02)
+- **GA4** (`VITE_GA_ID`) — guna cookie, jadi hanya kira pelawat yang tekan "Accept".
+  Kekal untuk funnel/event (`sign_up`, `begin_checkout`, `mt5_import_success`).
+- **Vercel Web Analytics** (`src/lib/webAnalytics.ts`) — cookieless, kira SEMUA
+  pelawat. Ini angka "berapa ramai orang datang". GA4 akan nampak jauh lebih kecil.
+- Semak: `python3 ~/tools/pelawat-laman.py` (kedua-dua laman) atau Vercel → Analytics.
+- Toggle mesti HIDUP di Vercel — kod sahaja tak cukup. Detail: skill `vercel-web-analytics`.
+
 ## Seterusnya
 - (kemas kini di sini bila kerja baru bermula)
