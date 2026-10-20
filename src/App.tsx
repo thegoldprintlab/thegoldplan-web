@@ -23,7 +23,7 @@ import { getSupabase } from './lib/supabase'
 import { exitDemoPreview } from './lib/demo'
 
 function Shell() {
-  const { session, loading, configured, disabled, recovery, clearRecovery } = useAuth()
+  const { session, loading, configured, disabled } = useAuth()
 
   if (!configured) {
     return (
@@ -51,10 +51,6 @@ function Shell() {
 
   if (!session) {
     return <Auth />
-  }
-
-  if (recovery) {
-    return <SetPassword onDone={clearRecovery} />
   }
 
   if (disabled) {
@@ -117,25 +113,35 @@ function Shell() {
   )
 }
 
+// Recovery links land wherever Supabase's redirect allowlist points, so the
+// set-password screen has to sit above the routes, not inside /app.
+function AppRoutes() {
+  const { recovery, clearRecovery } = useAuth()
+  if (recovery) return <SetPassword onDone={clearRecovery} />
+  return (
+    <Routes>
+      {/* Public landing page — no login needed */}
+      <Route path="/" element={<Landing />} />
+      {/* Public pricing page — no login needed */}
+      <Route path="/pricing" element={<Pricing />} />
+      {/* Privacy policy — public, linked from footer + cookie banner */}
+      <Route path="/privacy" element={<Privacy />} />
+      {/* Public how-to-use — no login needed */}
+      <Route path="/help" element={<HowToUse />} />
+      {/* The authenticated app */}
+      <Route path="/app/*" element={<Shell />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <AnalyticsRouteTracker />
       <CanonicalRouteTracker />
       <AuthProvider>
-        <Routes>
-          {/* Public landing page — no login needed */}
-          <Route path="/" element={<Landing />} />
-          {/* Public pricing page — no login needed */}
-          <Route path="/pricing" element={<Pricing />} />
-          {/* Privacy policy — public, linked from footer + cookie banner */}
-          <Route path="/privacy" element={<Privacy />} />
-          {/* Public how-to-use — no login needed */}
-          <Route path="/help" element={<HowToUse />} />
-          {/* The authenticated app */}
-          <Route path="/app/*" element={<Shell />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <AppRoutes />
       </AuthProvider>
     </BrowserRouter>
   )
