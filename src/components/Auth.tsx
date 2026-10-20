@@ -85,8 +85,23 @@ export default function Auth() {
     }
   }
 
-  async function resend() {
+  async function forgot() {
+    if (!email) {
+      setMsg('Type your email above first, then press "Lupa password?" again.')
+      return
+    }
     setBusy(true)
+    setMsg(null)
+    const { error } = await getSupabase().auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/app`,
+    })
+    setBusy(false)
+    setMsg(
+      error ? error.message : `Reset link sent to ${email}. Check your inbox and spam folder.`,
+    )
+  }
+
+  async function resend() {    setBusy(true)
     setMsg(null)
     const sb = getSupabase()
     const { error } = await sb.auth.resend({ type: 'signup', email: sentTo || email })
@@ -169,6 +184,11 @@ export default function Auth() {
           <button className="btn btn-primary" disabled={busy} type="submit">
             {busy ? 'Please wait…' : mode === 'login' ? 'Log in' : 'Create account'}
           </button>
+          {mode === 'login' && (
+            <button className="btn btn-ghost" type="button" disabled={busy} onClick={forgot}>
+              Lupa password?
+            </button>
+          )}
           <button
             type="button"
             className="btn btn-ghost"

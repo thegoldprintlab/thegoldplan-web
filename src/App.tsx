@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { DataProvider } from './context/DataContext'
 import { BillingProvider } from './context/BillingContext'
 import Auth from './components/Auth'
+import SetPassword from './components/SetPassword'
 import Nav from './components/Nav'
 import ThemeSwitcher from './components/ThemeSwitcher'
 import AnalyticsRouteTracker from './components/AnalyticsRouteTracker'
@@ -22,7 +23,7 @@ import { getSupabase } from './lib/supabase'
 import { exitDemoPreview } from './lib/demo'
 
 function Shell() {
-  const { session, loading, configured, disabled } = useAuth()
+  const { session, loading, configured, disabled, recovery, clearRecovery } = useAuth()
 
   if (!configured) {
     return (
@@ -50,6 +51,10 @@ function Shell() {
 
   if (!session) {
     return <Auth />
+  }
+
+  if (recovery) {
+    return <SetPassword onDone={clearRecovery} />
   }
 
   if (disabled) {

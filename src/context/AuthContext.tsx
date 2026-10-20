@@ -10,6 +10,8 @@ interface AuthCtx {
   configured: boolean
   isAdmin: boolean
   disabled: boolean
+  recovery: boolean
+  clearRecovery: () => void
   refreshRole: () => Promise<void>
 }
 
@@ -19,6 +21,8 @@ const Ctx = createContext<AuthCtx>({
   configured: false,
   isAdmin: false,
   disabled: false,
+  recovery: false,
+  clearRecovery: () => {},
   refreshRole: async () => {},
 })
 
@@ -37,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
   const [disabled, setDisabled] = useState(false)
+  const [recovery, setRecovery] = useState(false)
   const effectiveSession = demoPreview ? DEMO_SESSION : session
   const effectiveLoading = demoPreview ? false : loading
   const effectiveAdmin = demoPreview ? true : isAdmin
@@ -85,8 +90,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const {
       data: { subscription },
-    } = sb.auth.onAuthStateChange((_event, s) => {
+    } = sb.auth.onAuthStateChange((event, s) => {
       if (s) exitDemoPreview()
+      // Supabase parses #type=recovery from the reset link and fires this event.
+      if (event === 'PASSWORD_RECOVERY') setRecovery(true)
       setSession(s)
     })
 
@@ -106,6 +113,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         configured,
         isAdmin: effectiveAdmin,
         disabled: effectiveDisabled,
+        recovery,
+        clearRecovery: () => setRecovery(false),
         refreshRole,
       }}
     >
