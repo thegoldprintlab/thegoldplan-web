@@ -23,11 +23,15 @@ function readRawBody(req) {
 }
 
 // Verify Stripe signature: signed_payload = timestamp + '.' + rawBody
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const SIG_TOLERANCE_SEC = 300
+
 function verifyStripeSignature(rawBody, signatureHeader, secret) {
   if (!signatureHeader || !secret) return false
   const entry = signatureHeader.split(',').map((p) => p.trim().split('=')).find(([k]) => k === 'v1')
   const ts = signatureHeader.split(',').map((p) => p.trim().split('=')).find(([k]) => k === 't')
   if (!entry || !ts) return false
+  if (Math.abs(Date.now() / 1000 - Number(ts[1])) > SIG_TOLERANCE_SEC) return false
   const signedPayload = `${ts[1]}.${rawBody}`
   const expected = crypto.createHmac('sha256', secret).update(signedPayload).digest()
   const received = Buffer.from(entry[1], 'hex')
@@ -35,17 +39,19 @@ function verifyStripeSignature(rawBody, signatureHeader, secret) {
   return crypto.timingSafeEqual(expected, received)
 }
 
-async function upsertSubscription(userId, plan, status, periodEnd, stripeCustomerId, stripeSubscriptionId) {
+async function upsertSubscription(userId, plan, status, periodEnd, stripeCustomerId, stripeSubscriptionId, eventCreated) {
   await pool.query(
     `insert into public.subscriptions
        (user_id, plan, status, current_period_end, stripe_customer_id, stripe_subscription_id, updated_at)
-     values ($1, $2, $3, $4, $5, $6, now())
+     values ($1, coalesce($2, 'monthly'), $3, $4, $5, $6, to_timestamp($7))
      on conflict (user_id) do update set
-       plan = $2, status = $3, current_period_end = $4,
+       plan = coalesce($2, public.subscriptions.plan),
+       status = $3, current_period_end = $4,
        stripe_customer_id = coalesce($5, public.subscriptions.stripe_customer_id),
        stripe_subscription_id = coalesce($6, public.subscriptions.stripe_subscription_id),
-       updated_at = now()`,
-    [userId, plan, status, periodEnd, stripeCustomerId, stripeSubscriptionId],
+       updated_at = to_timestamp($7)
+     where to_timestamp($7) > subscriptions.updated_at`,
+    [userId, plan, status, periodEnd, stripeCustomerId, stripeSubscriptionId, eventCreated],
   )
 }
 
@@ -129,7 +135,8 @@ export default async function handler(req, res) {
 
     if (event.type === 'checkout.session.completed') {
       const session = obj
-      let userId = session.client_reference_id || session.metadata?.user_id || null
+      const ref = session.client_reference_id
+      let userId = (ref && UUID_RE.test(ref)) ? ref : (session.metadata?.user_id || null)
       if (!userId && typeof session.customer === 'string') {
         userId = await customerUserId(stripe, session.customer)
       }
@@ -146,6 +153,7 @@ export default async function handler(req, res) {
         periodEnd,
         typeof session.customer === 'string' ? session.customer : null,
         typeof session.subscription === 'string' ? session.subscription : null,
+        event.created,
       )
       res.status(200).json({ received: true, provisioned: userId })
       return
@@ -168,6 +176,7 @@ export default async function handler(req, res) {
         sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
         typeof sub.customer === 'string' ? sub.customer : null,
         sub.id || null,
+        event.created,
       )
       res.status(200).json({ received: true, updated: userId })
       return
@@ -182,11 +191,12 @@ export default async function handler(req, res) {
       }
       await upsertSubscription(
         userId,
-        'monthly',
+        null, // jangan turunkan lifetime ke monthly bila subscription dipadam
         'canceled',
         sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
         typeof sub.customer === 'string' ? sub.customer : null,
         sub.id || null,
+        event.created,
       )
       res.status(200).json({ received: true, canceled: userId })
       return
@@ -198,3 +208,6 @@ export default async function handler(req, res) {
     res.status(500).json({ error: e.message })
   }
 }
+
+// Untuk ujian sahaja (tests/stripe-webhook.test.mjs).
+export { verifyStripeSignature, UUID_RE }

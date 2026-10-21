@@ -32,8 +32,9 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", {
   httpClient: Stripe.createFetchHttpClient(),
 });
 
-function cors(): Response {
-  return new Response("ok", {
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function cors(): Response {  return new Response("ok", {
     headers: {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -44,7 +45,7 @@ function cors(): Response {
 
 async function userIdFromSession(session: Stripe.Checkout.Session): Promise<string | null> {
   const ref = session.client_reference_id;
-  if (ref && ref.trim() && ref.includes("-")) return ref; // looks like a UUID
+  if (ref && UUID_RE.test(ref)) return ref;
   if (session.metadata?.user_id) return session.metadata.user_id;
   if (typeof session.customer === "string") {
     const cust = await stripe.customers.retrieve(session.customer);
@@ -55,27 +56,32 @@ async function userIdFromSession(session: Stripe.Checkout.Session): Promise<stri
 
 async function upsertSubscription(
   userId: string,
-  plan: "monthly" | "lifetime",
+  plan: "monthly" | "lifetime" | null,
   status: string,
   periodEnd: string | null,
   stripeCustomerId: string | null,
   stripeSubscriptionId: string | null,
+  eventCreated: number,
 ) {
+  const eventAt = new Date(eventCreated * 1000).toISOString();
+  const { data: existing } = await supabase
+    .from("subscriptions")
+    .select("id, plan, updated_at")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  // Event Stripe yang lebih lama (retry / out of order) tak boleh timpa keadaan terkini.
+  if (existing && new Date(existing.updated_at).getTime() >= new Date(eventAt).getTime()) return;
+
   const payload = {
     user_id: userId,
-    plan,
+    plan: plan ?? existing?.plan ?? "monthly",
     status,
     current_period_end: periodEnd,
     stripe_customer_id: stripeCustomerId,
     stripe_subscription_id: stripeSubscriptionId,
-    updated_at: new Date().toISOString(),
+    updated_at: eventAt,
   };
-
-  const { data: existing } = await supabase
-    .from("subscriptions")
-    .select("id")
-    .eq("user_id", userId)
-    .maybeSingle();
 
   if (existing) {
     const { error } = await supabase.from("subscriptions").update(payload).eq("user_id", userId);
@@ -86,7 +92,7 @@ async function upsertSubscription(
   }
 }
 
-async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session, eventCreated: number) {
   const userId = await userIdFromSession(session);
   if (!userId) {
     console.error("No user_id resolvable for checkout session", session.id);
@@ -111,6 +117,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     periodEnd,
     typeof session.customer === "string" ? session.customer : null,
     typeof session.subscription === "string" ? session.subscription : null,
+    eventCreated,
   );
 }
 
@@ -138,20 +145,27 @@ async function handleSubscriptionEvent(event: Stripe.Event) {
     sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
     typeof sub.customer === "string" ? sub.customer : null,
     sub.id,
+    event.created,
   );
 }
 
 async function handleCanceled(event: Stripe.Event) {
   const sub = event.data.object as Stripe.Subscription;
-  const userId = sub.metadata?.user_id ?? null;
+  const userId =
+    sub.metadata?.user_id ??
+    (typeof sub.customer === "string"
+      ? (await stripe.customers.retrieve(sub.customer).catch(() => null))?.metadata?.user_id
+      : null) ??
+    null;
   if (userId) {
     await upsertSubscription(
       userId,
-      "monthly",
+      null,
       "canceled",
       sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
       typeof sub.customer === "string" ? sub.customer : null,
       sub.id,
+      event.created,
     );
   }
 }
@@ -177,7 +191,7 @@ Deno.serve(async (req: Request) => {
   try {
     switch (event.type) {
       case "checkout.session.completed":
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session, event.created);
         break;
       case "customer.subscription.created":
       case "customer.subscription.updated":
