@@ -11,7 +11,6 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     {
-      "comment": "Halaman SEO statik. Vercel padan fail dahulu, tapi /slug tak jumpa /slug.html tanpa rewrite ni. Tambah entri baru di sini bila tambah halaman dalam scripts/gen_seo_pages.py.",
       "source": "/prop-firm-daily-loss-tracker",
       "destination": "/prop-firm-daily-loss-tracker.html"
     },
