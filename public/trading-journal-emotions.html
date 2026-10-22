@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logging Emotion Per Trade — The Part Most Journals Skip</title>
+<meta name="description" content="The emotion column is the one field nobody fills in and the one that explains your red days. Here is how to log it in a way that produces a usable answer.">
+<link rel="canonical" href="https://thegoldplan.my/trading-journal-emotions">
+<meta property="og:title" content="Logging Emotion Per Trade — The Part Most Journals Skip">
+<meta property="og:description" content="The emotion column is the one field nobody fills in and the one that explains your red days. Here is how to log it in a way that produces a usable answer.">
+<meta property="og:url" content="https://thegoldplan.my/trading-journal-emotions">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0d0f14">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{--bg:#0d0f14;--fg:#e9ecf1;--dim:#9aa3b2;--line:#232a36;--acc:#c9a227;--card:#141822}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 Inter,system-ui,-apple-system,sans-serif}
+a{color:var(--acc)}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:34px;font-size:14px}
+nav b{margin-right:auto;letter-spacing:.02em}
+nav a{color:var(--dim);text-decoration:none}
+nav a:hover{color:var(--fg)}
+h1{font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.18;letter-spacing:-.02em;margin:0 0 18px}
+h2{font-size:1.22rem;margin:38px 0 10px;letter-spacing:-.01em}
+h3{font-size:1rem;margin:22px 0 6px}
+p,li{color:#cdd4e0}
+.lead{font-size:1.08rem;color:var(--fg)}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.94rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}
+code{background:#1b2130;padding:2px 6px;border-radius:4px;font-size:.9em}
+.cta{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:38px 0}
+.cta h3{margin-top:0}
+.btn{display:inline-block;background:var(--acc);color:#12140f;font-weight:600;padding:11px 20px;border-radius:8px;text-decoration:none;margin:6px 10px 0 0}
+.btn.alt{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.ans{border-left:2px solid var(--acc);padding:2px 0 2px 16px;margin:14px 0;color:var(--fg)}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:18px;font-size:13px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><b>The Gold Plan</b><a href="/">Home</a><a href="/pricing">Pricing</a>
+<a href="/xauusd-trading-journal">XAUUSD journal</a>
+<a href="/mt5-trading-journal-import">MT5 import</a>
+<a href="/prop-firm-daily-loss-tracker">Daily loss tracker</a></nav>
+<article>
+<h1>The emotion column nobody fills in, and why it is the one that pays</h1>
+
+<p class="lead">Almost every trading journal template has an emotion field. Almost nobody
+fills it in, because "how did you feel" is a bad question. It produces a word, and a word
+does not aggregate.</p>
+
+<h2>Ask a narrower question</h2>
+<p>Instead of "how do you feel", pick from a fixed short list. Fixed options are what make
+the scoreboard possible:</p>
+<table>
+<tr><th>Label</th><th>The trade it usually produces</th></tr>
+<tr><td>Calm</td><td>Setup was there, size was normal, stop was honoured.</td></tr>
+<tr><td>Hesitant</td><td>Entry was late, size was small, the move happened without you.</td></tr>
+<tr><td>FOMO</td><td>Entry was after the move, stop was wide or absent.</td></tr>
+<tr><td>Revenge</td><td>Entry came within minutes of a loss, size was larger.</td></tr>
+<tr><td>Tired</td><td>Entry in a session you do not normally trade.</td></tr>
+</table>
+
+<p>Five labels is enough. Twenty labels is a taxonomy nobody maintains.</p>
+
+<h2>What the chart actually tells you</h2>
+<p>Once trades carry a label, one comparison becomes possible: net P&amp;L per label. In
+most journals the result is lopsided in a way the trader already suspected but never
+priced. Revenge trades are rarely the most numerous. They are almost always the most
+expensive per trade.</p>
+
+<p>That single number does something a rule cannot: it makes the cost of the next revenge
+entry concrete. "I should not do this" is a feeling. "This label has cost me $840 this
+quarter" is a fact.</p>
+
+<h2>Two fields, not one</h2>
+<p>Emotion before the entry and emotion after the exit are different things, and they
+diverge in the trades that matter. Calm going in, angry coming out is a normal stop-out.
+Angry going in, calm coming out is the one that ends accounts.</p>
+
+<h2>How to start without changing your process</h2>
+<ol>
+<li>Tag the last thirty trades you already have, from memory. Memory is fine for a month.</li>
+<li>Look at the net P&amp;L per label. Do not fix anything yet.</li>
+<li>For two weeks, tag every new trade at entry. One tap, chosen from the fixed list.</li>
+<li>Compare the two periods. If the expensive label has not shrunk, the tagging is not
+doing the work — the rule is missing.</li>
+</ol>
+
+<h2>The honest limit</h2>
+<p>Emotion tags are self-reported and they are not science. Nobody is measuring your
+cortisol. What they are is a cheap proxy that turns a vague pattern into a number you can
+compare month to month, and that is enough to change behaviour.</p>
+
+<p>If you want to see how the scoreboard looks before committing, the
+<a href="/app?demo=1">demo</a> is the full app with sample data and no login.</p>
+
+</article>
+<div class="cta"><h3>See it with your own trades</h3>
+<p>The demo opens with four sample accounts and 107 trades — no login, no card.
+The live journal is $19/month or $149 once.</p>
+<a class="btn" href="/app?demo=1">Open the free demo</a>
+<a class="btn alt" href="/pricing">See pricing</a></div>
+<footer>The Gold Plan — a XAUUSD trading journal. Not signals, not a broker. We are not
+affiliated with any prop firm. <a href="/pricing">Pricing</a> ·
+<a href="/app?demo=1">Demo</a> · <a href="/privacy">Privacy</a></footer>
+</div>
+</body>
+</html>

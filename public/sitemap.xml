@@ -11,9 +11,34 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://thegoldplan.my/help</loc>
+    <loc>https://thegoldplan.my/xauusd-trading-journal</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thegoldplan.my/prop-firm-daily-loss-tracker</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thegoldplan.my/mt5-trading-journal-import</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thegoldplan.my/trading-journal-vs-excel</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thegoldplan.my/trading-journal-emotions</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thegoldplan.my/help</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://thegoldplan.my/privacy</loc>

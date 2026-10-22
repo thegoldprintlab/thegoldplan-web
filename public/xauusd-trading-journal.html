@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XAUUSD Trading Journal — Track Gold Trades, Sessions and Emotions</title>
+<meta name="description" content="A trading journal built for one instrument: gold. Per-account daily loss limits, session and emotion scoreboards, MT5 import, and a share card.">
+<link rel="canonical" href="https://thegoldplan.my/xauusd-trading-journal">
+<meta property="og:title" content="XAUUSD Trading Journal — Track Gold Trades, Sessions and Emotions">
+<meta property="og:description" content="A trading journal built for one instrument: gold. Per-account daily loss limits, session and emotion scoreboards, MT5 import, and a share card.">
+<meta property="og:url" content="https://thegoldplan.my/xauusd-trading-journal">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#0d0f14">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root{--bg:#0d0f14;--fg:#e9ecf1;--dim:#9aa3b2;--line:#232a36;--acc:#c9a227;--card:#141822}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 Inter,system-ui,-apple-system,sans-serif}
+a{color:var(--acc)}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:34px;font-size:14px}
+nav b{margin-right:auto;letter-spacing:.02em}
+nav a{color:var(--dim);text-decoration:none}
+nav a:hover{color:var(--fg)}
+h1{font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.18;letter-spacing:-.02em;margin:0 0 18px}
+h2{font-size:1.22rem;margin:38px 0 10px;letter-spacing:-.01em}
+h3{font-size:1rem;margin:22px 0 6px}
+p,li{color:#cdd4e0}
+.lead{font-size:1.08rem;color:var(--fg)}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.94rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}
+code{background:#1b2130;padding:2px 6px;border-radius:4px;font-size:.9em}
+.cta{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:38px 0}
+.cta h3{margin-top:0}
+.btn{display:inline-block;background:var(--acc);color:#12140f;font-weight:600;padding:11px 20px;border-radius:8px;text-decoration:none;margin:6px 10px 0 0}
+.btn.alt{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.ans{border-left:2px solid var(--acc);padding:2px 0 2px 16px;margin:14px 0;color:var(--fg)}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:18px;font-size:13px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><b>The Gold Plan</b><a href="/">Home</a><a href="/pricing">Pricing</a>
+<a href="/xauusd-trading-journal">XAUUSD journal</a>
+<a href="/mt5-trading-journal-import">MT5 import</a>
+<a href="/prop-firm-daily-loss-tracker">Daily loss tracker</a></nav>
+<article>
+<h1>A trading journal built for one instrument, not thirty</h1>
+
+<p class="lead">Gold is not forex with a different ticker. It moves on real yields, on
+central-bank headlines, and on a spread that widens exactly when the move starts. A journal
+that treats XAUUSD as one row among forty pairs will average away the only patterns that
+matter.</p>
+
+<h2>What is different about journaling gold</h2>
+<table>
+<tr><th>Gold-specific problem</th><th>What the journal gives you</th></tr>
+<tr><td>One lot is ~$10 a pip — sizing errors are expensive fast</td><td>Volume and P&amp;L per trade, with average win and average loss</td></tr>
+<tr><td>The London–NY overlap is a different market from Asia</td><td>Session scoreboard, so the two are not blended</td></tr>
+<tr><td>Revenge trading after a stop-out is the classic death</td><td>Emotion scoreboard against net P&amp;L</td></tr>
+<tr><td>Prop rules are daily, not monthly</td><td>Per-account daily loss limit with 50/80/100% warnings</td></tr>
+</table>
+
+<h2>The four scoreboards</h2>
+<ul>
+<li><strong>Setup</strong> — which of your named setups actually pays.</li>
+<li><strong>Session</strong> — Asia, London, overlap, New York. Where your edge lives.</li>
+<li><strong>Account</strong> — ROI per account, including prop vs personal separately.</li>
+<li><strong>Emotion</strong> — calm, hesitant, FOMO, revenge, and what each one costs.</li>
+</ul>
+
+<h2>Numbers on the dashboard</h2>
+<p>Total net P&amp;L, win rate, profit factor, trades won/lost, average win, average loss,
+best trade, worst trade, and a daily equity curve. All of it filters by account, because
+"all accounts" is a comforting view that hides a blown challenge.</p>
+
+<h2>How I use it</h2>
+<p>I trade gold on a prop account and on my own. Before the London open I look at one
+number: how much of today's limit is left. After the session I log the trades I took and,
+more usefully, note the ones I wanted to take and did not. Over 1,517 logged trades across
+three accounts, the pattern that cost the most was never a bad entry — it was the second
+and third entry after a loss.</p>
+
+<p>You do not have to take my word for any of that. The demo is the app with sample data,
+open, no login: <a href="/app?demo=1">try it here</a>.</p>
+
+<h2>Who this is not for</h2>
+<ul>
+<li>If you want signals, this is not that.</li>
+<li>If you want an EA that trades for you, this is not that either.</li>
+<li>If you trade twelve instruments and want one blended report, a general journal will
+serve you better than a gold-specific one.</li>
+</ul>
+
+<p>If you trade one instrument, seriously, the journal should be shaped like that
+instrument.</p>
+
+</article>
+<div class="cta"><h3>See it with your own trades</h3>
+<p>The demo opens with four sample accounts and 107 trades — no login, no card.
+The live journal is $19/month or $149 once.</p>
+<a class="btn" href="/app?demo=1">Open the free demo</a>
+<a class="btn alt" href="/pricing">See pricing</a></div>
+<footer>The Gold Plan — a XAUUSD trading journal. Not signals, not a broker. We are not
+affiliated with any prop firm. <a href="/pricing">Pricing</a> ·
+<a href="/app?demo=1">Demo</a> · <a href="/privacy">Privacy</a></footer>
+</div>
+</body>
+</html>
