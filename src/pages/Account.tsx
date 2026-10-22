@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 /** Account / subscription management (B1 + B3 support + promo redemption). */
 export default function AccountPage() {
-  const { session } = useAuth()
+  const { session, isDemo } = useAuth()
   const { enabled, loading, subscription, active, refresh } = useBilling()
   const [promoCode, setPromoCode] = useState('')
   const [promoBusy, setPromoBusy] = useState(false)
@@ -120,13 +120,18 @@ export default function AccountPage() {
               <button className="btn" onClick={refresh}>
                 Refresh
               </button>
-              {plan?.paymentLink && (
+              {plan?.paymentLink && !isDemo && (
                 <a
                   className="btn btn-primary"
                   href={checkoutUrl(plan.paymentLink, session.user.email ?? null, session.user.id)}
                 >
                   Manage / renew
                 </a>
+              )}
+              {isDemo && (
+                <span className="muted" style={{ fontSize: '0.82rem' }}>
+                  Demo account — sign up to subscribe.
+                </span>
               )}
             </div>
           </>

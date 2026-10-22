@@ -6,6 +6,8 @@ import type { Session } from '@supabase/supabase-js'
 
 interface AuthCtx {
   session: Session | null
+  /** True when the session is the fake ?demo=1 preview, not a real account. */
+  isDemo: boolean
   loading: boolean
   configured: boolean
   isAdmin: boolean
@@ -17,6 +19,7 @@ interface AuthCtx {
 
 const Ctx = createContext<AuthCtx>({
   session: null,
+  isDemo: false,
   loading: true,
   configured: false,
   isAdmin: false,
@@ -109,6 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <Ctx.Provider
       value={{
         session: effectiveSession,
+        isDemo: demoPreview,
         loading: effectiveLoading,
         configured,
         isAdmin: effectiveAdmin,

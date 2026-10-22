@@ -9,9 +9,14 @@ import { FaqSection } from '../components/Proof'
 
 /** Public pricing page (B1) — no login needed to browse. */
 export default function Pricing() {
-  const { session } = useAuth()
+  const { session, isDemo } = useAuth()
   const billing = useBilling()
   const [busy, setBusy] = useState<string | null>(null)
+
+  // A demo session is a fake user (id 'demo-user'). Passing it to Stripe would
+  // charge a real card and hand the webhook a user_id that does not exist, so
+  // the buyer pays and gets nothing. Demo visitors must sign up first.
+  const realSession = isDemo ? null : session
 
   function go(paymentLink: string, planId: string) {
     if (!paymentLink) {
@@ -20,10 +25,18 @@ export default function Pricing() {
       setTimeout(() => setBusy(null), 2500)
       return
     }
+    // No real account = no client_reference_id = the webhook cannot attach the
+    // payment to anyone. The card would be charged and the plan would never
+    // activate. Send them to sign up instead of to Stripe.
+    if (!realSession) {
+      trackEvent('checkout_blocked_no_account', { plan_id: planId })
+      setBusy(`gate:${planId}`)
+      return
+    }
     // Funnel step: the click that hands off to Stripe. Pair with Stripe's own
     // checkout.session.completed webhook to measure click -> paid conversion.
     trackEvent('begin_checkout', { plan_id: planId, currency: 'USD' })
-    const url = checkoutUrl(paymentLink, session?.user?.email ?? null, session?.user?.id ?? null)
+    const url = checkoutUrl(paymentLink, realSession.user.email ?? null, realSession.user.id ?? null)
     window.location.href = url
   }
 
@@ -61,7 +74,7 @@ export default function Pricing() {
             </ul>
             {p.paymentLink ? (
               <button className={`btn ${p.featured ? 'btn-primary' : 'btn'} btn-lg`} onClick={() => go(p.paymentLink, p.id)}>
-                {p.cta}
+                {busy === `gate:${p.id}` ? 'Create a free account first' : busy === p.id ? 'Billing coming soon…' : p.cta}
               </button>
             ) : (
               <button className={`btn ${p.featured ? 'btn-primary' : 'btn'} btn-lg`} onClick={() => go('', p.id)}>
@@ -74,13 +87,14 @@ export default function Pricing() {
 
       <section className="pricing-foot">
         <p className="muted">
-          {session ? (
+          {realSession ? (
             <>
-              Logged in as <b>{session.user.email}</b>. Your subscription activates automatically after payment.
+              Logged in as <b>{realSession.user.email}</b>. Your subscription activates automatically after payment.
             </>
           ) : (
             <>
               Have an account? <Link to="/app">Log in</Link> before checkout so your plan activates instantly.
+              {' '}New here? <Link to="/app">Sign up</Link> — the demo account cannot take a payment.
             </>
           )}
         </p>

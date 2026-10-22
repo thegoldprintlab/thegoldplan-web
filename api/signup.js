@@ -30,9 +30,28 @@ import pg from 'pg'
 
 const { Pool } = pg
 
+// POSTGRES_URL carries sslmode=require, which pg treats as verify-full and then
+// rejects Supabase's cert (SELF_SIGNED_CERT_IN_CHAIN). Strip it and pass our own
+// ssl object instead. Verified against production 22 Oct 2026.
+function connStr() {
+  const raw = process.env.POSTGRES_URL || process.env.DATABASE_URL || ''
+  if (!raw) return ''
+  try {
+    const u = new URL(raw)
+    u.searchParams.delete('sslmode')
+    u.searchParams.delete('ssl')
+    return u.toString()
+  } catch {
+    return raw
+  }
+}
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || '',
-  ssl: { rejectUnauthorized: false },
+  // POSTGRES_URL first: DATABASE_URL on this project carries a corrupted
+  // password (16 chars vs 15 -> 28P01), which made every signup return 500.
+  // Verified 22 Oct 2026. DATABASE_URL kept as last-resort fallback.
+  connectionString: connStr(),
+  ssl: { rejectUnauthorized: false, checkServerIdentity: () => undefined },
   max: 2,
 })
 
@@ -71,7 +90,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  if (!SUPABASE_URL || !SERVICE_KEY || !process.env.DATABASE_URL) {
+  if (!SUPABASE_URL || !SERVICE_KEY || !(process.env.POSTGRES_URL || process.env.DATABASE_URL)) {
     return res.status(500).json({ error: 'Signup is not configured on the server.' })
   }
 
