@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
   "redirects": [
     {
       "source": "/(.*)",
@@ -11,6 +10,15 @@
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
+    {
+      "comment": "Halaman SEO statik. Vercel padan fail dahulu, tapi /slug tak jumpa /slug.html tanpa rewrite ni. Tambah entri baru di sini bila tambah halaman dalam scripts/gen_seo_pages.py.",
+      "source": "/prop-firm-daily-loss-tracker",
+      "destination": "/prop-firm-daily-loss-tracker.html"
+    },
+    { "source": "/xauusd-trading-journal", "destination": "/xauusd-trading-journal.html" },
+    { "source": "/mt5-trading-journal-import", "destination": "/mt5-trading-journal-import.html" },
+    { "source": "/trading-journal-vs-excel", "destination": "/trading-journal-vs-excel.html" },
+    { "source": "/trading-journal-emotions", "destination": "/trading-journal-emotions.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
