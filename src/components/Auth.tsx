@@ -50,10 +50,18 @@ export default function Auth() {
 
     if (REQUIRE_VERIFICATION) {
       // Native flow — Supabase sends the confirmation email.
-      const { error } = await sb.auth.signUp({ email, password })
+      const { data, error } = await sb.auth.signUp({ email, password })
       setBusy(false)
       if (error) {
         setMsg(error.message)
+        return
+      }
+      // Supabase returns 200 with an empty `identities` for an email that
+      // already exists, and sends NO email. Saying "we sent a link" there is a
+      // lie that leaves the user waiting forever — tell them to log in instead.
+      if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        setMode('login')
+        setMsg('That email already has an account. Log in, or use "Lupa password?" if you never confirmed it.')
         return
       }
       setSentTo(email)
