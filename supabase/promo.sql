@@ -47,9 +47,11 @@ begin
     raise exception 'Not authenticated';
   end if;
 
+  -- Lock the row: dua redemption serentak tak boleh sama-sama lulus semakan used_count.
   select * into v_code
   from public.promo_codes
-  where code = upper(trim(p_code));
+  where code = upper(trim(p_code))
+  for update;
 
   if not found then
     raise exception 'Invalid promo code';
