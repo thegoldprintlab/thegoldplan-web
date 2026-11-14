@@ -10,6 +10,7 @@ import { closeTrade, evaluateBar, floating, fmtMoney, usedMargin, withStops } fr
 import type { Bar, ClosedTrade, Manifest, Position, Side, TF } from '../sim/types'
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase'
 import { drawdownOf, readSessions, writeSession, type SavedSession } from '../sim/sessions'
+import { useChartColors } from '../sim/useChartColors'
 import { isDemoPreview } from '../lib/demo'
 import { trackEvent } from '../lib/analytics'
 
@@ -17,18 +18,8 @@ const SPEEDS = [0.5, 1, 2, 4, 8, 16] as const
 const TFS: TF[] = [1, 5, 15, 60, 240]
 const START_BALANCE = 10000
 
-function useDark() {
-  const [dark, setDark] = useState(() => document.documentElement.getAttribute('data-theme') !== 'light')
-  useEffect(() => {
-    const obs = new MutationObserver(() => setDark(document.documentElement.getAttribute('data-theme') !== 'light'))
-    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
-    return () => obs.disconnect()
-  }, [])
-  return dark
-}
-
 export default function Simulator() {
-  const dark = useDark()
+  const colors = useChartColors()
 
   const [manifest, setManifest] = useState<Manifest | null>(null)
   const [month, setMonth] = useState('')
@@ -430,7 +421,7 @@ export default function Simulator() {
             tp={positions[0]?.tp ?? null}
             entry={positions[0]?.entry ?? null}
             side={positions[0]?.side ?? null}
-            isDark={dark}
+            colors={colors}
           />
         </div>
         <aside className="sim-side">

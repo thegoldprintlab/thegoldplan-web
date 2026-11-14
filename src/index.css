@@ -1569,9 +1569,9 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 .sim-btn span { font-weight: 700; font-size: 0.9rem; letter-spacing: 0.06em; }
 .sim-btn small { font-family: var(--font-mono); font-size: 0.68rem; opacity: 0.8; }
 .sim-btn.buy { border-color: var(--green); background: var(--green-soft); color: var(--green); }
-.sim-btn.buy:hover:not(:disabled) { background: rgba(47, 191, 113, 0.2); }
+.sim-btn.buy:hover:not(:disabled) { background: color-mix(in srgb, var(--green) 22%, transparent); }
 .sim-btn.sell { border-color: var(--red); background: var(--red-soft); color: var(--red); }
-.sim-btn.sell:hover:not(:disabled) { background: rgba(229, 72, 77, 0.2); }
+.sim-btn.sell:hover:not(:disabled) { background: color-mix(in srgb, var(--red) 22%, transparent); }
 .sim-ticket-note { font-size: 0.68rem; line-height: 1.5; margin: 0; }
 
 /* ---------- Positions ---------- */
