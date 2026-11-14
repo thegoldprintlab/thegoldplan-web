@@ -135,6 +135,19 @@ export default function Landing() {
           <div className="panel landing-card">
             <div className="landing-card-icon" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M4 20V9M10 20V4M16 20v-7M22 20V12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            </div>
+            <h3>Chart simulator</h3>
+            <p>
+              Replay four years of real XAUUSD M1 data bar by bar. Practise entries, stops and sizing with
+              no money at risk — then carry the plan into your live account.
+            </p>
+          </div>
+
+          <div className="panel landing-card">
+            <div className="landing-card-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
               </svg>
@@ -184,6 +197,9 @@ export default function Landing() {
           <div className="landing-hero-actions">
             <Link className="btn btn-primary btn-lg" to="/app?demo=1">
               Explore the demo
+            </Link>
+            <Link className="btn btn-ghost btn-lg" to="/app/sim?demo=1">
+              Try the chart simulator
             </Link>
             <Link className="btn btn-ghost btn-lg" to="/pricing">
               See pricing

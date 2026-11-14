@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { DataProvider } from './context/DataContext'
 import { BillingProvider } from './context/BillingContext'
@@ -16,6 +17,10 @@ import AccountPage from './pages/Account'
 import AdminPage from './pages/Admin'
 import HowToUse from './pages/HowToUse'
 import ImportPage from './pages/Import'
+
+// Simulator dibundel berasingan — lightweight-charts + enjin replay tak
+// perlu masuk bundle utama untuk pengguna yang cuma nak guna journal.
+const Simulator = lazy(() => import('./pages/Simulator'))
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
 import Privacy from './pages/Privacy'
@@ -100,6 +105,14 @@ function Shell() {
               <Route path="/input" element={<InputForm />} />
               <Route path="/log" element={<TradingLog />} />
               <Route path="/import" element={<ImportPage />} />
+              <Route
+                path="/sim"
+                element={
+                  <Suspense fallback={<div className="page-loading">Loading simulator…</div>}>
+                    <Simulator />
+                  </Suspense>
+                }
+              />
               <Route path="/help" element={<HowToUse />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/account" element={<AccountPage />} />
