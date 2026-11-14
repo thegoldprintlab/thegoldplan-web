@@ -271,6 +271,9 @@ p { margin: 0; }
   min-width: 0;
 }
 
+/* Simulator perlukan ruang — carta jadi besar, bukan tersepit dalam 1200px. */
+.app-shell:has(.sim) { max-width: min(1840px, 100%); }
+
 .main { min-height: 60vh; }
 
 /* ---------- Top bar ---------- */
@@ -1484,7 +1487,7 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .sim-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(0, 1fr) 280px;
   grid-template-areas:
     'chart ticket'
     'pos   ticket';
@@ -1513,7 +1516,7 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   font-size: 0.72rem;
 }
 .sim-chart-legend b { font-size: 0.8rem; letter-spacing: 0.04em; }
-.sim-chart-canvas { width: 100%; height: min(58vh, 480px); min-height: 300px; }
+.sim-chart-canvas { width: 100%; height: clamp(420px, 72vh, 760px); }
 
 /* ---------- Ticket ---------- */
 .sim-ticket { display: flex; flex-direction: column; gap: 0; padding: 0; overflow: hidden; }
@@ -1620,7 +1623,7 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   }
   .sim-side { position: static; }
   .sim-toolbar-group:last-child { margin-left: 0; }
-  .sim-chart-canvas { height: min(52vh, 400px); }
+  .sim-chart-canvas { height: clamp(340px, 58vh, 520px); }
 }
 @media (max-width: 620px) {
   .sim-toolbar { gap: 10px; padding: 9px 10px; }
@@ -1644,3 +1647,165 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 .sim-saved > summary::before { content: '▸'; color: var(--ink-subtle); font-size: 0.7rem; }
 .sim-saved[open] > summary::before { content: '▾'; }
 .sim-saved > summary:hover { background: var(--surface-2); }
+
+/* ---------- Chart stage + overlay (drawings, RSI) ---------- */
+.sim-chart-stage { position: relative; }
+.sim-chart-overlay {
+  position: absolute;
+  inset: 0;
+  /* canvas = replaced element: inset:0 sahaja tak cukup, ia kekal 300x150 */
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+.sim-chart-overlay.drawing {
+  pointer-events: auto;
+  cursor: crosshair;
+}
+.sim-chart-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  border: 1px solid var(--hairline-strong);
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  z-index: 3;
+}
+.sim-chart-active-ind {
+  margin-left: auto;
+  font-size: 0.68rem;
+  color: var(--ink-subtle);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Settings panel ---------- */
+.sim-settings {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(360px, 92vw);
+  background: var(--surface);
+  border-left: 1px solid var(--hairline-strong);
+  box-shadow: var(--shadow-md);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sim-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 0.9rem;
+}
+.sim-settings-body {
+  overflow-y: auto;
+  padding: 4px 16px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.sim-settings-body section { display: flex; flex-direction: column; gap: 9px; padding-top: 14px; }
+.sim-settings-body h4 {
+  margin: 0;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--ink-subtle);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+.seg-wrap { flex-wrap: wrap; }
+
+.sim-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  cursor: pointer;
+  line-height: 1.35;
+}
+.sim-toggle input[type='checkbox'] {
+  /* reset global `input { padding: 10px 13px; width: 100% }` — ia buat checkbox 327px */
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  padding: 0;
+  margin: 2px 0 0;
+  accent-color: var(--primary);
+  flex: 0 0 auto;
+}
+.sim-toggle em { font-style: normal; font-size: 0.72rem; }
+
+.sim-colors { display: flex; gap: 14px; }
+.sim-colors label { display: flex; align-items: center; gap: 7px; font-size: 0.8rem; color: var(--ink-muted); }
+.sim-colors input[type='color'],
+.sim-tool-color input[type='color'] {
+  padding: 0;
+  width: 32px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
+}
+
+.sim-ind { display: flex; align-items: center; gap: 8px; }
+.sim-ind .sim-toggle { flex: 1; }
+.sim-num {
+  width: 58px;
+  padding: 4px 6px;
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline-strong);
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.sim-tools { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.sim-tool {
+  width: 34px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline-strong);
+  background: var(--surface-2);
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.14s ease, color 0.14s ease;
+}
+.sim-tool:hover { border-color: var(--primary); color: var(--ink); }
+.sim-tool.active { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+.sim-tool-color { display: inline-flex; margin-left: 4px; }
+.sim-note { font-size: 0.72rem; line-height: 1.5; margin: 0; }
+.sim-tools-actions { display: flex; gap: 8px; margin-top: 2px; }
+
+@media (max-width: 620px) {
+  .sim-settings { width: 100vw; }
+  .sim-chart-hint { font-size: 0.64rem; padding: 4px 9px; }
+  .sim-chart-active-ind { display: none; }
+}
+
+/* Fullscreen chart — hides ticket & tables so the chart fills the screen. */
+.sim-expanded {
+  grid-template-columns: 1fr !important;
+  grid-template-areas: 'chart' !important;
+}
+.sim-expanded .sim-side,
+.sim-expanded .sim-pos-slot { display: none; }
+.sim-expanded .sim-chart-canvas { height: calc(100vh - 210px); }

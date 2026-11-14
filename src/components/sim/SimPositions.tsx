@@ -40,7 +40,7 @@ export default function SimPositions({ positions, closed, price, onClose, onClos
 
       {tab === 'open' ? (
         positions.length === 0 ? (
-          <p className="muted sim-empty">Tiada posisi terbuka. Tekan BUY atau SELL pada ticket.</p>
+          <p className="muted sim-empty">No open positions. Use BUY or SELL on the ticket.</p>
         ) : (
           <div className="table-wrap">
             <table className="tbl tbl--wide">
@@ -81,7 +81,7 @@ export default function SimPositions({ positions, closed, price, onClose, onClos
           </div>
         )
       ) : closed.length === 0 ? (
-        <p className="muted sim-empty">Belum ada trade ditutup.</p>
+        <p className="muted sim-empty">No closed trades yet.</p>
       ) : (
         <div className="table-wrap">
           <table className="tbl tbl--wide">

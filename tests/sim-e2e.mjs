@@ -1,6 +1,6 @@
 import { chromium } from 'playwright'
 
-const BASE = process.env.BASE || 'http://localhost:4178'
+const BASE = process.env.BASE || 'http://localhost:4186'
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1440, height: 960 } })
 const errors = []

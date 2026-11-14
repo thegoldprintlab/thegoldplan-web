@@ -65,13 +65,13 @@ export default function SimTicket({ price, balance, equity, margin, freeMargin, 
         </div>
 
         <button className="sim-more" onClick={() => setRiskOpen((v) => !v)} type="button">
-          {riskOpen ? '－ Sembunyi SL/TP' : '＋ Set SL / TP'}
+          {riskOpen ? '− Hide SL / TP' : '+ Set SL / TP'}
         </button>
 
         {riskOpen && (
           <div className="sim-risk">
             <div className="field">
-              <label htmlFor="sim-sl">Stop loss (jarak harga $)</label>
+              <label htmlFor="sim-sl">Stop loss (price distance, $)</label>
               <input
                 id="sim-sl"
                 type="number"
@@ -82,7 +82,7 @@ export default function SimTicket({ price, balance, equity, margin, freeMargin, 
               />
             </div>
             <div className="field">
-              <label htmlFor="sim-tp">Take profit (jarak harga $)</label>
+              <label htmlFor="sim-tp">Take profit (price distance, $)</label>
               <input
                 id="sim-tp"
                 type="number"
@@ -93,7 +93,7 @@ export default function SimTicket({ price, balance, equity, margin, freeMargin, 
               />
             </div>
             <p className="muted sim-risk-note">
-              0 = tiada. Risiko SL ≈ {fmtMoney(slRisk)} · margin ≈ {fmtMoney(marginNeeded)}
+              0 = none. SL risk ≈ {fmtMoney(slRisk)} · margin ≈ {fmtMoney(marginNeeded)}
             </p>
           </div>
         )}
@@ -110,7 +110,7 @@ export default function SimTicket({ price, balance, equity, margin, freeMargin, 
         </div>
 
         <p className="muted sim-ticket-note">
-          XAUUSD · 1 lot = 100 oz · leverage 1:500. PnL = pergerakan harga × 100 × lot.
+          XAUUSD · 1 lot = 100 oz · leverage 1:500. PnL = price move × 100 × lots.
         </p>
       </div>
     </div>

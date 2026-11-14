@@ -2,15 +2,24 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SimChart from '../components/sim/SimChart'
 import SimPositions from '../components/sim/SimPositions'
+import SimSettingsPanel from '../components/sim/SimSettingsPanel'
 import SimTicket from '../components/sim/SimTicket'
 import { aggregate, fmtTime, indexAtOrBefore, TF_LABEL } from '../sim/aggregate'
-import { getManifest, monthKey } from '../sim/data'
-import { loadMonthWrapped } from '../sim/data'
+import { getManifest, loadMonthWrapped } from '../sim/data'
 import { closeTrade, evaluateBar, floating, fmtMoney, usedMargin, withStops } from '../sim/engine'
 import type { Bar, ClosedTrade, Manifest, Position, Side, TF } from '../sim/types'
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase'
 import { drawdownOf, readSessions, writeSession, type SavedSession } from '../sim/sessions'
 import { useChartColors } from '../sim/useChartColors'
+import type { Drawing, Tool } from '../sim/drawings'
+import {
+  loadChartSettings,
+  loadIndicators,
+  saveChartSettings,
+  saveIndicators,
+  type ChartSettings,
+  type IndicatorSettings,
+} from '../sim/settings'
 import { isDemoPreview } from '../lib/demo'
 import { trackEvent } from '../lib/analytics'
 
@@ -38,18 +47,31 @@ export default function Simulator() {
   const [seq, setSeq] = useState(1)
   const [savedMsg, setSavedMsg] = useState<string | null>(null)
   const [savedList, setSaved] = useState<SavedSession[]>(() => readSessions())
+
+  // carta + objek
+  const [chartSettings, setChartSettings] = useState<ChartSettings>(loadChartSettings)
+  const [indicators, setIndicators] = useState<IndicatorSettings>(loadIndicators)
+  const [tool, setTool] = useState<Tool>('none')
+  const [drawColor, setDrawColor] = useState('#5e6ad2')
+  const [drawings, setDrawings] = useState<Drawing[]>([])
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [expanded, setExpanded] = useState(false)
+
   /** cursor terakhir yang dah diperiksa untuk SL/TP (elak semak berulang) */
   const lastChecked = useRef(0)
 
   const bars = useMemo(() => aggregate(m1, tf), [m1, tf])
   const price = cursor > 0 && bars[cursor - 1] ? bars[cursor - 1].c : 0
 
+  useEffect(() => saveChartSettings(chartSettings), [chartSettings])
+  useEffect(() => saveIndicators(indicators), [indicators])
+
   // ── muat manifest ───────────────────────────────────────────────
   useEffect(() => {
     getManifest()
       .then((m) => {
         setManifest(m)
-        // mula pada bulan rawak — replay bukan hafalan
+        // start on a random month — replay, not memorising
         const pick = m.months[Math.floor(Math.random() * m.months.length)]
         setMonth(pick)
       })
@@ -67,7 +89,6 @@ export default function Simulator() {
       .then((rows) => {
         if (dead) return
         setM1(rows)
-        // cursor mula di 40% supaya ada sejarah di kiri
         const agg = aggregate(rows, tf)
         setCursor(Math.max(30, Math.floor(agg.length * 0.4)))
         setLoading(false)
@@ -81,7 +102,7 @@ export default function Simulator() {
       dead = true
       ac.abort()
     }
-    // tf sengaja tak masuk: tukar tf tak patut tarik semula data
+    // tf deliberately excluded: changing timeframe should not refetch data
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [month])
 
@@ -92,11 +113,12 @@ export default function Simulator() {
     setMarginCall(false)
     setPlaying(false)
     setSavedMsg(null)
+    setDrawings([])
     lastChecked.current = -1
     if (nextMonth) setMonth(nextMonth)
   }, [])
 
-  // ── enjin main ──────────────────────────────────────────────────
+  // ── playback ────────────────────────────────────────────────────
   useEffect(() => {
     if (!playing) return
     const interval = 320 / speed
@@ -214,11 +236,11 @@ export default function Simulator() {
     resetSession(pick)
   }
 
-  // ── simpan ke Supabase ──────────────────────────────────────────
+  // ── simpan sesi ─────────────────────────────────────────────────
   async function saveSession() {
     setSavedMsg(null)
     if (!closed.length) {
-      setSavedMsg('Belum ada trade ditutup untuk disimpan.')
+      setSavedMsg('No closed trades to save yet.')
       return
     }
     const net = closed.reduce((a, t) => a + t.pnl, 0)
@@ -246,17 +268,17 @@ export default function Simulator() {
         exitTime: t.exitTime,
       })),
     }
-    // Lapisan 1 — selalu berjaya, tak perlu akaun atau DB.
+    // Layer 1 — always works, no account or DB needed.
     setSaved(writeSession(session))
     trackEvent('sim_session_saved', { trades: closed.length, net: Number(net.toFixed(2)) })
 
-    // Lapisan 2 — Supabase, kalau table dah wujud dan user log masuk.
+    // Layer 2 — Supabase, when the table exists and the user is signed in.
     if (isDemoPreview()) {
-      setSavedMsg(`Sesi disimpan pada peranti ini sahaja (${closed.length} trade, demo mode).`)
+      setSavedMsg(`Saved on this device only (${closed.length} trades, demo mode).`)
       return
     }
     if (!isSupabaseConfigured()) {
-      setSavedMsg(`Sesi disimpan pada peranti ini (${closed.length} trade).`)
+      setSavedMsg(`Saved on this device (${closed.length} trades).`)
       return
     }
     try {
@@ -264,7 +286,7 @@ export default function Simulator() {
       const { data: u } = await sb.auth.getUser()
       const uid = u.user?.id
       if (!uid) {
-        setSavedMsg(`Sesi disimpan pada peranti ini (${closed.length} trade). Log masuk untuk sync.`)
+        setSavedMsg(`Saved on this device (${closed.length} trades). Sign in to sync.`)
         return
       }
       const { data: sess, error } = await sb
@@ -302,14 +324,12 @@ export default function Simulator() {
       }))
       const { error: e2 } = await sb.from('sim_trades').insert(rows)
       if (e2) throw e2
-      setSavedMsg(`Sesi disimpan + sync ke akaun (${closed.length} trade).`)
+      setSavedMsg(`Saved and synced to your account (${closed.length} trades).`)
     } catch (e) {
-      // Table mungkin belum dicipta (supabase/simulator.sql). Sesi tetap selamat
-      // pada peranti, jadi jangan tuduh data hilang.
+      // Table may not exist yet (supabase/simulator.sql). The session is still
+      // safe on this device — never imply the data was lost.
       setSavedMsg(
-        `Sesi disimpan pada peranti ini. Sync Supabase gagal: ${
-          e instanceof Error ? e.message : String(e)
-        }`
+        `Saved on this device. Cloud sync failed: ${e instanceof Error ? e.message : String(e)}`
       )
     }
   }
@@ -327,11 +347,17 @@ export default function Simulator() {
           <div className="kicker">Replay lab</div>
           <h1>XAUUSD Chart Simulator</h1>
           <p className="muted" style={{ marginTop: 4 }}>
-            Data M1 sebenar ({(manifest?.bars ?? 0).toLocaleString()} bar, {manifest?.from} → {manifest?.to}).
-            Tiada wang sebenar, tiada sambungan broker.
+            Real M1 data ({(manifest?.bars ?? 0).toLocaleString()} bars, {manifest?.from} → {manifest?.to}).
+            No real money, no broker connection.
           </p>
         </div>
         <div className="sim-head-actions">
+          <button className="btn btn-sm" onClick={() => setSettingsOpen(true)}>
+            ⚙ Chart settings
+          </button>
+          <button className="btn btn-sm" onClick={() => setExpanded((v) => !v)}>
+            {expanded ? '⤡ Collapse' : '⤢ Expand'}
+          </button>
           <button className="btn btn-sm" onClick={() => resetSession()} disabled={!m1.length}>
             Reset
           </button>
@@ -346,11 +372,11 @@ export default function Simulator() {
 
       {err && <div className="sim-alert red">{err}</div>}
       {savedMsg && <div className="sim-alert">{savedMsg}</div>}
-      {marginCall && <div className="sim-alert red">⚠ Margin call — posisi ditutup paksa.</div>}
+      {marginCall && <div className="sim-alert red">⚠ Margin call — positions were force closed.</div>}
 
       <div className="sim-toolbar">
         <div className="sim-toolbar-group">
-          <button className="btn btn-sm" onClick={() => resetSession()} title="Mula semula bulan ini">
+          <button className="btn btn-sm" onClick={() => resetSession()} title="Restart this month">
             ⏮
           </button>
           <button
@@ -370,6 +396,7 @@ export default function Simulator() {
               setCursor((c) => Math.min(bars.length - 1, c + 1))
             }}
             disabled={!bars.length || atEnd}
+            title="Step one bar"
           >
             ⏭
           </button>
@@ -394,7 +421,7 @@ export default function Simulator() {
             className="input sim-month"
             value={month}
             onChange={(e) => resetSession(e.target.value)}
-            aria-label="Bulan data"
+            aria-label="Data month"
           >
             {(manifest?.months ?? []).map((m) => (
               <option key={m} value={m}>
@@ -410,9 +437,9 @@ export default function Simulator() {
         </div>
       </div>
 
-      {loading && <div className="sim-loading">Memuatkan data {month}…</div>}
+      {loading && <div className="sim-loading">Loading {month} data…</div>}
 
-      <div className="sim-grid">
+      <div className={`sim-grid ${expanded ? 'sim-expanded' : ''}`}>
         <div className="sim-chart-slot">
           <SimChart
             bars={bars}
@@ -422,6 +449,13 @@ export default function Simulator() {
             entry={positions[0]?.entry ?? null}
             side={positions[0]?.side ?? null}
             colors={colors}
+            settings={chartSettings}
+            indicators={indicators}
+            tool={tool}
+            drawColor={drawColor}
+            drawings={drawings}
+            onAddDrawing={(d) => setDrawings((prev) => [...prev, d])}
+            onRemoveDrawing={(id) => setDrawings((prev) => prev.filter((x) => x.id !== id))}
           />
         </div>
         <aside className="sim-side">
@@ -449,25 +483,26 @@ export default function Simulator() {
 
       <div className="sim-foot">
         <span className="muted">
-          Sesi ini guna {closed.length} trade ditutup · net {fmtMoney(closed.reduce((a, t) => a + t.pnl, 0))}
+          This session: {closed.length} closed trade{closed.length === 1 ? '' : 's'} · net{' '}
+          {fmtMoney(closed.reduce((a, t) => a + t.pnl, 0))}
         </span>
         <Link className="btn btn-sm btn-ghost" to="/app">
-          ← Balik ke journal
+          ← Back to journal
         </Link>
       </div>
 
       {savedList.length > 0 && (
         <details className="panel sim-saved">
           <summary>
-            Sesi disimpan ({savedList.length})
-            <span className="muted"> — pada peranti ini</span>
+            Saved sessions ({savedList.length})
+            <span className="muted"> — on this device</span>
           </summary>
           <div className="table-wrap">
             <table className="tbl tbl--wide">
               <thead>
                 <tr>
-                  <th>Bila</th>
-                  <th>Bulan</th>
+                  <th>When</th>
+                  <th>Month</th>
                   <th>TF</th>
                   <th>Trades</th>
                   <th>Net</th>
@@ -484,7 +519,7 @@ export default function Simulator() {
                     <td>{s.trades}</td>
                     <td className={s.netPnl >= 0 ? 'green' : 'red'}>{fmtMoney(s.netPnl)}</td>
                     <td className="mono">{fmtMoney(-s.maxDrawdown)}</td>
-                    <td>{s.marginCalls > 0 ? <span className="sim-badge sl">YA</span> : '—'}</td>
+                    <td>{s.marginCalls > 0 ? <span className="sim-badge sl">YES</span> : '—'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -492,6 +527,22 @@ export default function Simulator() {
           </div>
         </details>
       )}
+
+      <SimSettingsPanel
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        settings={chartSettings}
+        onSettings={setChartSettings}
+        indicators={indicators}
+        onIndicators={setIndicators}
+        tool={tool}
+        onTool={(t) => setTool(t)}
+        drawColor={drawColor}
+        onDrawColor={setDrawColor}
+        drawingCount={drawings.length}
+        onClearDrawings={() => setDrawings([])}
+        onUndoDrawing={() => setDrawings((prev) => prev.slice(0, -1))}
+      />
     </div>
   )
 }
