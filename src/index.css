@@ -1496,6 +1496,7 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 }
 .sim-chart-slot { grid-area: chart; min-width: 0; }
 .sim-side { grid-area: ticket; position: sticky; top: 14px; }
+.sim-orderbar-slot { grid-area: order; }
 .sim-pos-slot { grid-area: pos; min-width: 0; }
 
 /* ---------- Chart ---------- */
@@ -1801,11 +1802,106 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   .sim-chart-active-ind { display: none; }
 }
 
-/* Fullscreen chart — hides ticket & tables so the chart fills the screen. */
+/* Carta penuh — tiket sisi disembunyi, diganti bar order mendatar
+   bawah carta. Jadual posisi kekal. */
 .sim-expanded {
   grid-template-columns: 1fr !important;
-  grid-template-areas: 'chart' !important;
+  grid-template-areas:
+    'chart' !important
+    'order' !important
+    'pos' !important;
 }
-.sim-expanded .sim-side,
-.sim-expanded .sim-pos-slot { display: none; }
-.sim-expanded .sim-chart-canvas { height: calc(100vh - 210px); }
+.sim-expanded .sim-side { display: none; }
+.sim-expanded .sim-chart-canvas { height: calc(100vh - 300px); }
+
+/* ---------- Order bar (horizontal, below chart when expanded) ---------- */
+.sim-orderbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.sim-orderbar-bal { font-size: 0.82rem; display: flex; gap: 5px; align-items: baseline; }
+.sim-orderbar-lots { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; }
+.sim-orderbar-lots input {
+  width: 72px;
+  padding: 5px 7px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+}
+.sim-orderbar .sim-btn { flex: 0 0 auto; min-width: 110px; padding: 8px 14px; }
+
+/* ---------- Drawing toolbar ---------- */
+.sim-drawbar { display: flex; align-items: center; gap: 4px; }
+.sim-drawbar .sim-tool {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.sim-drawbar .sim-tool.active { border-color: var(--accent); color: var(--accent); }
+.sim-tool-color input { width: 26px; height: 26px; padding: 0; border: none; background: none; cursor: pointer; }
+
+/* ---------- Chart clock (time under the crosshair) ---------- */
+.sim-hover-clock { color: var(--accent); }
+
+/* ---------- Date picker / calendar ---------- */
+.sim-date { position: relative; }
+.sim-date .sim-month { cursor: pointer; }
+.sim-date-caret { margin-left: 3px; font-size: 0.7em; }
+.sim-cal {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  width: 248px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+}
+.sim-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sim-cal-head button {
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+.sim-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.sim-cal-dow { margin-bottom: 4px; }
+.sim-cal-dow span { text-align: center; font-size: 0.66rem; color: var(--muted); }
+.sim-cal-day {
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.78rem;
+  position: relative;
+}
+.sim-cal-day:hover:not(:disabled) { background: var(--bg); }
+.sim-cal-day:disabled { opacity: 0.35; cursor: default; }
+.sim-cal-day.news { color: #f59e0b; font-weight: 700; }
+.sim-cal-day.holiday { box-shadow: inset 0 0 0 1px var(--red); color: var(--red); }
+.sim-cal-legend { display: flex; gap: 10px; margin-top: 8px; font-size: 0.66rem; color: var(--muted); }
+.sim-cal-legend .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 3px; }
+.sim-cal-legend .dot.news { background: #f59e0b; }
+.sim-cal-legend .dot.holiday { background: var(--red); }

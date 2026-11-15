@@ -2,23 +2,24 @@ import type { Bar, ClosedTrade, Position, Side } from './types'
 
 /** XAUUSD: 1 lot = 100 oz → pergerakan $1 = $100 per lot. */
 export const CONTRACT = 100
-export const LEVERAGE = 500
+export const DEFAULT_LEVERAGE = 500
+export const DEFAULT_BALANCE = 10_000
 
 export function pnlOf(side: Side, entry: number, exit: number, lots: number): number {
   const diff = side === 'BUY' ? exit - entry : entry - exit
   return diff * CONTRACT * lots
 }
 
-export function marginOf(price: number, lots: number): number {
-  return (price * CONTRACT * lots) / LEVERAGE
+export function marginOf(price: number, lots: number, leverage = DEFAULT_LEVERAGE): number {
+  return (price * CONTRACT * lots) / leverage
 }
 
 export function floating(positions: Position[], price: number): number {
   return positions.reduce((a, p) => a + pnlOf(p.side, p.entry, price, p.lots), 0)
 }
 
-export function usedMargin(positions: Position[], price: number): number {
-  return positions.reduce((a, p) => a + marginOf(p.entry || price, p.lots), 0)
+export function usedMargin(positions: Position[], price: number, leverage = DEFAULT_LEVERAGE): number {
+  return positions.reduce((a, p) => a + marginOf(p.entry || price, p.lots, leverage), 0)
 }
 
 export interface Fill {

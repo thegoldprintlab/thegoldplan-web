@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import SimChart from '../components/sim/SimChart'
+import SimDatePicker from '../components/sim/SimDatePicker'
+import SimDrawBar from '../components/sim/SimDrawBar'
 import SimPositions from '../components/sim/SimPositions'
 import SimSettingsPanel from '../components/sim/SimSettingsPanel'
 import SimTicket from '../components/sim/SimTicket'
@@ -13,19 +15,22 @@ import { drawdownOf, readSessions, writeSession, type SavedSession } from '../si
 import { useChartColors } from '../sim/useChartColors'
 import type { Drawing, Tool } from '../sim/drawings'
 import {
+  loadAccount,
   loadChartSettings,
   loadIndicators,
+  saveAccount,
   saveChartSettings,
   saveIndicators,
+  type AccountSettings,
   type ChartSettings,
   type IndicatorSettings,
 } from '../sim/settings'
+import { loadNews, newsDaysInRange, newsInRange, type NewsEvent } from '../sim/news'
 import { isDemoPreview } from '../lib/demo'
 import { trackEvent } from '../lib/analytics'
 
 const SPEEDS = [0.5, 1, 2, 4, 8, 16] as const
 const TFS: TF[] = [1, 5, 15, 60, 240]
-const START_BALANCE = 10000
 
 export default function Simulator() {
   const colors = useChartColors()
@@ -40,7 +45,7 @@ export default function Simulator() {
   const [err, setErr] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const [balance, setBalance] = useState(START_BALANCE)
+  const [balance, setBalance] = useState(() => loadAccount().startBalance)
   const [positions, setPositions] = useState<Position[]>([])
   const [closed, setClosed] = useState<ClosedTrade[]>([])
   const [marginCall, setMarginCall] = useState(false)
@@ -51,11 +56,17 @@ export default function Simulator() {
   // carta + objek
   const [chartSettings, setChartSettings] = useState<ChartSettings>(loadChartSettings)
   const [indicators, setIndicators] = useState<IndicatorSettings>(loadIndicators)
+  const [account, setAccount] = useState<AccountSettings>(loadAccount)
   const [tool, setTool] = useState<Tool>('none')
   const [drawColor, setDrawColor] = useState('#5e6ad2')
   const [drawings, setDrawings] = useState<Drawing[]>([])
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [expanded, setExpanded] = useState(false)
+  const [showSeparators, setShowSeparators] = useState(true)
+  const [tradeNews, setTradeNews] = useState(false)
+  const [news, setNews] = useState<NewsEvent[]>([])
+  const [recenterToken, setRecenterToken] = useState(0)
+  const [hoverTime, setHoverTime] = useState<string | null>(null)
 
   /** cursor terakhir yang dah diperiksa untuk SL/TP (elak semak berulang) */
   const lastChecked = useRef(0)
@@ -65,6 +76,27 @@ export default function Simulator() {
 
   useEffect(() => saveChartSettings(chartSettings), [chartSettings])
   useEffect(() => saveIndicators(indicators), [indicators])
+  useEffect(() => saveAccount(account), [account])
+
+  useEffect(() => {
+    loadNews().then(setNews)
+  }, [])
+
+  const newsDays = useMemo(() => {
+    if (!tradeNews || !manifest) return new Set<string>()
+    return newsDaysInRange(news, manifest.from, manifest.to)
+  }, [tradeNews, news, manifest])
+
+  const visibleNews = useMemo(() => {
+    if (!tradeNews || !bars.length) return []
+    return newsInRange(news, bars[0].t, bars[bars.length - 1].t)
+  }, [tradeNews, news, bars])
+
+  const newsCoverage = useMemo(() => {
+    if (!news.length) return 'loading…'
+    const days = news.map((e) => e.day).sort()
+    return `${days[0]} → ${days[days.length - 1]}`
+  }, [news])
 
   // ── muat manifest ───────────────────────────────────────────────
   useEffect(() => {
@@ -109,14 +141,14 @@ export default function Simulator() {
   const resetSession = useCallback((nextMonth?: string) => {
     setPositions([])
     setClosed([])
-    setBalance(START_BALANCE)
+    setBalance(account.startBalance)
     setMarginCall(false)
     setPlaying(false)
     setSavedMsg(null)
     setDrawings([])
     lastChecked.current = -1
     if (nextMonth) setMonth(nextMonth)
-  }, [])
+  }, [account.startBalance])
 
   // ── playback ────────────────────────────────────────────────────
   useEffect(() => {
@@ -147,6 +179,7 @@ export default function Simulator() {
     setTf(next)
     setCursor(Math.max(1, Math.min(nextCursor, nextBars.length)))
     lastChecked.current = -1
+    setRecenterToken((n) => n + 1)
   }
 
   // ── semak SL/TP pada setiap bar baru ────────────────────────────
@@ -178,7 +211,7 @@ export default function Simulator() {
     // margin call
     const fl = floating(still, bar.c)
     const eq = balance + fl
-    const mg = usedMargin(still, bar.c)
+    const mg = usedMargin(still, bar.c, account.leverage)
     if (mg > 0 && eq / mg < 0.5 && still.length) {
       const forced = still.map((p) => closeTrade(p, bar.c, bar.t, 'MANUAL'))
       setPositions([])
@@ -244,14 +277,14 @@ export default function Simulator() {
       return
     }
     const net = closed.reduce((a, t) => a + t.pnl, 0)
-    const dd = drawdownOf(closed, START_BALANCE)
+    const dd = drawdownOf(closed, account.startBalance)
     const session: SavedSession = {
       id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
       savedAt: Date.now(),
       symbol: 'XAUUSD',
       month,
       tf,
-      startBalance: START_BALANCE,
+      startBalance: account.startBalance,
       endBalance: balance,
       trades: closed.length,
       netPnl: Number(net.toFixed(2)),
@@ -297,7 +330,7 @@ export default function Simulator() {
           start_month: month,
           end_month: month,
           tf,
-          start_balance: START_BALANCE,
+          start_balance: account.startBalance,
           end_balance: balance,
           trades: closed.length,
           net_pnl: Number(net.toFixed(2)),
@@ -335,7 +368,7 @@ export default function Simulator() {
   }
 
   const equity = balance + floating(positions, price)
-  const margin = usedMargin(positions, price)
+  const margin = usedMargin(positions, price, account.leverage)
   const freeMargin = equity - margin
   const marginLevel = margin > 0 ? (equity / margin) * 100 : null
   const atEnd = cursor >= bars.length - 1
@@ -376,7 +409,15 @@ export default function Simulator() {
 
       <div className="sim-toolbar">
         <div className="sim-toolbar-group">
-          <button className="btn btn-sm" onClick={() => resetSession()} title="Restart this month">
+          <button
+            className="btn btn-sm"
+            onClick={() => {
+              setPlaying(false)
+              setCursor(Math.max(1, cursor - 1))
+            }}
+            disabled={!bars.length || cursor <= 1}
+            title="Step back one bar"
+          >
             ⏮
           </button>
           <button
@@ -417,22 +458,29 @@ export default function Simulator() {
               </button>
             ))}
           </div>
-          <select
-            className="input sim-month"
+          <SimDatePicker
             value={month}
-            onChange={(e) => resetSession(e.target.value)}
-            aria-label="Data month"
-          >
-            {(manifest?.months ?? []).map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
+            months={manifest?.months ?? []}
+            newsDays={newsDays}
+            showNews={tradeNews}
+            onPick={(m) => {
+              if (m !== month) resetSession(m)
+            }}
+          />
+          <SimDrawBar
+            tool={tool}
+            color={drawColor}
+            count={drawings.length}
+            onTool={setTool}
+            onColor={setDrawColor}
+            onUndo={() => setDrawings((prev) => prev.slice(0, -1))}
+            onClear={() => setDrawings([])}
+          />
         </div>
 
         <div className="sim-toolbar-group">
-          <span className="sim-clock">{price ? fmtTime(bars[cursor - 1].t) : '—'}</span>
+          <span className="sim-clock" title="Bar time (UTC)">{price ? fmtTime(bars[cursor - 1].t) : '—'}</span>
+          {hoverTime && <span className="sim-clock sim-hover-clock" title="Time under cursor (UTC)">{hoverTime}</span>}
           <span className="sim-price">{price ? price.toFixed(2) : '—'}</span>
         </div>
       </div>
@@ -456,6 +504,10 @@ export default function Simulator() {
             drawings={drawings}
             onAddDrawing={(d) => setDrawings((prev) => [...prev, d])}
             onRemoveDrawing={(id) => setDrawings((prev) => prev.filter((x) => x.id !== id))}
+            showSeparators={showSeparators}
+            news={visibleNews}
+            recenterToken={recenterToken}
+            onHoverTime={setHoverTime}
           />
         </div>
         <aside className="sim-side">
@@ -466,10 +518,27 @@ export default function Simulator() {
             margin={margin}
             freeMargin={freeMargin}
             marginLevel={marginLevel}
+            leverage={account.leverage}
             onOrder={openPosition}
             disabled={!price || marginCall}
           />
         </aside>
+        {expanded && (
+          <div className="sim-orderbar-slot">
+            <SimTicket
+              compact
+              price={price}
+              balance={balance}
+              equity={equity}
+              margin={margin}
+              freeMargin={freeMargin}
+              marginLevel={marginLevel}
+              leverage={account.leverage}
+              onOrder={openPosition}
+              disabled={!price || marginCall}
+            />
+          </div>
+        )}
         <div className="sim-pos-slot">
           <SimPositions
             positions={positions}
@@ -535,13 +604,13 @@ export default function Simulator() {
         onSettings={setChartSettings}
         indicators={indicators}
         onIndicators={setIndicators}
-        tool={tool}
-        onTool={(t) => setTool(t)}
-        drawColor={drawColor}
-        onDrawColor={setDrawColor}
-        drawingCount={drawings.length}
-        onClearDrawings={() => setDrawings([])}
-        onUndoDrawing={() => setDrawings((prev) => prev.slice(0, -1))}
+        account={account}
+        onAccount={setAccount}
+        showSeparators={showSeparators}
+        onSeparators={setShowSeparators}
+        tradeNews={tradeNews}
+        onTradeNews={setTradeNews}
+        newsCoverage={newsCoverage}
       />
     </div>
   )

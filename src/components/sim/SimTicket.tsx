@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { fmtMoney } from '../../sim/engine'
+import { fmtMoney, marginOf } from '../../sim/engine'
 import type { Side } from '../../sim/types'
 
 interface Props {
@@ -9,19 +9,52 @@ interface Props {
   margin: number
   freeMargin: number
   marginLevel: number | null
+  leverage: number
   disabled: boolean
+  /** Mod bar mendatar: volume + buy/sell + baki sahaja. */
+  compact?: boolean
   onOrder: (side: Side, lots: number, slDist: number, tpDist: number) => void
 }
 
-export default function SimTicket({ price, balance, equity, margin, freeMargin, marginLevel, disabled, onOrder }: Props) {
+export default function SimTicket({ price, balance, equity, margin, freeMargin, marginLevel, leverage, disabled, compact, onOrder }: Props) {
   const [lots, setLots] = useState(0.1)
   const [sl, setSl] = useState(0)
   const [tp, setTp] = useState(0)
   const [riskOpen, setRiskOpen] = useState(false)
 
-  const notional = price * 100 * lots
-  const marginNeeded = notional / 500
+  const marginNeeded = price ? marginOf(price, lots, leverage) : 0
   const slRisk = sl > 0 ? sl * 100 * lots : 0
+
+  if (compact) {
+    return (
+      <div className="sim-orderbar">
+        <span className="sim-orderbar-bal">
+          <span className="muted">Bal</span> <b>{fmtMoney(balance)}</b>
+        </span>
+        <span className="sim-orderbar-bal">
+          <span className="muted">Eq</span> <b>{fmtMoney(equity)}</b>
+        </span>
+        <label className="sim-orderbar-lots">
+          <span className="muted">Lots</span>
+          <input
+            type="number"
+            step="0.01"
+            min="0.01"
+            max="10"
+            value={lots}
+            onChange={(e) => setLots(Math.min(10, Math.max(0.01, Number(e.target.value) || 0.01)))}
+            aria-label="Volume (lot)"
+          />
+        </label>
+        <button className="sim-btn buy" onClick={() => onOrder('BUY', lots, sl, tp)} disabled={disabled}>
+          BUY {price ? price.toFixed(2) : ''}
+        </button>
+        <button className="sim-btn sell" onClick={() => onOrder('SELL', lots, sl, tp)} disabled={disabled}>
+          SELL {price ? price.toFixed(2) : ''}
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className="panel sim-ticket">
@@ -110,7 +143,7 @@ export default function SimTicket({ price, balance, equity, margin, freeMargin, 
         </div>
 
         <p className="muted sim-ticket-note">
-          XAUUSD · 1 lot = 100 oz · leverage 1:500. PnL = price move × 100 × lots.
+          XAUUSD · 1 lot = 100 oz · leverage 1:{leverage}. PnL = price move × 100 × lots.
         </p>
       </div>
     </div>

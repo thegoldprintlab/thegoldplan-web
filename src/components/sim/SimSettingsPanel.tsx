@@ -1,6 +1,4 @@
-import type { ChartKind, ChartSettings, IndicatorSettings } from '../../sim/settings'
-import type { Tool } from '../../sim/drawings'
-import { TOOL_LABEL } from '../../sim/drawings'
+import type { ChartKind, ChartSettings, IndicatorSettings, AccountSettings } from '../../sim/settings'
 
 interface Props {
   open: boolean
@@ -9,13 +7,14 @@ interface Props {
   onSettings: (s: ChartSettings) => void
   indicators: IndicatorSettings
   onIndicators: (i: IndicatorSettings) => void
-  tool: Tool
-  onTool: (t: Tool) => void
-  drawColor: string
-  onDrawColor: (c: string) => void
-  drawingCount: number
-  onClearDrawings: () => void
-  onUndoDrawing: () => void
+  account: AccountSettings
+  onAccount: (a: AccountSettings) => void
+  showSeparators: boolean
+  onSeparators: (v: boolean) => void
+  tradeNews: boolean
+  onTradeNews: (v: boolean) => void
+  /** Liputan data berita, untuk nota dalam panel. */
+  newsCoverage: string
 }
 
 const KINDS: Array<{ id: ChartKind; label: string }> = [
@@ -24,8 +23,6 @@ const KINDS: Array<{ id: ChartKind; label: string }> = [
   { id: 'line', label: 'Line' },
   { id: 'area', label: 'Area' },
 ]
-
-const TOOLS: Tool[] = ['none', 'hray', 'vline', 'trend', 'rect', 'text']
 
 function Toggle({
   checked,
@@ -56,13 +53,13 @@ export default function SimSettingsPanel({
   onSettings,
   indicators,
   onIndicators,
-  tool,
-  onTool,
-  drawColor,
-  onDrawColor,
-  drawingCount,
-  onClearDrawings,
-  onUndoDrawing,
+  account,
+  onAccount,
+  showSeparators,
+  onSeparators,
+  tradeNews,
+  onTradeNews,
+  newsCoverage,
 }: Props) {
   if (!open) return null
   const set = (patch: Partial<ChartSettings>) => onSettings({ ...settings, ...patch })
@@ -203,35 +200,53 @@ export default function SimSettingsPanel({
         </section>
 
         <section>
-          <h4>Drawing objects</h4>
-          <div className="sim-tools">
-            {TOOLS.map((t) => (
-              <button
-                key={t}
-                className={`sim-tool ${tool === t ? 'active' : ''}`}
-                onClick={() => onTool(t)}
-                title={TOOL_LABEL[t]}
-              >
-                {t === 'none' ? '↖' : t === 'hray' ? '━' : t === 'vline' ? '┃' : t === 'trend' ? '╱' : t === 'rect' ? '▭' : 'T'}
-              </button>
-            ))}
-            <label className="sim-tool-color" title="Drawing color">
-              <input type="color" value={drawColor} onChange={(e) => onDrawColor(e.target.value)} />
-            </label>
+          <h4>Account</h4>
+          <p className="muted sim-note">Applies on the next reset.</p>
+          <div className="field">
+            <label htmlFor="sim-balance">Starting balance ($)</label>
+            <input
+              id="sim-balance"
+              className="sim-num"
+              type="number"
+              min={100}
+              step={1000}
+              value={account.startBalance}
+              onChange={(e) =>
+                onAccount({ ...account, startBalance: Math.max(100, Number(e.target.value) || 100) })
+              }
+            />
           </div>
-          <p className="muted sim-note">
-            {drawingCount === 0
-              ? 'Pick a tool, then click the chart. Trend line & rectangle need two clicks.'
-              : `${drawingCount} object${drawingCount > 1 ? 's' : ''} on chart. Backspace deletes the last one.`}
-          </p>
-          <div className="sim-tools-actions">
-            <button className="btn btn-sm" onClick={onUndoDrawing} disabled={!drawingCount}>
-              Undo last
-            </button>
-            <button className="btn btn-sm btn-danger" onClick={onClearDrawings} disabled={!drawingCount}>
-              Clear all
-            </button>
+          <div className="field">
+            <label htmlFor="sim-lev">Leverage</label>
+            <select
+              id="sim-lev"
+              value={account.leverage}
+              onChange={(e) => onAccount({ ...account, leverage: Number(e.target.value) })}
+            >
+              {[50, 100, 200, 500, 1000].map((n) => (
+                <option key={n} value={n}>
+                  1:{n}
+                </option>
+              ))}
+            </select>
           </div>
+        </section>
+
+        <section>
+          <h4>Chart extras</h4>
+          <Toggle
+            checked={showSeparators}
+            onChange={onSeparators}
+            label="Period separators"
+            hint="vertical line at each new day"
+          />
+          <Toggle
+            checked={tradeNews}
+            onChange={onTradeNews}
+            label="Trade news"
+            hint="highlight USD high-impact events"
+          />
+          <p className="muted sim-note">News data: {newsCoverage}. US bank holidays always show on the calendar.</p>
         </section>
       </div>
     </div>

@@ -56,6 +56,7 @@ export const DEFAULT_INDICATORS: IndicatorSettings = {
 
 const KEY_CHART = 'gp-sim-chart-settings'
 const KEY_IND = 'gp-sim-indicators'
+const KEY_ACCOUNT = 'gp-sim-account'
 
 function load<T>(key: string, fallback: T): T {
   try {
@@ -86,6 +87,30 @@ export function saveChartSettings(s: ChartSettings) {
 export function saveIndicators(s: IndicatorSettings) {
   try {
     localStorage.setItem(KEY_IND, JSON.stringify(s))
+  } catch {
+    /* ignore */
+  }
+}
+
+export interface AccountSettings {
+  startBalance: number
+  leverage: number
+}
+
+export const DEFAULT_ACCOUNT: AccountSettings = { startBalance: 10_000, leverage: 500 }
+
+const LEVERAGE_CHOICES = [50, 100, 200, 500, 1000]
+
+export function loadAccount(): AccountSettings {
+  const a = load(KEY_ACCOUNT, DEFAULT_ACCOUNT)
+  const leverage = LEVERAGE_CHOICES.includes(a.leverage) ? a.leverage : DEFAULT_ACCOUNT.leverage
+  const startBalance = Number.isFinite(a.startBalance) && a.startBalance > 0 ? a.startBalance : DEFAULT_ACCOUNT.startBalance
+  return { startBalance, leverage }
+}
+
+export function saveAccount(s: AccountSettings) {
+  try {
+    localStorage.setItem(KEY_ACCOUNT, JSON.stringify(s))
   } catch {
     /* ignore */
   }

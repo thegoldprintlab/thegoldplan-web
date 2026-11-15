@@ -24,6 +24,7 @@ import type { Drawing, Tool, Anchor } from '../../sim/drawings'
 import { newId } from '../../sim/drawings'
 import { strokePath } from './overlay'
 import { fmtTime } from '../../sim/aggregate'
+import type { NewsEvent } from '../../sim/news'
 
 interface Props {
   bars: Bar[]
@@ -40,6 +41,14 @@ interface Props {
   drawings: Drawing[]
   onAddDrawing: (d: Drawing) => void
   onRemoveDrawing: (id: string) => void
+  /** Garis menegak di sempadan hari. */
+  showSeparators: boolean
+  /** Tanda berita USD high-impact pada carta. */
+  news: NewsEvent[]
+  /** Naik setiap kali timeframe bertukar → harga semasa dipusatkan. */
+  recenterToken: number
+  /** Masa (UTC) bar di bawah kursor, untuk jam carta. */
+  onHoverTime?: (label: string | null) => void
 }
 
 type AnySeries = ISeriesApi<'Candlestick'> | ISeriesApi<'Bar'> | ISeriesApi<'Line'> | ISeriesApi<'Area'>
@@ -67,6 +76,10 @@ export default function SimChart({
   drawings,
   onAddDrawing,
   onRemoveDrawing,
+  showSeparators,
+  news,
+  recenterToken,
+  onHoverTime,
 }: Props) {
   const boxRef = useRef<HTMLDivElement | null>(null)
   const overlayRef = useRef<HTMLCanvasElement | null>(null)
@@ -131,6 +144,37 @@ export default function SimChart({
       indRef.current.clear()
     }
   }, [])
+
+  // ── jam carta: masa bar di bawah kursor (bukan masa sebenar) ──
+  useEffect(() => {
+    const chart = chartRef.current
+    if (!chart || !onHoverTime) return
+    const handler = (param: { time?: unknown }) => {
+      const t = param.time
+      onHoverTime(typeof t === 'number' ? fmtTime(t) : null)
+    }
+    chart.subscribeCrosshairMove(handler)
+    return () => chart.unsubscribeCrosshairMove(handler)
+  }, [onHoverTime])
+
+  // ── bila timeframe bertukar, letak bar semasa di tengah ──────
+  const recenterSkip = useRef(true)
+  useEffect(() => {
+    if (recenterSkip.current) {
+      recenterSkip.current = false
+      return
+    }
+    const chart = chartRef.current
+    if (!chart || cursor <= 0) return
+    const range = chart.timeScale().getVisibleLogicalRange()
+    const span = range ? range.to - range.from : 120
+    const idx = cursor - 1
+    chart.timeScale().setVisibleLogicalRange({ from: idx - span / 2, to: idx + span / 2 })
+    // cursor sengaja tak masuk deps: kita nak julat zoom semasa, bukan nilai terkini
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recenterToken])
+
+  // ── data + indikator + garis SL/TP ───────────────────────────
 
   // ── bina/tukar jenis siri utama ───────────────────────────────
   useEffect(() => {
@@ -401,6 +445,53 @@ export default function SimChart({
       return y == null ? null : (y as number)
     }
 
+    // period separator: garis menegak pada bar pertama setiap hari
+    if (showSeparators) {
+      ctx.save()
+      ctx.strokeStyle = colorsRef.current.border
+      ctx.globalAlpha = 0.55
+      ctx.lineWidth = 1
+      ctx.setLineDash([])
+      let prevDay = ''
+      for (const b of visible) {
+        const day = new Date(b.t * 1000).toISOString().slice(0, 10)
+        if (day === prevDay) continue
+        prevDay = day
+        const x = xOf(b.t)
+        if (x == null || x < 0 || x > w) continue
+        ctx.beginPath()
+        ctx.moveTo(x, 0)
+        ctx.lineTo(x, h)
+        ctx.stroke()
+      }
+      ctx.restore()
+    }
+
+    // tanda berita: jalur oren pada masa release
+    if (news.length) {
+      const from = visible[0]?.t ?? 0
+      const to = visible[visible.length - 1]?.t ?? 0
+      ctx.save()
+      ctx.strokeStyle = '#f59e0b'
+      ctx.fillStyle = '#f59e0b'
+      ctx.lineWidth = 1
+      ctx.setLineDash([2, 3])
+      for (const ev of news) {
+        if (ev.t < from || ev.t > to) continue
+        const x = xOf(ev.t)
+        if (x == null || x < 0 || x > w) continue
+        ctx.beginPath()
+        ctx.moveTo(x, 0)
+        ctx.lineTo(x, h)
+        ctx.stroke()
+        ctx.setLineDash([])
+        ctx.font = '10px ui-monospace, monospace'
+        ctx.fillText(ev.title, x + 3, 12)
+        ctx.setLineDash([2, 3])
+      }
+      ctx.restore()
+    }
+
     for (const d of drawings) {
       ctx.strokeStyle = d.color
       ctx.fillStyle = d.color
@@ -481,7 +572,7 @@ export default function SimChart({
       ctx.font = '10px ui-monospace, monospace'
       ctx.fillText(`RSI ${indicators.rsiPeriod}`, 6, top + 12)
     }
-  }, [drawings, indicators, visible])
+  }, [drawings, indicators, visible, showSeparators, news])
 
   useEffect(() => {
     drawOverlay()
