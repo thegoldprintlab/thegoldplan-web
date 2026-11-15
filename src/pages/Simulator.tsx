@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import SimChart from '../components/sim/SimChart'
 import SimDatePicker from '../components/sim/SimDatePicker'
 import SimDrawBar from '../components/sim/SimDrawBar'
+import SimNewsPanel from '../components/sim/SimNewsPanel'
 import SimPositions from '../components/sim/SimPositions'
 import SimSettingsPanel from '../components/sim/SimSettingsPanel'
 import SimTicket from '../components/sim/SimTicket'
-import { aggregate, fmtTime, indexAtOrBefore, TF_LABEL } from '../sim/aggregate'
+import { aggregate, fmtTime, indexAtOrAfter, indexAtOrBefore, TF_LABEL } from '../sim/aggregate'
 import { getManifest, loadMonthWrapped } from '../sim/data'
 import { closeTrade, evaluateBar, floating, fmtMoney, usedMargin, withStops } from '../sim/engine'
 import type { Bar, ClosedTrade, Manifest, Position, Side, TF } from '../sim/types'
@@ -25,7 +26,7 @@ import {
   type ChartSettings,
   type IndicatorSettings,
 } from '../sim/settings'
-import { loadNews, newsDaysInRange, newsInRange, type NewsEvent } from '../sim/news'
+import { loadNews, newsDaysInRange, newsInRange, newsOnDay, type NewsEvent } from '../sim/news'
 import { isDemoPreview } from '../lib/demo'
 import { trackEvent } from '../lib/analytics'
 
@@ -65,11 +66,15 @@ export default function Simulator() {
   const [showSeparators, setShowSeparators] = useState(true)
   const [tradeNews, setTradeNews] = useState(false)
   const [news, setNews] = useState<NewsEvent[]>([])
+  const [newsOpen, setNewsOpen] = useState(false)
+  const [newsDay, setNewsDay] = useState<string | null>(null)
   const [recenterToken, setRecenterToken] = useState(0)
   const [hoverTime, setHoverTime] = useState<string | null>(null)
 
   /** cursor terakhir yang dah diperiksa untuk SL/TP (elak semak berulang) */
   const lastChecked = useRef(0)
+  /** Hari yang user klik pada kalendar tapi bulan lain — lompat selepas data tiba. */
+  const pendingDayJump = useRef<string | null>(null)
 
   const bars = useMemo(() => aggregate(m1, tf), [m1, tf])
   const price = cursor > 0 && bars[cursor - 1] ? bars[cursor - 1].c : 0
@@ -98,6 +103,39 @@ export default function Simulator() {
     return `${days[0]} → ${days[days.length - 1]}`
   }, [news])
 
+  /** Event pada hari yang dipilih (kalendar) atau hari bar semasa. */
+  const dayForNews = newsDay ?? (price ? new Date(bars[cursor - 1].t * 1000).toISOString().slice(0, 10) : null)
+  const dayNews = useMemo(() => {
+    if (!dayForNews) return []
+    return newsOnDay(news, dayForNews)
+  }, [news, dayForNews])
+
+  /** Berapa banyak event dalam bulan harga yang dimuat — konteks bila hari kosong. */
+  const monthNewsCount = useMemo(() => {
+    if (!month) return 0
+    return news.filter((e) => e.day.startsWith(month)).length
+  }, [news, month])
+
+  /** Lompat carta ke masa tertentu (epoch saat) — dipakai oleh panel berita. */
+  const jumpToTime = useCallback(
+    (t: number) => {
+      const agg = aggregate(m1, tf)
+      // Guna bar pertama PADA/selepas t: kalau t jatuh pada hari tanpa dagangan
+      // (Sabtu/Ahad/cuti), kita mendarat pada bar seterusnya, bukan yang sebelumnya.
+      const i = indexAtOrAfter(agg, t)
+      if (i < 0) return
+      setPlaying(false)
+      setCursor(Math.min(agg.length, i + 1))
+      lastChecked.current = -1
+      setRecenterToken((n) => n + 1)
+    },
+    [m1, tf]
+  )
+
+  /** Lompat ke hari penuh (YYYY-MM-DD) — klik tarikh pada kalendar.
+   *  Kalau hari tu dalam bulan lain, tukar bulan dulu dan lompat selepas data tiba.
+   *  (Didefinisi selepas resetSession — ia bergantung padanya.) */
+
   // ── muat manifest ───────────────────────────────────────────────
   useEffect(() => {
     getManifest()
@@ -122,6 +160,21 @@ export default function Simulator() {
         if (dead) return
         setM1(rows)
         const agg = aggregate(rows, tf)
+        // Kalau user dah klik satu tarikh, jangan reset ke 40% — biar effect
+        // `pendingDayJump` yang letak cursor pada hari betul.
+        const want = pendingDayJump.current
+        if (want && want.slice(0, 7) === month) {
+          const target = Date.parse(`${want}T00:00:00Z`) / 1000
+          const i = indexAtOrAfter(agg, target)
+          if (i >= 0 && agg[i].t - target <= 7 * 86400) {
+            pendingDayJump.current = null
+            setCursor(Math.min(agg.length, i + 1))
+            lastChecked.current = -1
+            setRecenterToken((n) => n + 1)
+            setLoading(false)
+            return
+          }
+        }
         setCursor(Math.max(30, Math.floor(agg.length * 0.4)))
         setLoading(false)
       })
@@ -149,6 +202,21 @@ export default function Simulator() {
     lastChecked.current = -1
     if (nextMonth) setMonth(nextMonth)
   }, [account.startBalance])
+
+  /** Lompat ke hari penuh (YYYY-MM-DD) — klik tarikh pada kalendar.
+   *  Kalau hari tu dalam bulan lain, tukar bulan dulu; lompat dibuat selepas
+   *  data bulan baru siap dimuat (lihat effect `pendingDayJump` di bawah). */
+  const jumpToDay = useCallback(
+    (day: string) => {
+      if (day.slice(0, 7) !== month) {
+        pendingDayJump.current = day
+        resetSession(day.slice(0, 7))
+        return
+      }
+      jumpToTime(Date.parse(`${day}T00:00:00Z`) / 1000)
+    },
+    [month, jumpToTime, resetSession]
+  )
 
   // ── playback ────────────────────────────────────────────────────
   useEffect(() => {
@@ -463,10 +531,24 @@ export default function Simulator() {
             months={manifest?.months ?? []}
             newsDays={newsDays}
             showNews={tradeNews}
-            onPick={(m) => {
+            onPickDay={(day) => {
+              setNewsDay(day)
+              setNewsOpen(true)
+              jumpToDay(day)
+            }}
+            onPickMonth={(m) => {
               if (m !== month) resetSession(m)
             }}
           />
+          <button
+            className={`sim-tool${newsOpen ? ' active' : ''}`}
+            type="button"
+            onClick={() => setNewsOpen((v) => !v)}
+            title="USD news for the selected day"
+            aria-pressed={newsOpen}
+          >
+            📰
+          </button>
           <SimDrawBar
             tool={tool}
             color={drawColor}
@@ -510,6 +592,16 @@ export default function Simulator() {
             recenterToken={recenterToken}
             onHoverTime={setHoverTime}
           />
+          {newsOpen && (
+            <SimNewsPanel
+              day={dayForNews}
+              events={dayNews}
+              monthCount={monthNewsCount}
+              coverage={newsCoverage}
+              onJump={jumpToTime}
+              onClose={() => setNewsOpen(false)}
+            />
+          )}
         </div>
         <aside className="sim-side">
           <SimTicket

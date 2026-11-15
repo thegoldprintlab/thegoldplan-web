@@ -8,7 +8,10 @@ interface Props {
   /** Hari (YYYY-MM-DD) yang ada berita USD. */
   newsDays: Set<string>
   showNews: boolean
-  onPick: (month: string) => void
+  /** Dipanggil dengan hari penuh (YYYY-MM-DD) yang diklik. */
+  onPickDay: (day: string) => void
+  /** Dipanggil bila bulan ditukar tanpa pilih hari. */
+  onPickMonth: (month: string) => void
 }
 
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
@@ -23,7 +26,7 @@ function monthLabel(ym: string): string {
   })
 }
 
-export default function SimDatePicker({ value, months, newsDays, showNews, onPick }: Props) {
+export default function SimDatePicker({ value, months, newsDays, showNews, onPickDay, onPickMonth }: Props) {
   const [open, setOpen] = useState(false)
   const [view, setView] = useState(value)
   const ref = useRef<HTMLDivElement>(null)
@@ -104,9 +107,11 @@ export default function SimDatePicker({ value, months, newsDays, showNews, onPic
                   type="button"
                   className={cls}
                   disabled={!available.has(view)}
-                  title={holiday ?? (hasNews ? 'USD high-impact news' : undefined)}
+                  title={[ds, holiday, hasNews ? 'USD high-impact news' : null]
+                    .filter(Boolean)
+                    .join(' · ')}
                   onClick={() => {
-                    onPick(view)
+                    onPickDay(ds)
                     setOpen(false)
                   }}
                 >
@@ -122,6 +127,18 @@ export default function SimDatePicker({ value, months, newsDays, showNews, onPic
             <span><i className="dot holiday" /> US bank holiday</span>
             {!available.has(view) && <span className="muted">no price data</span>}
           </div>
+          {available.has(view) && view !== value && (
+            <button
+              type="button"
+              className="sim-cal-jump"
+              onClick={() => {
+                onPickMonth(view)
+                setOpen(false)
+              }}
+            >
+              Jump to start of {monthLabel(view)}
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -40,6 +40,26 @@ export function indexAtOrBefore(bars: Bar[], t: number): number {
   return ans
 }
 
+/** Indeks bar pertama yang buka-time >= t (binary search), -1 kalau tiada.
+ *  Dipakai untuk lompat ke tarikh: kalau hari tu takde dagangan (Sabtu/Ahad/
+ *  cuti), kita mendarat pada bar pertama selepasnya — bukan bar terakhir
+ *  sebelum, yang membuatkan carta nampak "tersasar" ke hari lain. */
+export function indexAtOrAfter(bars: Bar[], t: number): number {
+  let lo = 0
+  let hi = bars.length - 1
+  let ans = -1
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1
+    if (bars[mid].t >= t) {
+      ans = mid
+      hi = mid - 1
+    } else {
+      lo = mid + 1
+    }
+  }
+  return ans
+}
+
 export function fmtPrice(v: number): string {
   return v.toFixed(2)
 }
