@@ -1,8 +1,8 @@
 """Bina kalendar berita USD (high-impact) untuk chart simulator.
 
-Sumber: dataset awam Forex Factory (Ehsanrs2/Forex_Factory_Calendar, 2007-01 →
-2025-04, lesen MIT). Dataset tu tamat Apr 2025; replay data sampai Nov 2026,
-jadi selepas tarikh tu kalendar kosong — UI beritahu user.
+Sumber: dataset awam Forex Factory (HuggingFace `Ehsanrs2/Forex_Factory_Calendar`,
+2007-01-01 → 2025-04-07, lesen MIT). Dataset tu tamat Apr 2025; replay data
+sampai Nov 2026, jadi selepas tarikh tu kalendar kosong — UI beritahu user.
 
 Output: public/sim-data/news-usd.json
   {"built": "...", "from": "YYYY-MM-DD", "to": "YYYY-MM-DD",
