@@ -504,6 +504,7 @@ export default function Simulator() {
             drawings={drawings}
             onAddDrawing={(d) => setDrawings((prev) => [...prev, d])}
             onRemoveDrawing={(id) => setDrawings((prev) => prev.filter((x) => x.id !== id))}
+            onUpdateDrawing={(d) => setDrawings((prev) => prev.map((x) => (x.id === d.id ? d : x)))}
             showSeparators={showSeparators}
             news={visibleNews}
             recenterToken={recenterToken}

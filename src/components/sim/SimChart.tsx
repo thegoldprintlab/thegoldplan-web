@@ -41,6 +41,8 @@ interface Props {
   drawings: Drawing[]
   onAddDrawing: (d: Drawing) => void
   onRemoveDrawing: (id: string) => void
+  /** Ganti objek (id sama) — dipakai bila drag / edit teks. */
+  onUpdateDrawing: (d: Drawing) => void
   /** Garis menegak di sempadan hari. */
   showSeparators: boolean
   /** Tanda berita USD high-impact pada carta. */
@@ -76,6 +78,7 @@ export default function SimChart({
   drawings,
   onAddDrawing,
   onRemoveDrawing,
+  onUpdateDrawing,
   showSeparators,
   news,
   recenterToken,
@@ -83,6 +86,7 @@ export default function SimChart({
 }: Props) {
   const boxRef = useRef<HTMLDivElement | null>(null)
   const overlayRef = useRef<HTMLCanvasElement | null>(null)
+  const stageRef = useRef<HTMLDivElement | null>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<AnySeries | null>(null)
   const indRef = useRef<Map<string, AnySeries>>(new Map())
@@ -94,6 +98,7 @@ export default function SimChart({
   settingsRef.current = settings
   const linesRef = useRef<IPriceLine[]>([])
   const [pending, setPending] = useState<Anchor | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [size, setSize] = useState({ w: 0, h: 0 })
 
   const visible = useMemo(() => bars.slice(0, Math.max(0, cursor)), [bars, cursor])
@@ -493,9 +498,10 @@ export default function SimChart({
     }
 
     for (const d of drawings) {
-      ctx.strokeStyle = d.color
+      const isSel = d.id === selectedId
+      ctx.strokeStyle = isSel ? colorsRef.current.text : d.color
       ctx.fillStyle = d.color
-      ctx.lineWidth = 1.5
+      ctx.lineWidth = isSel ? 2.5 : 1.5
       if (d.kind === 'hray') {
         const y = yOf(d.a.p)
         if (y != null) {
@@ -505,6 +511,10 @@ export default function SimChart({
           ctx.stroke()
           ctx.font = '10px ui-monospace, monospace'
           ctx.fillText(`${d.a.p.toFixed(2)}`, 4, y - 4)
+          if (isSel) {
+            ctx.fillStyle = colorsRef.current.text
+            ctx.fillRect(w - 8, y - 3, 5, 5)
+          }
         }
       } else if (d.kind === 'vline') {
         const x = xOf(d.a.t)
@@ -514,6 +524,10 @@ export default function SimChart({
           ctx.moveTo(x, 0)
           ctx.lineTo(x, h)
           ctx.stroke()
+          if (isSel) {
+            ctx.fillStyle = colorsRef.current.text
+            ctx.fillRect(x - 3, 2, 5, 5)
+          }
         }
       } else if (d.kind === 'trend' || d.kind === 'rect') {
         const x1 = xOf(d.a.t)
@@ -532,6 +546,16 @@ export default function SimChart({
             ctx.globalAlpha = 1
             ctx.strokeRect(x1, y1, x2 - x1, y2 - y1)
           }
+          // Handle hujung — tunjuk bila terpilih supaya jelas boleh drag.
+          if (isSel) {
+            ctx.fillStyle = colorsRef.current.text
+            for (const [hx, hy] of [
+              [x1, y1],
+              [x2, y2],
+            ]) {
+              ctx.fillRect(hx - 3, hy - 3, 6, 6)
+            }
+          }
         }
       } else if (d.kind === 'text') {
         const x = xOf(d.a.t)
@@ -539,6 +563,12 @@ export default function SimChart({
         if (x != null && y != null) {
           ctx.font = '12px ui-monospace, monospace'
           ctx.fillText(d.text, x, y)
+          if (isSel) {
+            const tw = ctx.measureText(d.text).width
+            ctx.globalAlpha = 0.5
+            ctx.strokeRect(x - 3, y - 13, tw + 6, 17)
+            ctx.globalAlpha = 1
+          }
         }
       }
       ctx.setLineDash([])
@@ -572,7 +602,7 @@ export default function SimChart({
       ctx.font = '10px ui-monospace, monospace'
       ctx.fillText(`RSI ${indicators.rsiPeriod}`, 6, top + 12)
     }
-  }, [drawings, indicators, visible, showSeparators, news])
+  }, [drawings, indicators, visible, showSeparators, news, selectedId])
 
   useEffect(() => {
     drawOverlay()
@@ -598,6 +628,84 @@ export default function SimChart({
     return { t: t as unknown as number, p: p as number }
   }
 
+  /** Tukar koordinat piksel (relatif pada stage) → (masa, harga). */
+  function anchorAt(px: number, py: number): Anchor | null {
+    const chart = chartRef.current
+    const main = seriesRef.current
+    if (!chart || !main) return null
+    const t = chart.timeScale().coordinateToTime(px as never)
+    const p = main.coordinateToPrice(py)
+    if (t == null || p == null) return null
+    return { t: t as unknown as number, p: p as number }
+  }
+
+  /** Piksel untuk satu anchor, atau null kalau di luar skrin. */
+  function pxOf(a: Anchor): { x: number; y: number } | null {
+    const chart = chartRef.current
+    const main = seriesRef.current
+    if (!chart || !main) return null
+    const x = chart.timeScale().timeToCoordinate(a.t as UTCTimestamp)
+    const y = main.priceToCoordinate(a.p)
+    if (x == null || y == null) return null
+    return { x: x as number, y: y as number }
+  }
+
+  function distToSeg(px: number, py: number, x1: number, y1: number, x2: number, y2: number): number {
+    const dx = x2 - x1
+    const dy = y2 - y1
+    const len2 = dx * dx + dy * dy
+    if (len2 === 0) return Math.hypot(px - x1, py - y1)
+    let t = ((px - x1) * dx + (py - y1) * dy) / len2
+    t = Math.max(0, Math.min(1, t))
+    return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
+  }
+
+  const HANDLE = 9 // px — tangkapan hujung trend/rect
+  const LINE = 6 // px — tangkapan garis
+
+  /** Cari objek di bawah kursor. `part` = hujung mana yang kena. */
+  function hitTest(px: number, py: number): { d: Drawing; part: 'a' | 'b' | 'whole' } | null {
+    // Iterate terbalik: objek paling atas (terakhir dilukis) menang.
+    for (let i = drawings.length - 1; i >= 0; i--) {
+      const d = drawings[i]
+      if (d.kind === 'hray') {
+        const p = pxOf(d.a)
+        if (p && Math.abs(py - p.y) <= LINE) return { d, part: 'whole' }
+      } else if (d.kind === 'vline') {
+        const p = pxOf(d.a)
+        if (p && Math.abs(px - p.x) <= LINE) return { d, part: 'whole' }
+      } else if (d.kind === 'trend' || d.kind === 'rect') {
+        const a = pxOf(d.a)
+        const b = pxOf(d.b)
+        if (!a || !b) continue
+        if (Math.hypot(px - a.x, py - a.y) <= HANDLE) return { d, part: 'a' }
+        if (Math.hypot(px - b.x, py - b.y) <= HANDLE) return { d, part: 'b' }
+        if (d.kind === 'trend') {
+          if (distToSeg(px, py, a.x, a.y, b.x, b.y) <= LINE) return { d, part: 'whole' }
+        } else {
+          const x1 = Math.min(a.x, b.x)
+          const x2 = Math.max(a.x, b.x)
+          const y1 = Math.min(a.y, b.y)
+          const y2 = Math.max(a.y, b.y)
+          const inside = px >= x1 && px <= x2 && py >= y1 && py <= y2
+          const nearEdge =
+            Math.min(Math.abs(px - x1), Math.abs(px - x2)) <= LINE ||
+            Math.min(Math.abs(py - y1), Math.abs(py - y2)) <= LINE
+          if (inside && nearEdge) return { d, part: 'whole' }
+          if (inside) return { d, part: 'whole' } // badan rect pun boleh drag
+        }
+      } else if (d.kind === 'text') {
+        const p = pxOf(d.a)
+        if (!p) continue
+        const w = Math.max(24, d.text.length * 7)
+        if (px >= p.x - 4 && px <= p.x + w && py >= p.y - 14 && py <= p.y + 4) {
+          return { d, part: 'whole' }
+        }
+      }
+    }
+    return null
+  }
+
   function handleClick(ev: React.MouseEvent<HTMLCanvasElement>) {
     if (tool === 'none') return
     const a = anchorFrom(ev)
@@ -618,6 +726,105 @@ export default function SimChart({
     }
     onAddDrawing({ id: newId(), kind: tool, a: pending, b: a, color: drawColor })
     setPending(null)
+  }
+
+  // ── pilih / drag / edit objek (mod cursor) ───────────────────
+  const dragRef = useRef<{
+    id: string
+    part: 'a' | 'b' | 'whole'
+    start: Anchor
+    orig: Drawing
+  } | null>(null)
+
+  function stagePoint(ev: React.MouseEvent): { px: number; py: number } | null {
+    const stage = stageRef.current
+    if (!stage) return null
+    const r = stage.getBoundingClientRect()
+    return { px: ev.clientX - r.left, py: ev.clientY - r.top }
+  }
+
+  function onStageDown(ev: React.MouseEvent) {
+    if (tool !== 'none') return // mod lukis — biar handleClick yang urus
+    const pt = stagePoint(ev)
+    if (!pt) return
+    const hit = hitTest(pt.px, pt.py)
+    if (!hit) {
+      if (selectedId) setSelectedId(null)
+      return
+    }
+    const start = anchorAt(pt.px, pt.py)
+    if (!start) return
+    setSelectedId(hit.d.id)
+    dragRef.current = { id: hit.d.id, part: hit.part, start, orig: hit.d }
+    // Halang carta daripada pan/zoom semasa drag objek.
+    ev.preventDefault()
+    ev.stopPropagation()
+  }
+
+  function onStageMove(ev: React.MouseEvent) {
+    if (tool !== 'none') return
+    const pt = stagePoint(ev)
+    if (!pt) return
+
+    const drag = dragRef.current
+    if (!drag) {
+      // Umpan balik kursor sahaja
+      const stage = stageRef.current
+      if (stage) {
+        const hit = hitTest(pt.px, pt.py)
+        stage.style.cursor = hit ? (hit.part === 'whole' ? 'move' : 'nwse-resize') : ''
+      }
+      return
+    }
+
+    const now = anchorAt(pt.px, pt.py)
+    if (!now) return
+    const dt = now.t - drag.start.t
+    const dp = now.p - drag.start.p
+    const o = drag.orig
+    let next: Drawing
+
+    if (o.kind === 'hray' || o.kind === 'vline' || o.kind === 'text') {
+      next = { ...o, a: { t: o.a.t + dt, p: o.a.p + dp } }
+    } else if (drag.part === 'a') {
+      next = { ...o, a: { t: o.a.t + dt, p: o.a.p + dp } }
+    } else if (drag.part === 'b') {
+      next = { ...o, b: { t: o.b.t + dt, p: o.b.p + dp } }
+    } else {
+      next = {
+        ...o,
+        a: { t: o.a.t + dt, p: o.a.p + dp },
+        b: { t: o.b.t + dt, p: o.b.p + dp },
+      }
+    }
+    onUpdateDrawing(next)
+    ev.preventDefault()
+    ev.stopPropagation()
+  }
+
+  function onStageUp() {
+    dragRef.current = null
+  }
+
+  /** Double-click objek: teks → tukar tulisan, lain-lain → buang. */
+  function onStageDouble(ev: React.MouseEvent) {
+    if (tool !== 'none') return
+    const pt = stagePoint(ev)
+    if (!pt) return
+    const hit = hitTest(pt.px, pt.py)
+    if (!hit) return
+    if (hit.d.kind === 'text') {
+      const text = window.prompt('Edit label:', hit.d.text)
+      if (text == null) return
+      if (!text.trim()) {
+        onRemoveDrawing(hit.d.id)
+        return
+      }
+      onUpdateDrawing({ ...hit.d, text })
+      return
+    }
+    onRemoveDrawing(hit.d.id)
+    setSelectedId(null)
   }
 
   // Esc batal; Backspace buang objek terakhir
@@ -668,7 +875,15 @@ export default function SimChart({
           {activeInd && <span className="sim-chart-active-ind">{activeInd}</span>}
         </div>
       )}
-      <div className="sim-chart-stage">
+      <div
+        className="sim-chart-stage"
+        ref={stageRef}
+        onMouseDownCapture={onStageDown}
+        onMouseMove={onStageMove}
+        onMouseUp={onStageUp}
+        onMouseLeave={onStageUp}
+        onDoubleClick={onStageDouble}
+      >
         <div ref={boxRef} className="sim-chart-canvas" />
         <canvas
           ref={overlayRef}
@@ -676,6 +891,11 @@ export default function SimChart({
           onClick={handleClick}
         />
         {pending && <div className="sim-chart-hint">Click a second point to finish (Esc to cancel)</div>}
+        {tool === 'none' && selectedId && (
+          <div className="sim-chart-hint">
+            Drag to move · double-click to delete · Backspace deletes the last one
+          </div>
+        )}
       </div>
     </div>
   )

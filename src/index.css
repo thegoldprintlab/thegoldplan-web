@@ -271,8 +271,15 @@ p { margin: 0; }
   min-width: 0;
 }
 
-/* Simulator perlukan ruang — carta jadi besar, bukan tersepit dalam 1200px. */
+/* Simulator perlukan ruang — carta jadi besar, bukan tersepit dalam 1200px.
+   Tapi topbar (nav + userbox) MESTI kekal pada lebar 1200px, kalau tidak
+   nav melompat ke kedudukan lain setiap kali masuk /app/sim. 1200 - 2*20 = 1160. */
 .app-shell:has(.sim) { max-width: min(1840px, 100%); }
+.app-shell:has(.sim) .topbar {
+  max-width: 1160px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .main { min-height: 60vh; }
 
