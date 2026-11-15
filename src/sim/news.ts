@@ -1,7 +1,8 @@
 /**
  * Kalendar berita USD (high-impact) untuk chart simulator.
- * Data dijana oleh scripts/build-news.py → public/sim-data/news-usd.json.
- * Liputan dataset: 2007-01 → 2025-04. Selepas itu tiada data.
+ * Data dijana oleh scripts/build-news.py (2007-01 → 2025-04, dataset awam) dan
+ * ditambah oleh scripts/fetch-news-ff.py (scrape Forex Factory bulanan).
+ * Liputan penuh: 2007-01-03 → 2026-11-25.
  */
 
 export interface NewsEvent {

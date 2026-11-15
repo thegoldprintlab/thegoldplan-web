@@ -46,6 +46,44 @@ export default function SimTicket({ price, balance, equity, margin, freeMargin, 
             aria-label="Volume (lot)"
           />
         </label>
+        <button
+          className={`sim-orderbar-risk${riskOpen ? ' on' : ''}`}
+          type="button"
+          onClick={() => setRiskOpen((v) => !v)}
+          aria-expanded={riskOpen}
+          title="Stop loss / take profit (price distance in $)"
+        >
+          SL/TP{(sl > 0 || tp > 0) && <i className="dot" />}
+        </button>
+        {riskOpen && (
+          <>
+            <label className="sim-orderbar-lots">
+              <span className="muted">SL $</span>
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                value={sl}
+                onChange={(e) => setSl(Math.max(0, Number(e.target.value) || 0))}
+                aria-label="Stop loss distance in dollars"
+              />
+            </label>
+            <label className="sim-orderbar-lots">
+              <span className="muted">TP $</span>
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                value={tp}
+                onChange={(e) => setTp(Math.max(0, Number(e.target.value) || 0))}
+                aria-label="Take profit distance in dollars"
+              />
+            </label>
+            <span className="sim-orderbar-bal muted">
+              risk {fmtMoney(slRisk)}
+            </span>
+          </>
+        )}
         <button className="sim-btn buy" onClick={() => onOrder('BUY', lots, sl, tp)} disabled={disabled}>
           BUY {price ? price.toFixed(2) : ''}
         </button>

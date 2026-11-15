@@ -1803,13 +1803,16 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 }
 
 /* Carta penuh — tiket sisi disembunyi, diganti bar order mendatar
-   bawah carta. Jadual posisi kekal. */
-.sim-expanded {
-  grid-template-columns: 1fr !important;
+   bawah carta. Jadual posisi kekal.
+   Nota: jangan letak `!important` di tengah senarai grid-template-areas —
+   seluruh declaration jadi invalid dan grid tinggal 2 kolum asas (carta
+   sempit + ruang kosong di kanan). */
+.sim-grid.sim-expanded {
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    'chart' !important
-    'order' !important
-    'pos' !important;
+    'chart'
+    'order'
+    'pos';
 }
 .sim-expanded .sim-side { display: none; }
 .sim-expanded .sim-chart-canvas { height: calc(100vh - 300px); }
@@ -1837,6 +1840,28 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   font-family: var(--mono);
 }
 .sim-orderbar .sim-btn { flex: 0 0 auto; min-width: 110px; padding: 8px 14px; }
+.sim-orderbar-risk {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 0.76rem;
+  font-family: var(--mono);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+}
+.sim-orderbar-risk:hover { color: var(--text); border-color: var(--text-dim, var(--hairline)); }
+.sim-orderbar-risk.on { color: var(--text); border-color: var(--accent); }
+.sim-orderbar-risk .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
 
 /* ---------- Drawing toolbar ---------- */
 .sim-drawbar { display: flex; align-items: center; gap: 4px; }
