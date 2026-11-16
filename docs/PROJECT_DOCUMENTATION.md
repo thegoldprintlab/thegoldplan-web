@@ -61,12 +61,14 @@ gold-plan-web/
 │   │   ├── api.ts           # Supabase CRUD + compute pips/pnl/volatility
 │   │   ├── stats.ts         # groupStats, scoreboard, ROI, fmt helpers
 │   │   ├── supabase.ts      # createClient + config check
+│   │   ├── lotSize.ts       # Sizing XAUUSD (tulen, tiada React)
 │   │   └── types.ts         # Trade, Settings, DashboardStats, dll
 │   └── pages/
 │       ├── Dashboard.tsx    # Stats + charts + scoreboards
 │       ├── InputForm.tsx    # Form log trade
 │       ├── TradingLog.tsx   # Table semua trade + filter + delete
-│       └── Settings.tsx     # Config + capital + daily loss + Quick Log API
+│       ├── Settings.tsx     # Config + capital + daily loss + Quick Log API
+│       └── LotCalculator.tsx # Kalkulator lot awam (/lot-size-calculator)
 ├── supabase/
 │   ├── schema.sql           # CREATE TABLE trades + settings + RLS
 │   ├── ready_to_run.sql     # Schema + seed (user ID hardcoded)
@@ -183,6 +185,27 @@ Pooler region **ap-northeast-2 (Tokyo)**. Kalau host pooler lain bagi "tenant no
 - Header: `apikey` (anon key) + `Authorization: Bearer <anon key>` + `Content-Type: application/json`
 
 ---
+
+### 6.9 Kalkulator Lot Awam (`/lot-size-calculator`)
+
+Halaman awam, tiada login. Alat penarik trafik + SEO.
+
+- Input: balance, risk (% atau $ tetap), jarak SL (pip atau harga), R:R,
+  leverage + harga semasa (di bawah "Advanced").
+- Output: lot disyorkan, risiko sebenar di SL, nilai per pip, jarak TP, margin,
+  berapa kali rugi penuh sebelum akaun habis.
+- Logik tulen dalam `src/lib/lotSize.ts` — tiada React, senang diuji.
+- **Lot sentiasa dibundarkan KE BAWAH** ke step broker (0.01). Bundar ke atas
+  senyap-senyap naikkan risiko melebihi bajet.
+- Tukar unit pip ↔ harga akan **menukar nilai** input, bukan tafsir semula —
+  lot kekal sama.
+- Ada FAQPage JSON-LD + title/description sendiri (dipasang/unmount dalam
+  `useEffect`) supaya Google tak indeks ia sebagai homepage.
+
+### 6.10 Challenge Mode (dalam simulator)
+
+Lihat `docs/SIMULATOR.md` → "Challenge mode". Ringkas: target untung, max loss,
+had rugi harian, cap trade/hari, minimum hari dagang. Gagal → ticket dikunci.
 
 ## 7. Data (3 Akaun) — Final Numbers
 

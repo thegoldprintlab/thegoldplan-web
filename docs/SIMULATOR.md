@@ -102,3 +102,30 @@ node tests/sim-smoke.mjs # desktop + mobile render
 ```
 
 Kedua-dua guna `?demo=1` supaya tak perlu akaun Supabase.
+
+## Challenge mode
+
+Replay tanpa had tak mengajar apa-apa — disiplin hanya diuji oleh had. Challenge
+mode meletakkan satu set peraturan gaya prop-firm di atas sesi replay.
+
+| Peraturan | Lalai | Nota |
+|---|---|---|
+| Profit target | 8% | Peratus dari `startBalance` |
+| Max loss | 10% | Kena → challenge gagal, ticket dikunci |
+| Daily loss limit | 5% | Kena dalam satu hari UTC → gagal |
+| Trades per day | 3 | Kena → **kunci hari itu sahaja**, bukan gagal |
+| Min trading days | 0 | Target tak dikira lulus sebelum cukup hari |
+
+Tiga preset: *Prop evaluation*, *Strict discipline*, *One good trade*.
+
+**Fail:** `src/sim/challenge.ts` (logik tulen + localStorage),
+`src/components/sim/SimChallengeBar.tsx` (HUD atas carta),
+`src/components/sim/SimChallengePanel.tsx` (drawer peraturan).
+
+Prinsip penting:
+- Lot dikira semula dari `equity` (balance + floating), jadi posisi yang sedang
+  rugi boleh trip had **sebelum** ditutup.
+- `breached` (gagal atau cap harian) mematikan butang BUY/SELL — itu tujuan had.
+- Cap harian = lock, bukan fail. `capReached` berasingan dari `status`.
+- Peraturan disimpan dalam `localStorage` (`gp-sim-challenge`), bukan Supabase —
+  challenge adalah alat latihan, bukan rekod akaun.
