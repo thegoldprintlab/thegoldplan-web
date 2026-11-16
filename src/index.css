@@ -1990,3 +1990,333 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   min-width: 74px;
 }
 .sim-news-title { flex: 1 1 auto; }
+
+/* =================================================================
+   LOT SIZE CALCULATOR (public page)
+   ================================================================= */
+.calc-page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px 64px;
+}
+.calc-nav { padding: 18px 0 8px; }
+.calc-hero { padding: 26px 0 30px; max-width: 720px; }
+.calc-hero h1 {
+  font-size: clamp(1.9rem, 4.4vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 10px 0 14px;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 18px;
+  align-items: start;
+}
+.calc-inputs { display: flex; flex-direction: column; gap: 18px; }
+.calc-seg { width: 100%; }
+.calc-seg .seg-btn { flex: 1; }
+.calc-inline { display: flex; align-items: center; gap: 8px; }
+.calc-inline .input { flex: 1; }
+.calc-unit {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-subtle);
+  min-width: 34px;
+}
+.calc-presets { display: flex; gap: 6px; margin-top: 2px; }
+.calc-chip {
+  font: inherit;
+  font-size: 0.76rem;
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.calc-chip:hover { border-color: var(--hairline-strong); color: var(--ink); }
+.calc-chip.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--ink);
+}
+.calc-hint { font-size: 0.76rem; color: var(--ink-subtle); margin: 2px 0 0; line-height: 1.5; }
+.calc-advanced { border-top: 1px solid var(--hairline); padding-top: 14px; }
+.calc-advanced summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.calc-adv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.calc-output { display: flex; flex-direction: column; gap: 18px; }
+.calc-result-main {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.calc-result-label {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-subtle);
+  font-weight: 600;
+}
+.calc-result-value {
+  font-family: var(--font-mono);
+  font-size: clamp(2.4rem, 7vw, 3.4rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--gold-accent);
+  font-variant-numeric: tabular-nums;
+  margin-top: 6px;
+}
+.calc-result-unit {
+  font-size: 0.95rem;
+  color: var(--ink-subtle);
+  margin-left: 10px;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.calc-warn {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--red);
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.calc-rows { display: flex; flex-direction: column; }
+.calc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 0.85rem;
+}
+.calc-row:last-child { border-bottom: 0; }
+.calc-row > span { color: var(--ink-muted); }
+.calc-row > b {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.calc-row > b .muted { font-weight: 400; font-size: 0.78rem; }
+
+.calc-note {
+  font-size: 0.76rem;
+  color: var(--ink-subtle);
+  line-height: 1.55;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+}
+
+.calc-cta {
+  padding: 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+}
+.calc-cta h3 { margin: 0 0 8px; font-size: 1rem; font-weight: 600; }
+.calc-cta p { margin: 0 0 14px; font-size: 0.85rem; color: var(--ink-muted); line-height: 1.55; }
+.calc-cta-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.calc-explain {
+  max-width: 720px;
+  margin: 56px auto 0;
+}
+.calc-explain h2 {
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  margin: 38px 0 10px;
+}
+.calc-explain h2:first-child { margin-top: 0; }
+.calc-explain h3 { font-size: 1rem; margin: 22px 0 6px; font-weight: 600; }
+.calc-explain p,
+.calc-explain li { color: var(--ink-muted); font-size: 0.92rem; line-height: 1.65; }
+.calc-explain ul { padding-left: 20px; margin: 10px 0; }
+.calc-explain li { margin-bottom: 8px; }
+.calc-formula {
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  padding: 14px 16px;
+  margin: 14px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline);
+  border-left: 2px solid var(--gold-accent);
+  background: var(--surface-2);
+  color: var(--ink);
+  overflow-x: auto;
+}
+.calc-cta-bottom { margin-top: 44px; }
+
+@media (max-width: 900px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .calc-page { padding: 0 16px 48px; }
+  .calc-hero { padding: 18px 0 24px; }
+}
+@media (max-width: 520px) {
+  .calc-adv-grid { grid-template-columns: 1fr; }
+  .calc-row { font-size: 0.8rem; }
+}
+
+/* =================================================================
+   SIMULATOR — CHALLENGE MODE
+   ================================================================= */
+.sim-chal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+.sim-chal--off { flex-direction: row; align-items: center; gap: 12px; flex-wrap: wrap; }
+.sim-chal--off .sim-chal-sub { flex: 1 1 auto; font-size: 0.78rem; }
+.sim-chal--run { border-color: var(--primary); }
+.sim-chal--pass { border-color: var(--green); background: var(--green-soft); }
+.sim-chal--fail { border-color: var(--red); background: var(--red-soft); }
+
+.sim-chal-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sim-chal-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.sim-chal--pass .sim-chal-title { color: var(--green); }
+.sim-chal--fail .sim-chal-title { color: var(--red); }
+.sim-chal-meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-subtle);
+}
+.sim-chal-btn { margin-left: 0; }
+.sim-chal-head .sim-chal-btn:first-of-type { margin-left: auto; }
+
+.sim-chal-bars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.sim-chal-bar { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.sim-chal-bar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+}
+.sim-chal-bar-top b {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+}
+.sim-chal-track {
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.sim-chal-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width 0.25s ease;
+}
+.sim-chal-fill.target { background: var(--green); }
+.sim-chal-fill.loss { background: var(--primary); }
+.sim-chal-fill.loss.hot { background: var(--red); }
+
+.sim-chal-msg {
+  font-size: 0.76rem;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  line-height: 1.45;
+}
+.sim-chal-msg.fail { background: var(--red-soft); color: var(--red); }
+.sim-chal-msg.warn { background: var(--surface-2); color: var(--ink-muted); }
+
+/* ---------- Challenge rules drawer ---------- */
+.sim-settings-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 55;
+}
+.sim-chal-panel { z-index: 60; overflow-y: auto; }
+.sim-chal-intro {
+  margin: 0;
+  padding: 14px 16px 0;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  line-height: 1.55;
+}
+.sim-chal-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px 0;
+}
+.sim-chal-preset {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline);
+  background: var(--surface-2);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.sim-chal-preset:hover { border-color: var(--primary); }
+.sim-chal-preset b { font-size: 0.82rem; font-weight: 600; }
+.sim-chal-preset span { font-size: 0.72rem; color: var(--ink-subtle); }
+.sim-chal-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+.sim-chal-fields .field > span {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.sim-chal-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 16px 20px;
+  margin-top: auto;
+}
+
+@media (max-width: 700px) {
+  .sim-chal-bars { grid-template-columns: 1fr; gap: 10px; }
+}
+
+.sim-chal--lock { border-color: var(--gold-accent); }
+.sim-chal--lock .sim-chal-title { color: var(--gold-accent); }
+.sim-chal-msg.lock {
+  background: rgba(200, 162, 74, 0.12);
+  color: var(--gold-accent);
+}

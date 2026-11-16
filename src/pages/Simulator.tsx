@@ -7,6 +7,9 @@ import SimNewsPanel from '../components/sim/SimNewsPanel'
 import SimPositions from '../components/sim/SimPositions'
 import SimSettingsPanel from '../components/sim/SimSettingsPanel'
 import SimTicket from '../components/sim/SimTicket'
+import SimChallengeBar from '../components/sim/SimChallengeBar'
+import SimChallengePanel from '../components/sim/SimChallengePanel'
+import { evaluateChallenge, loadRules, saveRules, type ChallengeRules } from '../sim/challenge'
 import { aggregate, fmtTime, indexAtOrAfter, indexAtOrBefore, TF_LABEL } from '../sim/aggregate'
 import { getManifest, loadMonthWrapped } from '../sim/data'
 import { closeTrade, evaluateBar, floating, fmtMoney, usedMargin, withStops } from '../sim/engine'
@@ -70,6 +73,8 @@ export default function Simulator() {
   const [newsDay, setNewsDay] = useState<string | null>(null)
   const [recenterToken, setRecenterToken] = useState(0)
   const [hoverTime, setHoverTime] = useState<string | null>(null)
+  const [chalRules, setChalRules] = useState<ChallengeRules>(loadRules)
+  const [chalOpen, setChalOpen] = useState(false)
 
   /** cursor terakhir yang dah diperiksa untuk SL/TP (elak semak berulang) */
   const lastChecked = useRef(0)
@@ -82,6 +87,7 @@ export default function Simulator() {
   useEffect(() => saveChartSettings(chartSettings), [chartSettings])
   useEffect(() => saveIndicators(indicators), [indicators])
   useEffect(() => saveAccount(account), [account])
+  useEffect(() => saveRules(chalRules), [chalRules])
 
   useEffect(() => {
     loadNews().then(setNews)
@@ -441,6 +447,14 @@ export default function Simulator() {
   const marginLevel = margin > 0 ? (equity / margin) * 100 : null
   const atEnd = cursor >= bars.length - 1
 
+  const barTs = bars[cursor - 1]?.t ?? null
+  const challenge = useMemo(
+    () => evaluateChallenge(chalRules, account.startBalance, equity, closed, barTs),
+    [chalRules, account.startBalance, equity, closed, barTs]
+  )
+  // A breached challenge locks new orders — that is the whole point of a limit.
+  const ordersLocked = marginCall || challenge.breached
+
   return (
     <div className="sim">
       <div className="page-head">
@@ -474,6 +488,13 @@ export default function Simulator() {
       {err && <div className="sim-alert red">{err}</div>}
       {savedMsg && <div className="sim-alert">{savedMsg}</div>}
       {marginCall && <div className="sim-alert red">⚠ Margin call — positions were force closed.</div>}
+
+      <SimChallengeBar
+        rules={chalRules}
+        progress={challenge}
+        onRules={setChalRules}
+        onOpen={() => setChalOpen(true)}
+      />
 
       <div className="sim-toolbar">
         <div className="sim-toolbar-group">
@@ -613,7 +634,7 @@ export default function Simulator() {
             marginLevel={marginLevel}
             leverage={account.leverage}
             onOrder={openPosition}
-            disabled={!price || marginCall}
+            disabled={!price || ordersLocked}
           />
         </aside>
         {expanded && (
@@ -628,7 +649,7 @@ export default function Simulator() {
               marginLevel={marginLevel}
               leverage={account.leverage}
               onOrder={openPosition}
-              disabled={!price || marginCall}
+              disabled={!price || ordersLocked}
             />
           </div>
         )}
@@ -689,6 +710,13 @@ export default function Simulator() {
           </div>
         </details>
       )}
+
+      <SimChallengePanel
+        open={chalOpen}
+        rules={chalRules}
+        onRules={setChalRules}
+        onClose={() => setChalOpen(false)}
+      />
 
       <SimSettingsPanel
         open={settingsOpen}

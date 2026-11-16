@@ -24,6 +24,7 @@ const Simulator = lazy(() => import('./pages/Simulator'))
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
 import Privacy from './pages/Privacy'
+import LotCalculator from './pages/LotCalculator'
 import { getSupabase } from './lib/supabase'
 import { exitDemoPreview } from './lib/demo'
 
@@ -141,6 +142,8 @@ function AppRoutes() {
       <Route path="/privacy" element={<Privacy />} />
       {/* Public how-to-use — no login needed */}
       <Route path="/help" element={<HowToUse />} />
+      {/* Public lot size calculator — the free SEO entry point */}
+      <Route path="/lot-size-calculator" element={<LotCalculator />} />
       {/* The authenticated app */}
       <Route path="/app/*" element={<Shell />} />
       <Route path="*" element={<Navigate to="/" replace />} />

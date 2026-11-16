@@ -18,6 +18,9 @@ export default function Landing() {
             The Gold Plan
           </span>
           <div className="landing-cta">
+            <Link className="btn btn-ghost" to="/lot-size-calculator">
+              Lot calculator
+            </Link>
             <Link className="btn btn-ghost" to="/pricing">
               Pricing
             </Link>
@@ -200,6 +203,9 @@ export default function Landing() {
             </Link>
             <Link className="btn btn-ghost btn-lg" to="/app/sim?demo=1">
               Try the chart simulator
+            </Link>
+            <Link className="btn btn-ghost btn-lg" to="/lot-size-calculator">
+              Free lot calculator
             </Link>
             <Link className="btn btn-ghost btn-lg" to="/pricing">
               See pricing
