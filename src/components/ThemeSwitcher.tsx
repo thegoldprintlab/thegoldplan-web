@@ -13,7 +13,7 @@ function readInitial(): { design: DesignId; theme: ThemeId } {
   const p = new URLSearchParams(window.location.search)
   const pd = p.get('design') as DesignId | null
   const pt = p.get('theme') as ThemeId | null
-  const design = pd && DESIGNS.some((d) => d.id === pd) ? pd : ((localStorage.getItem('gp-design') as DesignId) || 'linear')
+  const design = pd && DESIGNS.some((d) => d.id === pd) ? pd : ((localStorage.getItem('gp-design') as DesignId) || 'gold')
   const theme =
     pt === 'light' || pt === 'dark'
       ? pt

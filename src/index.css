@@ -112,8 +112,8 @@
   --hairline-strong: #d6c9ad;
   --ink: #211a10;
   --ink-muted: #554832;
-  --ink-subtle: #8b7a5d;
-  --primary: #9a6b1d;
+  --ink-subtle: #77664b;
+  --primary: #7d5617;
   --primary-hover: #b0812b;
   --primary-soft: rgba(154, 107, 29, 0.12);
   --on-primary: #fffdf8;
@@ -121,7 +121,7 @@
   --green-soft: rgba(31, 125, 71, 0.1);
   --red: #b93a30;
   --red-soft: rgba(185, 58, 48, 0.09);
-  --gold-accent: #9a6b1d;
+  --gold-accent: #7d5617;
   --shadow-md: 0 16px 40px -22px rgba(120, 90, 40, 0.35);
 }
 
