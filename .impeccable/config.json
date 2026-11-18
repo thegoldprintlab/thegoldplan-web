@@ -7,7 +7,7 @@
         "rule": "overused-font",
         "value": "inter",
         "createdAt": "2026-11-18T15:29:38.851Z",
-        "reason": "Brand font since launch — landing, app, and share cards all ship Inter; switching faces would rebrand the product."
+        "reason": "Brand font since launch — landing, app, marketing pages and share cards all ship Inter; switching faces would rebrand the product, so the brand keeps the incumbent face under the refinement-preserves doctrine."
       },
       {
         "rule": "gradient-text",
