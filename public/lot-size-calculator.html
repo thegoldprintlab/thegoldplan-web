@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XAUUSD Lot Size Calculator — Free Risk-Based Sizing Tool</title>
+<meta name="description" content="Free XAUUSD lot size calculator. Enter your balance, risk percentage and stop distance to get the exact lot size for gold — rounded down so risk stays inside the plan.">
+<link rel="canonical" href="https://thegoldplan.my/lot-size-calculator">
+<meta name="theme-color" content="#0d0f14">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="XAUUSD Lot Size Calculator — Free, No Sign-Up">
+<meta property="og:description" content="Size gold trades from risk, not habit. Enter balance, risk and stop distance — get the exact lot, pip value, take profit and margin.">
+<meta property="og:url" content="https://thegoldplan.my/lot-size-calculator">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://thegoldplan.my/og/og-lot-calculator.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Gold Plan — XAUUSD lot size calculator, free and without sign-up">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAUUSD Lot Size Calculator — Free, No Sign-Up">
+<meta name="twitter:description" content="Size gold trades from risk, not habit. Get the exact lot, pip value, take profit and margin.">
+<meta name="twitter:image" content="https://thegoldplan.my/og/og-lot-calculator.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is a pip on gold 0.01 or 0.10?","acceptedAnswer":{"@type":"Answer","text":"Brokers disagree and both labels are in use. This calculator treats 1 pip as a $0.10 price move, the common convention. If your broker calls a $0.01 move a pip, enter the stop distance as a price move instead — the lot size is identical because sizing only uses the price distance."}},
+{"@type":"Question","name":"What lot size should I use on a $500 account?","acceptedAnswer":{"@type":"Answer","text":"At 1% risk on a $500 account the budget is $5. With a 30-pip stop that is 0.01 lots, the broker minimum. Any stop wider than about 50 pips cannot be traded at 1% risk on a standard account — that calls for a larger account or a tighter setup, not more risk."}},
+{"@type":"Question","name":"Does leverage change the lot size?","acceptedAnswer":{"@type":"Answer","text":"No. Leverage changes the margin the broker locks, not the money lost when the stop is hit. It only determines whether the position fits inside free margin."}},
+{"@type":"Question","name":"Why is the lot size rounded down?","acceptedAnswer":{"@type":"Answer","text":"Rounding up quietly turns a 1% risk into a larger one. Rounding down to the broker step keeps the position inside the risk budget at the cost of a few cents of potential profit."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"XAUUSD Lot Size Calculator","applicationCategory":"FinanceApplication","operatingSystem":"Any (web browser)","url":"https://thegoldplan.my/lot-size-calculator","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free XAUUSD lot size calculator: risk-based position sizing for gold, rounded down to the broker step.","browserRequirements":"Requires JavaScript"}
+</script>
+<style>
+:root{--bg:#0d0f14;--fg:#e9ecf1;--dim:#9aa3b2;--line:#232a36;--acc:#c9a227;--card:#141822}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 Inter,system-ui,-apple-system,sans-serif}
+a{color:var(--acc)}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 72px}
+nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:34px;font-size:14px}
+nav b{margin-right:auto;letter-spacing:.02em}
+nav a{color:var(--dim);text-decoration:none}
+nav a:hover{color:var(--fg)}
+h1{font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.18;letter-spacing:-.02em;margin:0 0 18px}
+h2{font-size:1.22rem;margin:38px 0 10px;letter-spacing:-.01em}
+h3{font-size:1rem;margin:22px 0 6px}
+p,li{color:#cdd4e0}
+.lead{font-size:1.08rem;color:var(--fg)}
+.kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);font-weight:600;margin:0 0 10px}
+code{background:#1b2130;padding:2px 6px;border-radius:4px;font-size:.9em}
+.cta{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:38px 0}
+.cta h3{margin-top:0}
+.btn{display:inline-block;background:var(--acc);color:#12140f;font-weight:600;padding:11px 20px;border-radius:8px;text-decoration:none;margin:6px 10px 0 0}
+.btn.alt{background:transparent;color:var(--fg);border:1px solid var(--line)}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:18px;font-size:13px;color:var(--dim)}
+/* calculator */
+.calc-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:18px;margin:30px 0 6px}
+@media(max-width:760px){.calc-grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+.panel h2{margin:0 0 14px;font-size:1rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.field{margin:0 0 16px}
+.field label{display:block;font-size:.85rem;color:var(--dim);margin-bottom:6px}
+.input{width:100%;background:#0d0f14;border:1px solid var(--line);border-radius:8px;color:var(--fg);padding:10px 12px;font:inherit}
+.input:focus{outline:1px solid var(--acc)}
+.seg{display:flex;gap:8px;margin-bottom:8px}
+.seg-btn{flex:1;background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--dim);padding:8px 0;font:inherit;cursor:pointer}
+.seg-btn.on{border-color:var(--acc);color:var(--fg)}
+.inline{display:flex;gap:10px;align-items:center}
+.unit{color:var(--dim);min-width:52px}
+.chips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.chip{background:transparent;border:1px solid var(--line);border-radius:999px;color:var(--dim);padding:5px 14px;font:inherit;font-size:.9rem;cursor:pointer}
+.chip.on{border-color:var(--acc);color:var(--acc)}
+.hint{font-size:.82rem;color:var(--dim);margin:8px 0 0}
+.adv{border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-top:4px}
+.adv summary{cursor:pointer;color:var(--dim);font-size:.9rem}
+.adv .field{margin-top:14px}
+.out .big-label{font-size:.85rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.big{font-size:3rem;font-weight:700;letter-spacing:-.02em;margin:2px 0 10px}
+.big-unit{font-size:1rem;color:var(--dim);font-weight:400}
+.warn{border:1px solid #7a4a21;background:#1d1508;color:#e8c9a0;border-radius:8px;padding:10px 12px;font-size:.9rem;margin:10px 0}
+.rows{margin-top:14px;border-top:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);padding:9px 0;font-size:.95rem}
+.row span{color:var(--dim)}
+.row b.red{color:#e06c6c}
+.row b.green{color:#7fbf7f}
+.note{font-size:.83rem;color:var(--dim);margin-top:14px}
+.formula{background:#1b2130;border-radius:8px;padding:14px 16px;font-size:1.05rem;color:var(--fg);margin:16px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><b>The Gold Plan</b><a href="/">Home</a><a href="/pricing">Pricing</a>
+<a href="/xauusd-trading-journal">XAUUSD journal</a><a href="/mt5-trading-journal-import">MT5 import</a>
+<a href="/prop-firm-daily-loss-tracker">Daily loss tracker</a></nav>
+<article>
+<p class="kicker">Free tool · no sign-up</p>
+<h1>XAUUSD lot size calculator</h1>
+
+<p class="lead">Decide your stop and your risk first. The lot size is the answer, not the
+starting point. Everything below runs in your browser — nothing is sent anywhere.</p>
+
+<section class="calc-grid" aria-label="Lot size calculator">
+  <div class="panel">
+    <h2>Your trade</h2>
+    <div class="field">
+      <label for="f-balance">Account balance (USD)</label>
+      <input id="f-balance" class="input" type="number" inputmode="decimal" min="0" step="100" value="1000">
+    </div>
+    <div class="field">
+      <label>Risk per trade</label>
+      <div class="seg">
+        <button type="button" class="seg-btn on" data-risk="percent">% of balance</button>
+        <button type="button" class="seg-btn" data-risk="fixed">Fixed $</button>
+      </div>
+      <div class="inline">
+        <input id="f-risk" class="input" type="number" inputmode="decimal" min="0" step="0.25" value="1" aria-label="Risk per trade">
+        <span class="unit" id="risk-unit">%</span>
+      </div>
+      <div class="chips" id="presets">
+        <button type="button" class="chip" data-chip="0.5">0.5%</button>
+        <button type="button" class="chip on" data-chip="1">1%</button>
+        <button type="button" class="chip" data-chip="2">2%</button>
+        <button type="button" class="chip" data-chip="3">3%</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Stop-loss distance</label>
+      <div class="seg">
+        <button type="button" class="seg-btn on" data-unit="pips">Pips</button>
+        <button type="button" class="seg-btn" data-unit="usd">Price ($)</button>
+      </div>
+      <div class="inline">
+        <input id="f-stop" class="input" type="number" inputmode="decimal" min="0" step="1" value="30" aria-label="Stop-loss distance">
+        <span class="unit" id="stop-unit">pips</span>
+      </div>
+      <p class="hint">1 pip on gold = $0.10 in price. Enter the distance from entry to stop,
+      not the stop price itself.</p>
+    </div>
+    <div class="field">
+      <label for="f-rr">Reward : risk</label>
+      <input id="f-rr" class="input" type="number" inputmode="decimal" min="0" step="0.5" value="2">
+    </div>
+    <details class="adv">
+      <summary>Advanced (margin &amp; leverage)</summary>
+      <div class="field">
+        <label for="f-price">Current XAUUSD price</label>
+        <input id="f-price" class="input" type="number" inputmode="decimal" min="0" step="1" value="2650">
+      </div>
+      <div class="field">
+        <label for="f-lev">Leverage</label>
+        <select id="f-lev" class="input">
+          <option value="50">1:50</option>
+          <option value="100" selected>1:100</option>
+          <option value="200">1:200</option>
+          <option value="500">1:500</option>
+          <option value="1000">1:1000</option>
+        </select>
+      </div>
+    </details>
+  </div>
+
+  <div class="panel out" aria-live="polite">
+    <div class="big-label">Suggested lot size</div>
+    <div class="big"><span id="r-lots">0.03</span> <span class="big-unit">lots</span></div>
+    <div class="warn" id="r-warn" style="display:none">Your risk budget is too small for the
+    0.01 minimum lot on this stop. Either widen the account, tighten the stop, or accept
+    <b id="r-warn-risk"></b> risk at 0.01 lots.</div>
+    <div class="rows">
+      <div class="row"><span>Risk budget</span><b id="r-budget">$10.00</b></div>
+      <div class="row"><span>Risk at stop</span><b id="r-riskat">$9.00</b></div>
+      <div class="row"><span>Value per pip</span><b id="r-pip">$0.30</b></div>
+      <div class="row"><span>Stop distance</span><b id="r-stopd">30.0 pips · $3.00 in price</b></div>
+      <div class="row"><span id="r-tp-label">Take profit at 1:2</span><b id="r-tp" class="green">60.0 pips · $18.00</b></div>
+      <div class="row"><span>Margin required</span><b id="r-margin">$79.50 (8.0% of balance)</b></div>
+      <div class="row"><span>Full losses to zero</span><b id="r-blow">111 in a row</b></div>
+    </div>
+    <p class="note">Rounded <b>down</b> to 0.01 so the position never exceeds your risk budget.
+    Excludes spread, commission and slippage — confirm the final figure in your broker's terminal.</p>
+  </div>
+</section>
+
+<h2>How the lot size is calculated</h2>
+<p>On XAUUSD one standard lot is 100 troy ounces, so a $1.00 move in the gold price is worth
+$100 per lot. That single fact drives the whole calculation:</p>
+<div class="formula">lots = risk in dollars ÷ (stop distance in price × 100)</div>
+<p>A $1,000 account risking 1% has a $10 budget. With a 30-pip stop (a $3.00 price distance),
+the calculation is 10 ÷ (3 × 100) = 0.033 lots. Rounded down to the broker step, that is
+<b>0.03 lots</b> — and the real risk is $9, not $10.</p>
+
+<h2>Why the lot is rounded down, never up</h2>
+<p>Rounding 0.033 up to 0.04 quietly turns a 1% risk into a 1.2% risk. Do that on every trade
+and the account bleeds a fifth more than the plan says. Rounding down costs a few cents of
+potential profit and keeps the plan honest.</p>
+
+<h2>Why risk first, lot second</h2>
+<p>Most traders pick a lot size out of habit — 0.10, or whatever they used last time — then
+place the stop wherever the chart allows. That reverses the only part of the trade they
+actually control. On a $1,000 account, a 0.10 lot with a 30-pip stop risks $30: three times
+the intended budget, and three full losses in a row is 9% of the account gone.</p>
+<p>Sizing from risk means the stop is decided by the chart and the lot is decided by arithmetic.
+The chart stays honest and the account stays predictable. Once the trade is placed, the next
+step is to <a href="/xauusd-trading-journal">log it</a> — the lot size is one decision, and the
+pattern across a hundred trades is what actually costs or pays.</p>
+
+<h2>What this calculator deliberately leaves out</h2>
+<ul>
+<li><b>Spread and commission.</b> They widen the effective stop. On a 2-pip spread your real
+risk is slightly higher than shown.</li>
+<li><b>Slippage.</b> Gold gaps through stops during news. Assume the fill is worse than the plan.</li>
+<li><b>Correlated positions.</b> Two gold trades in the same direction are one risk, not two.</li>
+</ul>
+
+<h2>Common questions</h2>
+<h3>Is a pip on gold 0.01 or 0.10?</h3>
+<p>Brokers disagree, and both labels are in use. This calculator treats 1 pip as a $0.10 price
+move, which is the common convention. If your broker calls a $0.01 move a pip, switch the unit
+to <b>Price ($)</b> and enter the distance directly — the result is identical because sizing
+only ever uses the price distance.</p>
+<h3>What lot size should I use on a $500 account?</h3>
+<p>At 1% risk that is a $5 budget. With a 30-pip stop the answer is 0.01 lots — the minimum.
+On a $500 account, any stop wider than about 50 pips cannot be traded at 1% risk with a
+standard account. That is a signal to widen the account or tighten the setup, not to raise
+the risk.</p>
+<h3>Does leverage change the lot size?</h3>
+<p>No. Leverage changes the margin your broker locks, not the money you lose when the stop is
+hit. It only matters for whether the position fits in free margin — which is why it sits under
+Advanced.</p>
+<h3>Why is the lot size rounded down?</h3>
+<p>Rounding up quietly turns a 1% risk into a larger one. Rounding down to the broker step
+keeps the position inside the risk budget at the cost of a few cents of potential profit.</p>
+
+</article>
+<div class="cta"><h3>Now log it properly</h3>
+<p>A lot size is one decision. The Gold Plan records the trade, the setup and the emotion
+behind it — then shows you which of the three is costing you money. The demo is the full app
+with sample accounts, open, no login.</p>
+<a class="btn" href="/app?demo=1">Open the free demo</a>
+<a class="btn alt" href="/pricing">See pricing</a></div>
+<footer>The Gold Plan — a XAUUSD trading journal with a
+<a href="/lot-size-calculator">free lot size calculator</a>. Not signals, not a broker. We are
+not affiliated with any prop firm. <a href="/pricing">Pricing</a> ·
+<a href="/app?demo=1">Demo</a> · <a href="/privacy">Privacy</a></footer>
+</div>
+<script>
+(function () {
+  'use strict'
+  var CONTRACT = 100, PIP = 0.1, MIN = 0.01
+  function safe(n, f) { f = f || 0; return isFinite(n) ? n : f }
+  function roundLotsDown(l) { if (!(l > 0)) return 0; var s = Math.floor(l / MIN + 1e-9); return Math.round(s * MIN * 100) / 100 }
+  function fmtUsd(v) { var s = v < 0 ? '-' : ''; return s + '$' + Math.abs(safe(v)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
+  function toPips(d) { return safe(d) / PIP }
+
+  var state = { riskMode: 'percent', unit: 'pips', leverage: 100 }
+  function $(id) { return document.getElementById(id) }
+  var els = {
+    balance: $('f-balance'), risk: $('f-risk'), stop: $('f-stop'), rr: $('f-rr'),
+    price: $('f-price'), lev: $('f-lev'),
+    riskUnit: $('risk-unit'), stopUnit: $('stop-unit'), presets: $('presets'),
+    lots: $('r-lots'), warn: $('r-warn'), warnRisk: $('r-warn-risk'),
+    budget: $('r-budget'), riskAt: $('r-riskat'), pip: $('r-pip'),
+    stopd: $('r-stopd'), tp: $('r-tp'), tpLabel: $('r-tp-label'),
+    margin: $('r-margin'), blow: $('r-blow')
+  }
+  function seg(nodes, attr, val) {
+    for (var i = 0; i < nodes.length; i++) nodes[i].classList.toggle('on', nodes[i].getAttribute(attr) === String(val))
+  }
+
+  function recalc() {
+    var balance = Math.max(0, safe(parseFloat(els.balance.value)))
+    var rv = Math.max(0, safe(parseFloat(els.risk.value)))
+    var riskAmount = state.riskMode === 'percent' ? (balance * rv) / 100 : rv
+    var stopPrice = state.unit === 'pips' ? safe(parseFloat(els.stop.value)) * PIP : safe(parseFloat(els.stop.value))
+    var rawLots = stopPrice > 0 ? riskAmount / (stopPrice * CONTRACT) : 0
+    var lots = roundLotsDown(rawLots)
+    var belowMin = rawLots > 0 && lots < MIN
+    var actualRisk = lots * stopPrice * CONTRACT
+    var pipValue = lots * PIP * CONTRACT
+    var ratio = Math.max(0, safe(parseFloat(els.rr.value)))
+    var takeProfitPrice = stopPrice * ratio
+    var rewardAmount = actualRisk * ratio
+    var price = Math.max(0, safe(parseFloat(els.price.value)))
+    var lev = state.leverage > 0 ? state.leverage : 100
+    var marginRequired = lots > 0 && price > 0 ? (price * CONTRACT * lots) / lev : 0
+    var marginPct = balance > 0 ? (marginRequired / balance) * 100 : 0
+    var perLoss = balance > 0 ? actualRisk / balance : 0
+    var lossesToBlow = perLoss > 0 ? Math.floor(1 / perLoss) : 0
+
+    els.lots.textContent = lots.toFixed(2)
+    els.warn.style.display = belowMin ? '' : 'none'
+    if (belowMin) els.warnRisk.textContent = fmtUsd(0.1 * stopPrice * CONTRACT)
+    els.budget.textContent = fmtUsd(riskAmount)
+    els.riskAt.textContent = fmtUsd(actualRisk)
+    els.riskAt.className = actualRisk > riskAmount + 0.01 ? 'red' : ''
+    els.pip.textContent = fmtUsd(pipValue)
+    els.stopd.textContent = toPips(stopPrice).toFixed(1) + ' pips · ' + fmtUsd(stopPrice) + ' in price'
+    els.tpLabel.textContent = 'Take profit at 1:' + (ratio || 0)
+    els.tp.textContent = toPips(takeProfitPrice).toFixed(1) + ' pips · ' + fmtUsd(rewardAmount)
+    els.margin.textContent = fmtUsd(marginRequired) + ' (' + marginPct.toFixed(1) + '% of balance)'
+    els.blow.textContent = lossesToBlow > 0 ? lossesToBlow + ' in a row' : '—'
+  }
+
+  ;[].forEach.call(document.querySelectorAll('[data-risk]'), function (b) {
+    b.addEventListener('click', function () {
+      state.riskMode = b.getAttribute('data-risk')
+      seg(document.querySelectorAll('[data-risk]'), 'data-risk', state.riskMode)
+      els.riskUnit.textContent = state.riskMode === 'percent' ? '%' : 'USD'
+      els.risk.step = state.riskMode === 'percent' ? '0.25' : '5'
+      els.presets.style.display = state.riskMode === 'percent' ? '' : 'none'
+      recalc()
+    })
+  })
+  ;[].forEach.call(document.querySelectorAll('[data-unit]'), function (b) {
+    b.addEventListener('click', function () {
+      var next = b.getAttribute('data-unit')
+      if (next === state.unit) return
+      var d = safe(parseFloat(els.stop.value))
+      els.stop.value = next === 'usd' ? Math.round(d * PIP * 100) / 100 : Math.round((d / PIP) * 10) / 10
+      state.unit = next
+      seg(document.querySelectorAll('[data-unit]'), 'data-unit', next)
+      els.stopUnit.textContent = next === 'pips' ? 'pips' : 'USD move'
+      els.stop.step = next === 'pips' ? '1' : '0.5'
+      recalc()
+    })
+  })
+  ;[].forEach.call(document.querySelectorAll('[data-chip]'), function (c) {
+    c.addEventListener('click', function () {
+      els.risk.value = c.getAttribute('data-chip')
+      ;[].forEach.call(document.querySelectorAll('[data-chip]'), function (x) { x.classList.toggle('on', x === c) })
+      recalc()
+    })
+  })
+  els.lev.addEventListener('change', function () { state.leverage = Number(this.value) || 100; recalc() })
+  ;[els.balance, els.risk, els.stop, els.rr, els.price].forEach(function (i) { i.addEventListener('input', recalc) })
+  recalc()
+})()
+</script>
+</body>
+</html>

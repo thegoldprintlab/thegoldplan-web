@@ -18,6 +18,7 @@
     { "source": "/mt5-trading-journal-import", "destination": "/mt5-trading-journal-import.html" },
     { "source": "/trading-journal-vs-excel", "destination": "/trading-journal-vs-excel.html" },
     { "source": "/trading-journal-emotions", "destination": "/trading-journal-emotions.html" },
+    { "source": "/lot-size-calculator", "destination": "/lot-size-calculator.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
