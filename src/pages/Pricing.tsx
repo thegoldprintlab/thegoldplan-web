@@ -43,7 +43,6 @@ export default function Pricing() {
   return (
     <div className="pricing">
       <header className="pricing-hero">
-        <div className="kicker">Pricing</div>
         <h1 className="landing-title">
           One plan. <span className="landing-title-accent">One edge.</span>
         </h1>

@@ -34,7 +34,6 @@ export default function Landing() {
         </nav>
 
         <div className="landing-hero-inner">
-          <div className="kicker">XAUUSD Trading Journal</div>
           <h1 className="landing-title">
             Stop turning one red gold trade
             <br />
@@ -42,8 +41,8 @@ export default function Landing() {
           </h1>
           <p className="landing-sub">
             The Gold Plan is a trading journal built for XAUUSD. Set one daily loss limit per
-            account, log every trade, and see exactly which sessions, setups and emotions are
-            costing you — before the account pays for it.
+            account, log every trade, and see exactly which sessions, setups and emotions
+            cost you money — before the account does.
           </p>
           <div className="landing-hero-actions">
             <Link className="btn btn-primary btn-lg" to="/app?demo=1">
@@ -85,7 +84,6 @@ export default function Landing() {
       <section className="landing-section">
         <div className="page-head">
           <div>
-            <div className="kicker">Features</div>
             <h2>Everything you need to trade deliberately</h2>
           </div>
         </div>
@@ -192,7 +190,6 @@ export default function Landing() {
       {/* ── CTA ──────────────────────────────────────────── */}
       <section className="landing-section landing-cta-band">
         <div className="panel landing-cta-card">
-          <div className="kicker">Get started</div>
           <h2>Start trading with a plan today</h2>
           <p className="landing-sub">
             Try the live demo with sample data, or create your own account and log your first trade in under a minute.
@@ -229,6 +226,13 @@ export default function Landing() {
         </span>
         <span className="landing-footer-note">
           thegoldplan.my — built for deliberate XAUUSD trading.
+        </span>
+        <span className="landing-footer-note landing-footer-links">
+          <Link to="/xauusd-trading-journal">XAUUSD journal</Link> ·
+          <Link to="/prop-firm-daily-loss-tracker">Daily loss tracker</Link> ·
+          <Link to="/mt5-trading-journal-import">MT5 import</Link> ·
+          <Link to="/trading-journal-vs-excel">Journal vs Excel</Link> ·
+          <Link to="/trading-journal-emotions">Emotions</Link>
         </span>
         <span className="landing-footer-note">
           <Link to="/privacy">Privacy</Link> · <CookieSettingsLink />

@@ -149,7 +149,6 @@ export default function LotCalculator() {
         </nav>
 
         <div className="calc-hero">
-          <div className="kicker">Free tool · no sign-up</div>
           <h1>XAUUSD lot size calculator</h1>
           <p className="landing-sub">
             Decide your stop and your risk first. The lot size is the answer, not the starting point.

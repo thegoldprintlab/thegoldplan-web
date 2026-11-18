@@ -104,7 +104,6 @@ export default function Dashboard() {
     <div>
       <div className="page-head">
         <div>
-          <div className="kicker">Command Center</div>
           <h1>Dashboard</h1>
           <p className="page-sub">A calm, disciplined view of your XAUUSD journey.</p>
         </div>

@@ -459,7 +459,6 @@ export default function Simulator() {
     <div className="sim">
       <div className="page-head">
         <div>
-          <div className="kicker">Replay lab</div>
           <h1>XAUUSD Chart Simulator</h1>
           <p className="muted" style={{ marginTop: 4 }}>
             Real M1 data ({(manifest?.bars ?? 0).toLocaleString()} bars, {manifest?.from} → {manifest?.to}).

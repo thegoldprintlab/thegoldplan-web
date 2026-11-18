@@ -19,7 +19,6 @@ export function ProofSection() {
     <section className="landing-section">
       <div className="page-head">
         <div>
-          <div className="kicker">Why it exists</div>
           <h2>Built for the trade that ends the day, not the week</h2>
         </div>
       </div>
@@ -75,7 +74,6 @@ export function StepsSection() {
     <section className="landing-section">
       <div className="page-head">
         <div>
-          <div className="kicker">How it works</div>
           <h2>Three steps, under a minute to start</h2>
         </div>
       </div>
@@ -186,7 +184,6 @@ export function FaqSection({ title = 'Straight answers' }: { title?: string }) {
     <section className="landing-section">
       <div className="page-head">
         <div>
-          <div className="kicker">FAQ</div>
           <h2>{title}</h2>
         </div>
       </div>

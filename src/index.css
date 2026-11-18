@@ -77,29 +77,29 @@
   --radius-xl: 22px;
   --radius-pill: 999px;
   --shadow-md: 0 16px 40px -20px rgba(0, 0, 0, 0.45);
-  --ring: rgba(200, 162, 74, 0.5);
+  --ring: rgba(201, 162, 39, 0.5);
 }
 
 [data-design='gold'][data-theme='dark'] {
   color-scheme: dark;
-  --canvas: #0b0908;
-  --surface: #14100c;
-  --surface-2: #1b1510;
-  --surface-3: #221b14;
-  --hairline: #2a2119;
-  --hairline-strong: #3b2f23;
-  --ink: #f6f0e6;
-  --ink-muted: #d8cdbb;
-  --ink-subtle: #a1937d;
-  --primary: #c8a24a;
-  --primary-hover: #dcb862;
-  --primary-soft: rgba(200, 162, 74, 0.13);
-  --on-primary: #1c150a;
+  --canvas: #0d0f14;
+  --surface: #141822;
+  --surface-2: #1b2130;
+  --surface-3: #232a36;
+  --hairline: #232a36;
+  --hairline-strong: #2c3442;
+  --ink: #e9ecf1;
+  --ink-muted: #cdd4e0;
+  --ink-subtle: #9aa3b2;
+  --primary: #c9a227;
+  --primary-hover: #e0bf58;
+  --primary-soft: rgba(201, 162, 39, 0.13);
+  --on-primary: #12140f;
   --green: #3fa66d;
   --green-soft: rgba(63, 166, 109, 0.13);
   --red: #e0685d;
   --red-soft: rgba(224, 104, 93, 0.12);
-  --gold-accent: #c8a24a;
+  --gold-accent: #c9a227;
 }
 
 [data-design='gold'][data-theme='light'] {
@@ -425,26 +425,6 @@ p { margin: 0; }
   gap: 20px;
   flex-wrap: wrap;
   margin-bottom: 28px;
-}
-
-.kicker {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.kicker::before {
-  content: '';
-  width: 22px;
-  height: 1px;
-  background: var(--primary);
-  display: inline-block;
 }
 
 .page-sub { color: var(--ink-subtle); margin-top: 8px; font-size: 0.94rem; max-width: 560px; }
@@ -1177,6 +1157,9 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 }
 
 .landing-footer-note { color: var(--ink-subtle); font-size: 0.82rem; }
+.landing-footer-links a { color: inherit; text-decoration: none; }
+.landing-footer-links a:hover { color: var(--ink); text-decoration: underline; }
+.landing-footer-links a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 2px; }
 
 /* Trust layer: problem / founder note / compliance / steps */
 .landing-grid-2 { grid-template-columns: repeat(2, 1fr); }

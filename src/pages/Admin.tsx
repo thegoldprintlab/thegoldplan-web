@@ -62,7 +62,6 @@ export default function AdminPage() {
     <div>
       <div className="page-head">
         <div>
-          <div className="kicker">Admin</div>
           <h1>Admin Panel</h1>
           <p className="page-sub">Manage users, roles, and subscriptions.</p>
         </div>

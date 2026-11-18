@@ -81,7 +81,6 @@ export default function InputForm() {
     <div>
       <div className="page-head">
         <div>
-          <div className="kicker">Journal Entry</div>
           <h1>Input Form</h1>
           <p className="page-sub">Log a new trade — entry, exit, volume &amp; profit are manual.</p>
         </div>

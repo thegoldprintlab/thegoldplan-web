@@ -147,7 +147,6 @@ export default function SettingsPage() {
     <div>
       <div className="page-head">
         <div>
-          <div className="kicker">Configuration</div>
           <h1>Settings</h1>
           <p className="page-sub">Setups, sessions, emotions, accounts, daily loss limits, and the Quick Log API.</p>
         </div>

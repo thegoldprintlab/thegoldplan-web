@@ -42,7 +42,6 @@ export default function TradingLog() {
     <div>
       <div className="page-head">
         <div>
-          <div className="kicker">Trade History</div>
           <h1>Trading Log</h1>
           <p className="page-sub">
             {filtered.length} trades · {wins}W / {losses}L · Net <span className={net >= 0 ? 'green' : 'red'}>{fmtPnl(net)}</span>

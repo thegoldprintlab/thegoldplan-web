@@ -41,7 +41,6 @@ export default function AccountPage() {
     <div>
       <div className="page-head">
         <div>
-          <div className="kicker">Account</div>
           <h1>Account &amp; Billing</h1>
           <p className="page-sub">Your profile, plan, and subscription.</p>
         </div>
