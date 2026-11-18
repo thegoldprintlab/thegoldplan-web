@@ -53,8 +53,8 @@
   --ink: #18181b;
   --ink-muted: #3f3f46;
   --ink-subtle: #71717a;
-  --primary: #5e6ad2;
-  --primary-hover: #4e59bd;
+  --primary: #4e59bd;
+  --primary-hover: #5e6ad2;
   --primary-soft: rgba(94, 106, 210, 0.12);
   --on-primary: #ffffff;
   --green: #16803f;
@@ -429,7 +429,7 @@ p { margin: 0; }
 
 .kicker {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--primary);
@@ -748,17 +748,18 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   transition: border-color 0.2s ease;
 }
 
-.kill-switch.safe { border-left: 3px solid var(--green); }
-.kill-switch.ok { border-left: 3px solid var(--primary); }
-.kill-switch.warn { border-left: 3px solid #d69e2e; }
+.kill-switch.safe { border-color: color-mix(in srgb, var(--green) 45%, var(--hairline)); }
+.kill-switch.ok { border-color: color-mix(in srgb, var(--primary) 45%, var(--hairline)); }
+.kill-switch.warn {
+  border-color: color-mix(in srgb, #d69e2e 55%, var(--hairline));
+  background: color-mix(in srgb, #d69e2e 8%, var(--surface));
+}
 .kill-switch.danger {
-  border-left: 3px solid var(--red);
   background: var(--red-soft);
   border-color: color-mix(in srgb, var(--red) 35%, var(--hairline));
   animation: pulse-danger 1.6s ease-in-out infinite;
 }
 .kill-switch.blown {
-  border-left: 3px solid var(--red);
   background: var(--red-soft);
   border-color: var(--red);
 }
@@ -1399,9 +1400,9 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .cookie-text {
   margin: 0;
-  font-size: 0.86rem;
+  font-size: 0.94rem;
   line-height: 1.5;
-  color: var(--text-muted, #9aa4b2);
+  color: var(--ink-subtle);
   flex: 1 1 380px;
 }
 
@@ -2158,9 +2159,8 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   padding: 14px 16px;
   margin: 14px 0;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--hairline);
-  border-left: 2px solid var(--gold-accent);
-  background: var(--surface-2);
+  border: 1px solid color-mix(in srgb, var(--gold-accent) 30%, var(--hairline));
+  background: color-mix(in srgb, var(--gold-accent) 7%, var(--surface-2));
   color: var(--ink);
   overflow-x: auto;
 }

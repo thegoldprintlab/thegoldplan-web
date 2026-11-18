@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T16:45:00Z",
+  "title": "Design System: The Gold Plan",
+  "extensions": {
+    "colorMeta": {
+      "gold": { "role": "primary", "displayName": "Ledger Gold", "canonical": "#c9a227", "tonalRamp": ["#0f0c05", "#2a2410", "#45381b", "#6b5726", "#917731", "#c9a227", "#e0bf58", "#f2df9b"] },
+      "gold-bright": { "role": "primary", "displayName": "Bright Gold", "canonical": "#e9c84a", "tonalRamp": ["#1a1505", "#3a3010", "#5c4c1b", "#7f6926", "#a38631", "#c9a227", "#e9c84a", "#f7e6a8"] },
+      "canvas": { "role": "neutral", "displayName": "Blueprint Black", "canonical": "#0d0f14", "tonalRamp": ["#050609", "#0d0f14", "#141822", "#1b2130", "#232a36", "#2c3442", "#3a4453", "#58637a"] },
+      "ink": { "role": "neutral", "displayName": "Ledger White", "canonical": "#e9ecf1", "tonalRamp": ["#0d0f14", "#3a4149", "#5a626d", "#7b8492", "#9aa3b2", "#cdd4e0", "#e9ecf1", "#f7f9fc"] },
+      "line": { "role": "neutral", "displayName": "Hairline Slate", "canonical": "#232a36", "tonalRamp": ["#0d0f14", "#141822", "#1b2130", "#232a36", "#2c3442", "#3a4453", "#4a5568", "#5f6d84"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display — Playfair Display", "purpose": "Brand moments only: landing hero in the Gold variant, og share cards, the share-card export. Never for article body." },
+      "headline": { "displayName": "Headline — Inter", "purpose": "Article h1 on marketing pages. Information first, ornament never." },
+      "title": { "displayName": "Title — Inter", "purpose": "Article h2, section titles." },
+      "body": { "displayName": "Body — Inter", "purpose": "Default reading text, 65–75ch column." },
+      "mono": { "displayName": "Mono — JetBrains Mono", "purpose": "Numbers, code, tabular data." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "state-color", "value": "color 0.15s ease", "purpose": "Hover/focus color shifts on links and controls. The only motion on marketing pages." }
+    ],
+    "breakpoints": [
+      { "name": "calc-stack", "value": "760px", "purpose": "Calculator grid drops from 2 columns to 1." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single gold CTA — demo or pricing, never both styles at once.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Open the free demo</a>",
+      "css": ".ds-btn-primary { display:inline-block; background:#c9a227; color:#12140f; font:600 16px/1.2 Inter,system-ui,sans-serif; padding:11px 20px; border-radius:8px; text-decoration:none; } .ds-btn-primary:hover { background:#e0bf58; } .ds-btn-primary:focus-visible { outline:2px solid #e9c84a; outline-offset:2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action beside a primary CTA.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\">See pricing</a>",
+      "css": ".ds-btn-ghost { display:inline-block; background:transparent; color:#e9ecf1; border:1px solid #232a36; font:600 16px/1.2 Inter,system-ui,sans-serif; padding:11px 20px; border-radius:8px; text-decoration:none; } .ds-btn-ghost:hover { border-color:#c9a227; color:#c9a227; } .ds-btn-ghost:focus-visible { outline:2px solid #e9c84a; outline-offset:2px; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "CTA panel and calculator panel: flat surface, hairline border, no shadow.",
+      "html": "<div class=\"ds-card\"><h3>Card title</h3><p>Card body copy.</p></div>",
+      "css": ".ds-card { background:#141822; border:1px solid #232a36; border-radius:12px; padding:22px; color:#e9ecf1; font:400 16px/1.65 Inter,system-ui,sans-serif; } .ds-card h3 { margin:0 0 8px; font-size:1.06rem; } .ds-card p { color:#cdd4e0; margin:0 0 10px; }"
+    },
+    {
+      "name": "Callout",
+      "kind": "custom",
+      "refersTo": "callout",
+      "description": "The honesty box (‘One honest thing’, ‘Fair comparison’): gold-tinted panel, no border-left.",
+      "html": "<div class=\"ds-callout\">One honest thing: the kill switch is a warning, not an execution tool.</div>",
+      "css": ".ds-callout { background:rgba(201,162,39,0.07); border-radius:8px; padding:12px 16px; margin:16px 0; color:#e9ecf1; font:400 16px/1.65 Inter,system-ui,sans-serif; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "text-input",
+      "description": "Calculator fields: canvas-dark field on card surface.",
+      "html": "<input class=\"ds-input\" type=\"number\" value=\"1000\">",
+      "css": ".ds-input { width:100%; background:#0d0f14; border:1px solid #232a36; border-radius:8px; color:#e9ecf1; padding:10px 12px; font:400 16px/1.5 Inter,system-ui,sans-serif; } .ds-input:focus { outline:1px solid #c9a227; } .ds-input:focus-visible { outline:2px solid #c9a227; outline-offset:1px; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Risk preset pills in the calculator.",
+      "html": "<button type=\"button\" class=\"ds-chip\">1%</button>",
+      "css": ".ds-chip { background:transparent; border:1px solid #232a36; border-radius:999px; color:#9aa3b2; padding:5px 14px; font:400 0.9rem Inter,system-ui,sans-serif; cursor:pointer; } .ds-chip:hover { color:#e9ecf1; } .ds-chip.ds-on { border-color:#c9a227; color:#c9a227; }"
+    },
+    {
+      "name": "Top Nav",
+      "kind": "nav",
+      "refersTo": "top-nav",
+      "description": "Brand left, quiet links right, hairline rule below.",
+      "html": "<nav class=\"ds-nav\"><b>The Gold Plan</b><a href=\"#\">Home</a><a href=\"#\">Pricing</a></nav>",
+      "css": ".ds-nav { display:flex; gap:18px; flex-wrap:wrap; align-items:center; border-bottom:1px solid #232a36; padding-bottom:14px; margin-bottom:34px; font:400 14px/1.4 Inter,system-ui,sans-serif; } .ds-nav b { margin-right:auto; letter-spacing:0.02em; color:#e9ecf1; } .ds-nav a { color:#9aa3b2; text-decoration:none; } .ds-nav a:hover { color:#e9ecf1; } .ds-nav a:focus-visible { outline:2px solid #c9a227; outline-offset:2px; border-radius:2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Ledger",
+    "overview": "The Gold Plan's public surface is a dark editorial ledger: a near-black canvas, hairline rules, one scarce gold accent, and typography that reads like a well-kept trading journal. Every page argues discipline, not profit; the design carries that by being quiet, exact, and unhurried. Decoration that the discipline story cannot justify does not ship.",
+    "keyCharacteristics": [
+      "Dark blueprint-black canvas (#0d0f14) with hairline slate borders — depth comes from surface steps, never shadows.",
+      "One scarce gold accent (#c9a227) for links, key numbers, and the single primary CTA.",
+      "Playfair Display for brand moments (landing hero, share cards); Inter for working type; JetBrains Mono for numbers.",
+      "Single 65–75ch reading column; marketing pages are articles, not dashboards.",
+      "Flat by default: no drop shadows, no gradients, no glass."
+    ],
+    "rules": [
+      { "name": "The Scarce Gold Rule", "body": "Gold appears on links, one or two key numbers, and one primary CTA per view — under 10% of any screen. When everything is gold, nothing is.", "section": "colors" },
+      { "name": "The Ledger Voice Rule", "body": "Headlines state facts in the product's own language ('Prop firm daily loss tracker for gold traders'), never marketing abstractions.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat with 1px hairline borders. Depth is surface color steps, not shadows.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep body copy at 16px/1.65 in the 720px column (65–75ch).",
+      "Do give headings more space above than below (h2: 38px above, 10px below).",
+      "Do use gold-tinted panels (rgba(201,162,39,0.07)) for callouts instead of border-left bars.",
+      "Do keep one primary CTA per view; everything else is ghost."
+    ],
+    "donts": [
+      "Don't use gold as a section background or card fill.",
+      "Don't add eyebrows/kickers above headings — the heading carries its own weight.",
+      "Don't use border-left/border-right bars above 1px on callouts and cards.",
+      "Don't introduce a second chromatic accent; semantic green/red only for P&L values.",
+      "Don't ship drop shadows, gradients, or glass on the marketing canvas."
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-18T15:29:38.851Z",
+        "reason": "Brand font since launch — landing, app, and share cards all ship Inter; switching faces would rebrand the product."
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/index.css"
+        ],
+        "createdAt": "2026-11-18T15:33:06.150Z",
+        "reason": "Landing hero accent (.landing-title-accent) — deliberate Linear-inspired brand element from the committed incumbent visual world, kept as designed under impeccable's refinement-preserves doctrine."
+      }
+    ]
+  }
+}
