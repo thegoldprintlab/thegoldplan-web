@@ -303,6 +303,22 @@ p { margin: 0; }
 
 .nav { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 
+/* nav-brand is a route link back to the landing page in both app and public navs. */
+.nav-brand, .nav-brand:visited { color: inherit; text-decoration: none; }
+.nav-brand:hover { color: var(--primary); }
+
+/* Demo preview notice on the simulator page. */
+.sim-demo-note {
+  background: color-mix(in srgb, var(--gold-accent) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold-accent) 25%, var(--hairline));
+  color: var(--ink-muted);
+  font-size: 0.86rem;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin: 10px 0 0;
+  max-width: 640px;
+}
+
 .nav-brand {
   display: flex;
   align-items: center;

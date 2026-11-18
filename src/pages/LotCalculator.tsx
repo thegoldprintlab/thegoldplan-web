@@ -139,6 +139,9 @@ export default function LotCalculator() {
             The Gold Plan
           </Link>
           <div className="landing-cta">
+            <Link className="btn btn-ghost" to="/">
+              Home
+            </Link>
             <Link className="btn btn-ghost" to="/pricing">
               Pricing
             </Link>

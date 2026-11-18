@@ -42,6 +42,25 @@ export default function Pricing() {
 
   return (
     <div className="pricing">
+      <nav className="landing-nav">
+        <Link className="nav-brand" to="/">
+          <span className="nav-logo" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3 21 12 12 21 3 12 12 3Z" fill="var(--primary)" />
+              <path d="M12 7 16.5 12 12 17 7.5 12 12 7Z" fill="var(--surface)" />
+            </svg>
+          </span>
+          The Gold Plan
+        </Link>
+        <div className="landing-cta">
+          <Link className="btn btn-ghost" to="/lot-size-calculator">
+            Lot calculator
+          </Link>
+          <Link className="btn btn-primary" to="/app?demo=1">
+            Try demo
+          </Link>
+        </div>
+      </nav>
       <header className="pricing-hero">
         <h1 className="landing-title">
           One plan. <span className="landing-title-accent">One edge.</span>

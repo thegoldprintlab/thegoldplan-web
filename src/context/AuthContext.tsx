@@ -47,7 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [recovery, setRecovery] = useState(false)
   const effectiveSession = demoPreview ? DEMO_SESSION : session
   const effectiveLoading = demoPreview ? false : loading
-  const effectiveAdmin = demoPreview ? true : isAdmin
+  // Demo preview is a sample-data sandbox, not an admin session — the Admin page
+  // must not appear in the preview nav or be reachable through it.
+  const effectiveAdmin = demoPreview ? false : isAdmin
   const effectiveDisabled = demoPreview ? false : disabled
 
   async function refreshRole() {

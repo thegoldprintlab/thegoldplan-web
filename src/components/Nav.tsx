@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function Nav() {
@@ -18,7 +18,7 @@ export default function Nav() {
 
   return (
     <nav className="nav">
-      <div className="nav-brand">
+      <Link to="/" className="nav-brand">
         <span className="nav-logo" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
             <path d="M12 3 21 12 12 21 3 12 12 3Z" fill="var(--primary)" />
@@ -26,7 +26,7 @@ export default function Nav() {
           </svg>
         </span>
         The Gold Plan
-      </div>
+      </Link>
       <div className="nav-links">
         {links.map((l) => (
           <NavLink

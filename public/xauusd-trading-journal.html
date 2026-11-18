@@ -36,6 +36,7 @@ a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2p
 .wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
 nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:34px;font-size:14px}
 nav b{margin-right:auto;letter-spacing:.02em}
+nav b a{color:var(--fg);text-decoration:none}
 nav a{color:var(--dim);text-decoration:none}
 nav a:hover{color:var(--fg)}
 h1{font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.18;letter-spacing:-.02em;margin:0 0 18px}
@@ -57,7 +58,7 @@ footer{border-top:1px solid var(--line);margin-top:56px;padding-top:18px;font-si
 </head>
 <body>
 <div class="wrap">
-<nav><b>The Gold Plan</b><a href="/">Home</a><a href="/pricing">Pricing</a>
+<nav><b><a class="brand-home" href="/">The Gold Plan</a></b><a href="/">Home</a><a href="/pricing">Pricing</a>
 <a href="/xauusd-trading-journal">XAUUSD journal</a>
 <a href="/mt5-trading-journal-import">MT5 import</a>
 <a href="/prop-firm-daily-loss-tracker">Daily loss tracker</a>

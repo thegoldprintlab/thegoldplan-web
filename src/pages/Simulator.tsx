@@ -36,8 +36,12 @@ import { trackEvent } from '../lib/analytics'
 const SPEEDS = [0.5, 1, 2, 4, 8, 16] as const
 const TFS: TF[] = [1, 5, 15, 60, 240]
 
+/** Demo preview: replay window — only the last N candles of each month. */
+const DEMO_CANDLES = 15
+
 export default function Simulator() {
   const colors = useChartColors()
+  const demoPreview = useMemo(() => isDemoPreview(), [])
 
   const [manifest, setManifest] = useState<Manifest | null>(null)
   const [month, setMonth] = useState('')
@@ -81,7 +85,10 @@ export default function Simulator() {
   /** Hari yang user klik pada kalendar tapi bulan lain — lompat selepas data tiba. */
   const pendingDayJump = useRef<string | null>(null)
 
-  const bars = useMemo(() => aggregate(m1, tf), [m1, tf])
+  const bars = useMemo(
+    () => (demoPreview ? aggregate(m1, tf).slice(-DEMO_CANDLES) : aggregate(m1, tf)),
+    [m1, tf, demoPreview]
+  )
   const price = cursor > 0 && bars[cursor - 1] ? bars[cursor - 1].c : 0
 
   useEffect(() => saveChartSettings(chartSettings), [chartSettings])
@@ -125,7 +132,7 @@ export default function Simulator() {
   /** Lompat carta ke masa tertentu (epoch saat) — dipakai oleh panel berita. */
   const jumpToTime = useCallback(
     (t: number) => {
-      const agg = aggregate(m1, tf)
+      const agg = demoPreview ? aggregate(m1, tf).slice(-DEMO_CANDLES) : aggregate(m1, tf)
       // Guna bar pertama PADA/selepas t: kalau t jatuh pada hari tanpa dagangan
       // (Sabtu/Ahad/cuti), kita mendarat pada bar seterusnya, bukan yang sebelumnya.
       const i = indexAtOrAfter(agg, t)
@@ -135,7 +142,7 @@ export default function Simulator() {
       lastChecked.current = -1
       setRecenterToken((n) => n + 1)
     },
-    [m1, tf]
+    [m1, tf, demoPreview]
   )
 
   /** Lompat ke hari penuh (YYYY-MM-DD) — klik tarikh pada kalendar.
@@ -165,7 +172,9 @@ export default function Simulator() {
       .then((rows) => {
         if (dead) return
         setM1(rows)
-        const agg = aggregate(rows, tf)
+        const full = aggregate(rows, tf)
+        // Demo preview: only the last DEMO_CANDLES candles exist.
+        const agg = demoPreview ? full.slice(-DEMO_CANDLES) : full
         // Kalau user dah klik satu tarikh, jangan reset ke 40% — biar effect
         // `pendingDayJump` yang letak cursor pada hari betul.
         const want = pendingDayJump.current
@@ -181,7 +190,11 @@ export default function Simulator() {
             return
           }
         }
-        setCursor(Math.max(30, Math.floor(agg.length * 0.4)))
+        if (demoPreview) {
+          setCursor(1)
+        } else {
+          setCursor(Math.max(30, Math.floor(agg.length * 0.4)))
+        }
         setLoading(false)
       })
       .catch((e) => {
@@ -244,7 +257,7 @@ export default function Simulator() {
   function changeTf(next: TF) {
     if (next === tf) return
     const anchor = bars[cursor - 1]?.t
-    const nextBars = aggregate(m1, next)
+    const nextBars = demoPreview ? aggregate(m1, next).slice(-DEMO_CANDLES) : aggregate(m1, next)
     let nextCursor = nextBars.length
     if (anchor != null) {
       const i = indexAtOrBefore(nextBars, anchor)
@@ -464,6 +477,12 @@ export default function Simulator() {
             Real M1 data ({(manifest?.bars ?? 0).toLocaleString()} bars, {manifest?.from} → {manifest?.to}).
             No real money, no broker connection.
           </p>
+          {demoPreview && (
+            <p className="sim-demo-note">
+              Demo preview — replay is limited to the last {DEMO_CANDLES} candles of the month.
+              Create an account to replay the full month.
+            </p>
+          )}
         </div>
         <div className="sim-head-actions">
           <button className="btn btn-sm" onClick={() => setSettingsOpen(true)}>
@@ -511,7 +530,7 @@ export default function Simulator() {
           <button
             className="btn btn-sm btn-primary"
             onClick={() => {
-              if (atEnd) setCursor(30)
+              if (atEnd) setCursor(demoPreview ? 1 : 30)
               setPlaying((p) => !p)
             }}
             disabled={!bars.length}
