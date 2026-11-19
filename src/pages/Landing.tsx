@@ -232,7 +232,11 @@ export default function Landing() {
           <Link to="/prop-firm-daily-loss-tracker">Daily loss tracker</Link> ·
           <Link to="/mt5-trading-journal-import">MT5 import</Link> ·
           <Link to="/trading-journal-vs-excel">Journal vs Excel</Link> ·
-          <Link to="/trading-journal-emotions">Emotions</Link>
+          <Link to="/trading-journal-emotions">Emotions</Link> ·
+          <Link to="/lot-size-calculator">Lot size calculator</Link> ·
+          <Link to="/pip-value-calculator">Pip value calculator</Link> ·
+          <Link to="/xauusd-session-times">Session times</Link> ·
+          <Link to="/trading-plan-template">Trading plan template</Link>
         </span>
         <span className="landing-footer-note">
           <Link to="/privacy">Privacy</Link> · <CookieSettingsLink />

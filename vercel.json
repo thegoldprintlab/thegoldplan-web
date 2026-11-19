@@ -3,22 +3,60 @@
   "redirects": [
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "www.thegoldplan.my" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.thegoldplan.my"
+        }
+      ],
       "destination": "https://thegoldplan.my/$1",
       "permanent": true
     }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
     {
       "source": "/prop-firm-daily-loss-tracker",
       "destination": "/prop-firm-daily-loss-tracker.html"
     },
-    { "source": "/xauusd-trading-journal", "destination": "/xauusd-trading-journal.html" },
-    { "source": "/mt5-trading-journal-import", "destination": "/mt5-trading-journal-import.html" },
-    { "source": "/trading-journal-vs-excel", "destination": "/trading-journal-vs-excel.html" },
-    { "source": "/trading-journal-emotions", "destination": "/trading-journal-emotions.html" },
-    { "source": "/lot-size-calculator", "destination": "/lot-size-calculator.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/xauusd-trading-journal",
+      "destination": "/xauusd-trading-journal.html"
+    },
+    {
+      "source": "/mt5-trading-journal-import",
+      "destination": "/mt5-trading-journal-import.html"
+    },
+    {
+      "source": "/trading-journal-vs-excel",
+      "destination": "/trading-journal-vs-excel.html"
+    },
+    {
+      "source": "/trading-journal-emotions",
+      "destination": "/trading-journal-emotions.html"
+    },
+    {
+      "source": "/lot-size-calculator",
+      "destination": "/lot-size-calculator.html"
+    },
+    {
+      "source": "/pip-value-calculator",
+      "destination": "/pip-value-calculator.html"
+    },
+    {
+      "source": "/xauusd-session-times",
+      "destination": "/xauusd-session-times.html"
+    },
+    {
+      "source": "/trading-plan-template",
+      "destination": "/trading-plan-template.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }

@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XAUUSD Pip Value Calculator: Gold Pip Value per Lot</title>
+<meta name="description" content="Free XAUUSD pip value calculator. Get the value of a 0.10 or 0.01 gold price move per lot, for your exact size, in USD or your own account currency. No sign-up.">
+<link rel="canonical" href="https://thegoldplan.my/pip-value-calculator">
+<meta name="theme-color" content="#0d0f14">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="XAUUSD Pip Value Calculator: What a Gold Pip Is Worth">
+<meta property="og:description" content="1.0 lot gold: $10 per $0.10 move. Enter your lot size and see the pip value for your account, including non-USD accounts.">
+<meta property="og:url" content="https://thegoldplan.my/pip-value-calculator">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://thegoldplan.my/og/og-pip-calculator.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Gold Plan XAUUSD pip value calculator, showing the dollar value of a gold price move per lot">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAUUSD Pip Value Calculator: What a Gold Pip Is Worth">
+<meta name="twitter:description" content="1.0 lot gold: $10 per $0.10 move. Get the pip value for your lot size and account currency.">
+<meta name="twitter:image" content="https://thegoldplan.my/og/og-pip-calculator.png">
+<meta name="twitter:image:alt" content="The Gold Plan XAUUSD pip value calculator, showing the dollar value of a gold price move per lot">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is one pip on gold 0.10 or 0.01?","acceptedAnswer":{"@type":"Answer","text":"Both labels are in use, which is why the numbers in forums disagree. Most brokers and most gold traders call a $0.10 price move one pip, and a $0.01 move one point or pipette. Some brokers, and most MT5 terminals set to 3 decimals, call the $0.01 move the pip. This calculator works from the raw price distance in dollars, so the label cannot change the answer: 1.0 lot is always $10 per $0.10 and $1 per $0.01."}},
+{"@type":"Question","name":"What is the pip value of 0.01 lots on gold?","acceptedAnswer":{"@type":"Answer","text":"0.01 lots is one troy ounce. A $0.10 move is worth $0.10 and a $0.01 move is worth $0.01. That is the smallest size most brokers allow, and it is why a $500 account can only ever risk a few dollars per trade on gold."}},
+{"@type":"Question","name":"My account is not in USD. How do I convert the pip value?","acceptedAnswer":{"@type":"Answer","text":"The pip value above is in USD because gold is priced in USD. If your account is in another currency, multiply by the USD rate your broker uses: at 1 USD equals 4.70 MYR, a $10 pip value is 47.00 MYR. The rate input on this page defaults to 1, so leave it alone if you trade a USD account."}},
+{"@type":"Question","name":"Does leverage change the pip value?","acceptedAnswer":{"@type":"Answer","text":"No. Leverage only changes the margin your broker locks up when the position opens. The money lost when price moves against you depends on lot size and the price distance alone, so a 1:500 account and a 1:50 account lose exactly the same amount on the same trade."}},
+{"@type":"Question","name":"Why is gold pip value so different from a forex pair?","acceptedAnswer":{"@type":"Answer","text":"A standard lot of EURUSD is 100,000 units and a pip is 0.0001, which gives about $10 per pip but with a stop measured in tens of pips. A standard lot of gold is 100 troy ounces and a $0.10 move is already $10, so gold moves the same money with a stop that is often ten to fifty times tighter in percentage terms. The dollar per pip looks familiar while the volatility behind it is not."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"XAUUSD Pip Value Calculator","applicationCategory":"FinanceApplication","operatingSystem":"Any (web browser)","url":"https://thegoldplan.my/pip-value-calculator","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free XAUUSD pip value calculator: the dollar value of a 0.10 or 0.01 gold price move per lot, for any lot size and account currency.","browserRequirements":"Requires JavaScript"}
+</script>
+<style>
+:root{--bg:#0d0f14;--fg:#e9ecf1;--dim:#9aa3b2;--line:#232a36;--acc:#c9a227;--card:#141822}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 Inter,system-ui,-apple-system,sans-serif}
+a{color:var(--acc)}
+a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+.btn:focus-visible,.seg-btn:focus-visible,.chip:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 72px}
+nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:34px;font-size:14px}
+nav b{margin-right:auto;letter-spacing:.02em}
+nav b a{color:var(--fg);text-decoration:none}
+nav a{color:var(--dim);text-decoration:none}
+nav a:hover{color:var(--fg)}
+h1{font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.18;letter-spacing:-.02em;margin:0 0 18px}
+h2{font-size:1.35rem;margin:38px 0 10px;letter-spacing:-.01em}
+h3{font-size:1.06rem;margin:22px 0 6px}
+p,li{color:#cdd4e0}
+.lead{font-size:1.08rem;color:var(--fg)}
+code{background:#1b2130;padding:2px 6px;border-radius:4px;font-size:.9em}
+.cta{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:38px 0}
+.cta h3{margin-top:0}
+.btn{display:inline-block;background:var(--acc);color:#12140f;font-weight:600;padding:11px 20px;border-radius:8px;text-decoration:none;margin:6px 10px 0 0}
+.btn.alt{background:transparent;color:var(--fg);border:1px solid var(--line)}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:18px;font-size:13px;color:var(--dim)}
+/* calculator */
+.calc-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:18px;margin:30px 0 6px}
+@media(max-width:760px){.calc-grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+.panel-label{margin:0 0 14px;font-size:.94rem;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.field{margin:0 0 16px}
+.field label{display:block;font-size:.85rem;color:var(--dim);margin-bottom:6px}
+.input{width:100%;background:#0d0f14;border:1px solid var(--line);border-radius:8px;color:var(--fg);padding:10px 12px;font:inherit}
+.input:focus{outline:1px solid var(--acc)}
+.seg{display:flex;gap:8px;margin-bottom:8px}
+.seg-btn{flex:1;background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--dim);padding:8px 0;font:inherit;cursor:pointer}
+.seg-btn.on{border-color:var(--acc);color:var(--fg)}
+.inline{display:flex;gap:10px;align-items:center}
+.unit{color:var(--dim);min-width:52px}
+.chips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.chip{background:transparent;border:1px solid var(--line);border-radius:999px;color:var(--dim);padding:5px 14px;font:inherit;font-size:.9rem;cursor:pointer}
+.chip.on{border-color:var(--acc);color:var(--acc)}
+.hint{font-size:.82rem;color:var(--dim);margin:8px 0 0}
+.adv{border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-top:4px}
+.adv summary{cursor:pointer;color:var(--dim);font-size:.9rem}
+.adv .field{margin-top:14px}
+.out .big-label{font-size:.85rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.big{font-size:3rem;font-weight:700;letter-spacing:-.02em;margin:2px 0 10px}
+.big-unit{font-size:1rem;color:var(--dim);font-weight:400}
+.warn{border:1px solid #7a4a21;background:#1d1508;color:#e8c9a0;border-radius:8px;padding:10px 12px;font-size:.9rem;margin:10px 0}
+.rows{margin-top:14px;border-top:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);padding:9px 0;font-size:.95rem}
+.row span{color:var(--dim)}
+.row b.red{color:#e06c6c}
+.row b.green{color:#7fbf7f}
+.note{font-size:.83rem;color:var(--dim);margin-top:14px}
+.formula{background:#1b2130;border-radius:8px;padding:14px 16px;font-size:1.05rem;color:var(--fg);margin:16px 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><b><a class="brand-home" href="/">The Gold Plan</a></b><a href="/">Home</a><a href="/pricing">Pricing</a>
+<a href="/xauusd-trading-journal">XAUUSD journal</a><a href="/mt5-trading-journal-import">MT5 import</a>
+<a href="/prop-firm-daily-loss-tracker">Daily loss tracker</a><a href="/lot-size-calculator">Lot size calculator</a>
+<a href="/pip-value-calculator">Pip value calculator</a>
+<a href="/xauusd-session-times">Session times</a>
+<a href="/trading-plan-template">Trading plan template</a></nav>
+<article>
+<h1>XAUUSD pip value calculator</h1>
+
+<p class="lead">On gold, one standard lot is 100 troy ounces. That is the whole trick: a $0.10 move
+in the gold price is $10 on 1.0 lot, $1 on 0.10 lot, and $0.10 on 0.01 lot. Enter your size
+below and see what a price move actually costs you, before the trade, not after it.</p>
+
+<section class="calc-grid" aria-label="Gold pip value calculator">
+  <div class="panel">
+    <div class="panel-label">Your position</div>
+    <div class="field">
+      <label for="f-lots">Lot size</label>
+      <input id="f-lots" class="input" type="number" inputmode="decimal" min="0" step="0.01" value="1.00">
+      <div class="chips" id="lot-chips">
+        <button type="button" class="chip" data-lot="0.01">0.01</button>
+        <button type="button" class="chip" data-lot="0.1">0.10</button>
+        <button type="button" class="chip on" data-lot="1">1.00</button>
+        <button type="button" class="chip" data-lot="5">5.00</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Price distance (entry to stop, or any move you want priced)</label>
+      <div class="seg">
+        <button type="button" class="seg-btn on" data-dist="price">Price ($)</button>
+        <button type="button" class="seg-btn" data-dist="p10">Pips, $0.10</button>
+        <button type="button" class="seg-btn" data-dist="p01">Pips, $0.01</button>
+      </div>
+      <div class="inline">
+        <input id="f-dist" class="input" type="number" inputmode="decimal" min="0" step="0.1" value="3.00" aria-label="Price distance">
+        <span class="unit" id="dist-unit">USD</span>
+      </div>
+      <p class="hint">Not sure which pip your broker means? Switch to <b>Price ($)</b> and type the
+      distance straight off the chart. The math is identical either way.</p>
+    </div>
+    <details class="adv">
+      <summary>Account currency (optional)</summary>
+      <div class="field">
+        <label for="f-cur">Currency code</label>
+        <input id="f-cur" class="input" type="text" maxlength="5" value="USD" aria-label="Account currency code">
+      </div>
+      <div class="field">
+        <label for="f-rate">1 USD = how much of that currency</label>
+        <input id="f-rate" class="input" type="number" inputmode="decimal" min="0" step="0.01" value="1">
+      </div>
+      <p class="hint">Leave this at 1 for a USD account. A MYR account at 4.70 enters 4.70, and
+      every figure below is converted at that rate.</p>
+    </details>
+  </div>
+
+  <div class="panel out" aria-live="polite">
+    <div class="big-label">Value of a $0.10 move at your size</div>
+    <div class="big"><span id="r-big">$10.00</span></div>
+    <div class="warn" id="r-warn" style="display:none">Enter a lot size above zero to see the
+    value of a gold price move.</div>
+    <div class="rows">
+      <div class="row"><span>Per 1.0 lot, $0.10 move</span><b id="r-perlot10">$10.00</b></div>
+      <div class="row"><span>Per 1.0 lot, $0.01 move</span><b id="r-perlot01">$1.00</b></div>
+      <div class="row"><span id="r-size10-label">At 1.00 lot, $0.10 move</span><b id="r-size10">$10.00</b></div>
+      <div class="row"><span id="r-size01-label">At 1.00 lot, $0.01 move</span><b id="r-size01">$1.00</b></div>
+      <div class="row"><span id="r-dist-label">Your distance ($3.00) at this size</span><b id="r-dist" class="green">$300.00</b></div>
+      <div class="row" id="r-conv-row" style="display:none"><span id="r-conv-label">In account currency</span><b id="r-conv">$300.00</b></div>
+      <div class="row"><span>Distance in pips, if $0.10 is the pip</span><b id="r-pips10">30.0</b></div>
+      <div class="row"><span>Distance in pips, if $0.01 is the pip</span><b id="r-pips01">300</b></div>
+    </div>
+    <p class="note">Gold is quoted in USD, so the raw value is always in USD. Leverage is not part
+    of this calculation: it changes margin, never the value of a price move.</p>
+  </div>
+</section>
+
+<div class="panel" style="margin-top:18px">
+  <div class="panel-label">Quick reference, XAUUSD pip value</div>
+  <div class="rows">
+    <div class="row"><span>Lot size</span><b>$0.10 move</b><b>$0.01 move</b></div>
+    <div class="row"><span>0.01 lot (1 ounce)</span><b>$0.10</b><b>$0.01</b></div>
+    <div class="row"><span>0.10 lot (10 ounces)</span><b>$1.00</b><b>$0.10</b></div>
+    <div class="row"><span>1.00 lot (100 ounces)</span><b>$10.00</b><b>$1.00</b></div>
+  </div>
+  <p class="hint">Left column: a $0.10 price move. Right column: a $0.01 price move. These hold on
+  any standard MT4 or MT5 gold contract of 100 ounces per lot, in a USD account.</p>
+</div>
+
+<h2>How the pip value is calculated</h2>
+<p>One standard lot of XAUUSD is 100 troy ounces, so the value of a price move is the move times
+100 times your lot size:</p>
+<div class="formula">value = price move × 100 × lots</div>
+<p>A $0.10 move on 1.0 lot is 0.10 × 100 × 1 = <b>$10</b>. The same move on 0.05 lots is 0.10 ×
+100 × 0.05 = <b>$0.50</b>. A $0.01 move is one tenth of that, so <b>$1</b> per lot. That is the
+entire table, and no pip label can change it.</p>
+
+<h2>Why pip value matters more on gold than on a forex pair</h2>
+<p>A trader who learned on EURUSD carries a habit into gold without noticing it. On EURUSD, 1.0
+lot with a 30 pip stop risks about $300, and the stop sits maybe 30 points away on the chart. On
+XAUUSD, 1.0 lot with a stop 30 dollars away risks $3,000. The lot size looks the same, the
+number of pips looks familiar, and the risk is ten times bigger.</p>
+<p>Gold's daily range does the rest. A normal gold day can move $20 to $40. Anyone carrying FX
+sizing intuition onto that range will place a stop that a single quiet afternoon clears, then
+double the size to make the stop feel safer, which doubles the loss per dollar of move.</p>
+<p>This is the point where most accounts break: not on a losing trade, but on a lot size that
+was never priced against the instrument's actual range. Once you know a $0.10 move is $10 per
+lot, the sentence "I risk 1% per trade" becomes arithmetic instead of a wish.</p>
+
+<h2>Using pip value to size a gold trade</h2>
+<p>Take a $1,000 account risking 1%, so $10 per trade. The stop needs $4.00 of room on the chart.
+Value of $1.00 of move per lot is 1 × 100 = $100, so $4.00 of room costs $400 per lot. Divide the
+$10 budget by $400 and the ceiling is 0.025 lots, which rounds down to <b>0.02 lots</b>. Real risk
+is $8, inside the plan.</p>
+<p>Read the same numbers on a 2% risk budget and the answer is 0.05 lots, which is where most
+traders start and then keep. The difference between a survivable month and a blown account is
+usually that one step, and it is a division you can do before the entry instead of after.
+The <a href="/lot-size-calculator">lot size calculator</a> runs the same division the other way,
+from risk to lots, if that is the direction you prefer.</p>
+
+<h2>Common questions</h2>
+<h3>Is one pip on gold 0.10 or 0.01?</h3>
+<p>Both labels are in use, which is why forum numbers disagree. Most brokers and most gold
+traders call a $0.10 price move one pip, and a $0.01 move one point or pipette. Some brokers,
+and most MT5 terminals set to three decimals, call the $0.01 move the pip. This page works from
+the raw price distance in dollars, so the label cannot break the math: 1.0 lot is always $10 per
+$0.10 and $1 per $0.01.</p>
+<h3>What is the pip value of 0.01 lots on gold?</h3>
+<p>0.01 lots is one troy ounce. A $0.10 move is worth $0.10 and a $0.01 move is worth $0.01.
+That is the smallest size most brokers allow, and it is why a $500 account can only ever risk a
+few dollars per trade on gold, whatever the leverage shown in the terminal.</p>
+<h3>My account is not in USD. What changes?</h3>
+<p>The pip value is in USD because gold is priced in USD. If your account is in another currency,
+multiply by the rate your broker uses: at 1 USD equals 4.70 MYR, a $10 pip value is 47.00 MYR.
+The rate field above defaults to 1, so leave it alone unless you need the conversion. Brokers
+apply their own rate and a small spread on it, so treat the converted figure as a close estimate.</p>
+<h3>Does leverage change the pip value?</h3>
+<p>No. Leverage only changes the margin your broker locks when the position opens. The money lost
+when price moves against you depends on lot size and distance alone, so a 1:500 account and a
+1:50 account lose exactly the same amount on the same trade. Higher leverage buys you more room
+to be wrong, never a cheaper loss.</p>
+<h3>Why is gold pip value so different from a forex pair?</h3>
+<p>A standard EURUSD lot is 100,000 units with a pip of 0.0001, which lands near $10 per pip with
+stops measured in tens of pips. A standard gold lot is 100 ounces where a $0.10 move is already
+$10, so the same money sits behind a stop that is far tighter in percentage terms. The dollars
+per pip look familiar while the volatility underneath is not, and that mismatch is exactly where
+size mistakes start.</p>
+
+</article>
+<div class="cta"><h3>See it with your own trades</h3>
+<p>Pip value tells you what a move costs. A journal tells you which setups earn it back. The Gold
+Plan records size, stop, setup and outcome per trade, then shows which one is draining the
+account. The demo is the full app with four sample accounts and 107 trades, open, no login.</p>
+<a class="btn" href="/app?demo=1">Open the free demo</a>
+<a class="btn alt" href="/pricing">See pricing</a></div>
+<footer>The Gold Plan — a XAUUSD trading journal. Not signals, not a broker. We are not affiliated with any prop firm. <a href="/pricing">Pricing</a> · <a href="/app?demo=1">Demo</a> · <a href="/privacy">Privacy</a></footer>
+</div>
+<script>
+(function () {
+  'use strict'
+  var CONTRACT = 100, P10 = 0.1, P01 = 0.01
+  function safe(n, f) { f = f || 0; return isFinite(n) ? n : f }
+  function num(v) { var n = parseFloat(v); return isFinite(n) && n > 0 ? n : 0 }
+  function money(v, cur) {
+    var abs = Math.abs(safe(v))
+    var s = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    return cur === 'USD' ? (v < 0 ? '-$' : '$') + s : (v < 0 ? '-' : '') + cur + ' ' + s
+  }
+  function $id(id) { return document.getElementById(id) }
+  var state = { dist: 'price', cur: 'USD', rate: 1 }
+  var els = {
+    lots: $id('f-lots'), dist: $id('f-dist'), distUnit: $id('dist-unit'),
+    cur: $id('f-cur'), rate: $id('f-rate'),
+    big: $id('r-big'), warn: $id('r-warn'),
+    per10: $id('r-perlot10'), per01: $id('r-perlot01'),
+    s10: $id('r-size10'), s10l: $id('r-size10-label'),
+    s01: $id('r-size01'), s01l: $id('r-size01-label'),
+    dl: $id('r-dist-label'), dv: $id('r-dist'), conv: $id('r-conv'),
+    convRow: $id('r-conv-row'), convLabel: $id('r-conv-label'),
+    pips10: $id('r-pips10'), pips01: $id('r-pips01')
+  }
+  function seg(sel, attr, val) {
+    var nodes = document.querySelectorAll(sel)
+    for (var i = 0; i < nodes.length; i++) {
+      nodes[i].classList.toggle('on', nodes[i].getAttribute(attr) === String(val))
+    }
+  }
+  function moveInDollars(raw) {
+    if (state.dist === 'p10') return raw * P10
+    if (state.dist === 'p01') return raw * P01
+    return raw
+  }
+  function recalc() {
+    var lots = num(els.lots.value)
+    var rawDist = safe(parseFloat(els.dist.value))
+    var move = moveInDollars(rawDist)
+    var cur = (els.cur.value || 'USD').toUpperCase().replace(/[^A-Z]/g, '') || 'USD'
+    var rate = num(els.rate.value) || 1
+    state.cur = cur
+
+    var per10 = P10 * CONTRACT            // per 1.0 lot
+    var per01 = P01 * CONTRACT
+    var at10 = lots * per10
+    var at01 = lots * per01
+    var atDist = lots * move * CONTRACT
+
+    els.big.textContent = money(at10 * rate, cur === 'USD' ? 'USD' : cur)
+    els.warn.style.display = lots > 0 ? 'none' : ''
+    els.per10.textContent = money(per10 * rate, cur)
+    els.per01.textContent = money(per01 * rate, cur)
+    els.s10l.textContent = 'At ' + lots.toFixed(2) + ' lot, $0.10 move'
+    els.s10.textContent = money(at10 * rate, cur)
+    els.s01l.textContent = 'At ' + lots.toFixed(2) + ' lot, $0.01 move'
+    els.s01.textContent = money(at01 * rate, cur)
+    els.dl.textContent = 'Your distance ($' + safe(move).toFixed(2) + ') at this size'
+    els.dv.textContent = money(atDist, 'USD')
+    if (cur !== 'USD' && rate !== 1) {
+      els.convRow.style.display = ''
+      els.conv.textContent = money(atDist * rate, cur) + ' (' + rate + ')'
+    } else {
+      els.convRow.style.display = 'none'
+    }
+    els.pips10.textContent = (move / P10).toFixed(1)
+    els.pips01.textContent = (move / P01).toFixed(0)
+  }
+
+  ;[].forEach.call(document.querySelectorAll('[data-lot]'), function (b) {
+    b.addEventListener('click', function () {
+      els.lots.value = Number(b.getAttribute('data-lot')).toFixed(2)
+      seg('[data-lot]', 'data-lot', b.getAttribute('data-lot'))
+      recalc()
+    })
+  })
+  ;[].forEach.call(document.querySelectorAll('[data-dist]'), function (b) {
+    b.addEventListener('click', function () {
+      var next = b.getAttribute('data-dist')
+      if (next === state.dist) return
+      var d = safe(parseFloat(els.dist.value))
+      var asMove = moveInDollars(d)
+      state.dist = next
+      els.dist.value = next === 'price' ? (Math.round(asMove * 100) / 100).toFixed(2)
+        : (Math.round((asMove / (next === 'p10' ? P10 : P01)) * 10) / 10).toFixed(1)
+      seg('[data-dist]', 'data-dist', next)
+      els.distUnit.textContent = next === 'price' ? 'USD' : 'pips'
+      els.dist.step = next === 'price' ? '0.1' : '1'
+      recalc()
+    })
+  })
+  ;[els.lots, els.dist, els.rate].forEach(function (i) { i.addEventListener('input', recalc) })
+  els.cur.addEventListener('input', recalc)
+  recalc()
+})()
+</script>
+</body>
+</html>

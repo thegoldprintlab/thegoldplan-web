@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XAUUSD Session Times in UTC: Gold Trading Hours Guide</title>
+<meta name="description" content="Gold trading hours in UTC: Sydney, Tokyo, London and New York sessions for XAUUSD, the London/New York overlap, the daily break at rollover, and how to convert broker server time.">
+<link rel="canonical" href="https://thegoldplan.my/xauusd-session-times">
+<meta name="theme-color" content="#0d0f14">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="XAUUSD Session Times in UTC: Gold Trading Hours Guide">
+<meta property="og:description" content="When gold actually moves: Sydney, Tokyo, London and New York hours in UTC, the London/New York overlap, and the daily break that costs gold holders on swap and spread.">
+<meta property="og:url" content="https://thegoldplan.my/xauusd-session-times">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://thegoldplan.my/og/og-session-times.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Gold Plan session times guide, showing gold trading hours in UTC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAUUSD Session Times in UTC: Gold Trading Hours Guide">
+<meta name="twitter:description" content="Sydney, Tokyo, London and New York hours in UTC, the overlap where gold moves cleanest, and the daily break at rollover.">
+<meta name="twitter:image" content="https://thegoldplan.my/og/og-session-times.png">
+<meta name="twitter:image:alt" content="The Gold Plan session times guide, showing gold trading hours in UTC">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"XAUUSD Session Times Guide","url":"https://thegoldplan.my/xauusd-session-times","applicationCategory":"FinanceApplication","operatingSystem":"Any (web browser)","browserRequirements":"Requires JavaScript for the live session indicator","description":"Reference guide to gold trading sessions in UTC: Sydney, Tokyo, London and New York hours for XAUUSD, the London/New York overlap, the daily break at rollover, and how to convert broker server time to UTC.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isPartOf":{"@type":"WebSite","name":"The Gold Plan","url":"https://thegoldplan.my"}}
+</script>
+<style>
+:root{--bg:#0d0f14;--fg:#e9ecf1;--dim:#9aa3b2;--line:#232a36;--acc:#c9a227;--card:#141822}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 Inter,system-ui,-apple-system,sans-serif}
+a{color:var(--acc)}
+a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+.btn:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+nav{display:flex;gap:18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:34px;font-size:14px}
+nav b{margin-right:auto;letter-spacing:.02em}
+nav b a{color:var(--fg);text-decoration:none}
+nav a{color:var(--dim);text-decoration:none}
+nav a:hover{color:var(--fg)}
+h1{font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.18;letter-spacing:-.02em;margin:0 0 18px}
+h2{font-size:1.35rem;margin:38px 0 10px;letter-spacing:-.01em}
+h3{font-size:1.06rem;margin:22px 0 6px}
+p,li{color:#cdd4e0}
+.lead{font-size:1.08rem;color:var(--fg)}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.94rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em}
+code{background:#1b2130;padding:2px 6px;border-radius:4px;font-size:.9em}
+.cta{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:38px 0}
+.cta h3{margin-top:0}
+.btn{display:inline-block;background:var(--acc);color:#12140f;font-weight:600;padding:11px 20px;border-radius:8px;text-decoration:none;margin:6px 10px 0 0}
+.btn.alt{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.ans{background:rgba(201,162,39,.07);border-radius:8px;padding:12px 16px;margin:16px 0;color:var(--fg)}
+.now{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:24px 0}
+.now .k{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+.now .v{font-size:1.15rem;margin:4px 0 0}
+.now .sub{font-size:.85rem;color:var(--dim);margin:10px 0 0}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:18px;font-size:13px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><b><a class="brand-home" href="/">The Gold Plan</a></b><a href="/">Home</a><a href="/pricing">Pricing</a>
+<a href="/xauusd-trading-journal">XAUUSD journal</a><a href="/mt5-trading-journal-import">MT5 import</a>
+<a href="/prop-firm-daily-loss-tracker">Daily loss tracker</a><a href="/lot-size-calculator">Lot size calculator</a>
+<a href="/pip-value-calculator">Pip value calculator</a>
+<a href="/xauusd-session-times">Session times</a>
+<a href="/trading-plan-template">Trading plan template</a></nav>
+<article>
+<h1>XAUUSD session times: when gold actually moves</h1>
+
+<p class="lead">Gold is open for roughly 23 hours a day, five days a week. The other hours are
+the part most traders never plan for. This page lists the sessions in UTC, so the numbers mean
+the same thing in Kuala Lumpur, London and New York.</p>
+
+<p>Every time below is UTC. When London and New York shift to daylight saving, their windows move
+one hour earlier in UTC and everything else on this page stays put. That single detail causes more
+confusion than the session hours themselves.</p>
+
+<h2>The gold trading day in one line</h2>
+<p>XAUUSD opens Sunday around 22:00 to 23:00 UTC and closes Friday around 21:00 to 22:00 UTC. In
+between, trading pauses once a day for roughly an hour, usually somewhere around 21:00 to 22:00 UTC.
+That pause is the daily break, and on some brokers you will see it as 23:00 to 00:00 or 00:00 to
+01:00 because they display their own server time.</p>
+
+<p>So the tradeable week is about 23 hours per day multiplied by five, minus the weekend gap. Gold
+does not have a session where the price is frozen and orders are ignored, but it does have an hour
+where liquidity thins out badly, and that hour matters if you hold a position through it.</p>
+
+<h2>The four sessions, in UTC</h2>
+<table>
+<tr><th>Session</th><th>UTC winter</th><th>UTC summer</th><th>What gold does</th></tr>
+<tr><td>Sydney</td><td>21:00 to 06:00</td><td>21:00 to 06:00</td><td>Thin liquidity, small ranges, the week opens here on Sunday night. Price often drifts.</td></tr>
+<tr><td>Tokyo</td><td>00:00 to 09:00</td><td>00:00 to 09:00</td><td>Quieter than London, ranges are tighter. Asian buyers and a weaker yen move gold, but the moves are rarely clean trends.</td></tr>
+<tr><td>London</td><td>08:00 to 17:00</td><td>07:00 to 16:00</td><td>The London open around 08:00 UTC often sets the first real direction of the day. Deepest book before New York arrives.</td></tr>
+<tr><td>New York</td><td>13:00 to 22:00</td><td>12:00 to 21:00</td><td>US data lands here. Big ranges, fast reversals, and the afternoon fade that catches late entries.</td></tr>
+</table>
+
+<p>Tokyo hours do not change in UTC because Japan does not observe daylight saving. Sydney's window
+here is rounded, since Australia and New Zealand shift on different dates than Europe and the US.
+Treat the edges as approximate and check your own broker's clock if a minute matters.</p>
+
+<div class="now" id="now-box" hidden>
+  <div class="k">Right now, by your device clock</div>
+  <p class="v" id="now-session">Checking</p>
+  <p class="sub" id="now-detail"></p>
+</div>
+
+<div class="ans"><strong>Short version:</strong> the highest-liquidity window for gold is the
+London and New York overlap, about 13:00 to 17:00 UTC in winter and 12:00 to 16:00 UTC in summer.
+Spreads are tightest there, and the moves are the cleanest of the day.</div>
+
+<h2>Why the London and New York overlap is the window that counts</h2>
+<p>For about four hours a day, both the London and New York desks are active at the same time. On
+gold that shows up as narrower spreads, more size available at each price level, and moves that
+follow through instead of stabbing both ways.</p>
+
+<p>The practical difference is not that gold only moves during the overlap. It is that a stop placed
+in the overlap is less likely to be taken out by a spread widening, and a breakout there is less
+likely to be a fake. Outside it, especially in the hours before the London open, a $3 move can look
+like a setup and turn out to be one order sweeping an empty book.</p>
+
+<p>If you only have one block of screen time per day and gold is the instrument, the overlap is the
+block to take. If your schedule forces you into the Asian session, lower your expectations for range
+and size down accordingly. A 15 pip stop that works at 13:00 UTC is a coin flip at 02:00 UTC.</p>
+
+<h2>The daily break and rollover: why gold holders feel it</h2>
+<p>Once a day, around 21:00 to 22:00 UTC, the market pauses while the trading day rolls over. Two
+things happen to gold positions in that hour, and both cost money if you are holding.</p>
+
+<h3>Spread widening</h3>
+<p>Liquidity providers step away during rollover. The spread on XAUUSD, already the widest of the
+major instruments, can widen to several times its normal size for a few minutes. A position that is
+comfortably in profit at 20:55 UTC can show a paper loss at 21:15 UTC without the price having moved
+at all. Stops sitting close to price are at real risk of being hit by the spread rather than the market.</p>
+
+<h3>Swap fees</h3>
+<p>Positions held through the rollover get charged or credited swap. Gold swap can be substantial
+relative to the size of the position, particularly on long holdings, and it is charged per night
+whether or not the trade is working. A three day hold can quietly give back more than the trade made
+if the swap is against you. Wednesday rollover is often triple swap, because it settles the weekend.</p>
+
+<p>The consequence is simple: if your plan is intraday, close before the break. If your plan is to
+hold, then the swap and the widened spread are part of the cost of the trade and belong in your
+numbers before you enter, not after.</p>
+
+<h2>Server time is not UTC: the conversion that wrecks journals</h2>
+<p>Most MT4 and MT5 brokers run their platform clock on EET or EEST, which is UTC+2 in winter and
+UTC+3 in summer. That means the daily candle on your chart closes at 00:00 server time, not 00:00
+UTC. When you export a statement and group trades by day, you are grouping by the broker's day, which
+starts two or three hours earlier than the UTC day.</p>
+
+<p>Two traders with the same trades can therefore show different daily results, different win rates
+per session, and different "best hour" statistics, all because one of them never converted. If you
+compare your journal to someone else's, or to a strategy write-up that uses UTC, convert first.</p>
+
+<p>The conversion itself is dull: subtract 2 hours in winter, 3 hours in summer, from server time to
+get UTC. The trap is that the offset changes twice a year, on dates that depend on the broker, and
+charts produced either side of that change will be off by an hour in the analytics. Note the offset
+on the trade, or keep the journal in UTC, and the problem disappears.</p>
+
+<h2>Picking a session and writing it into the plan</h2>
+<p>Session choice is a planning decision, not a market prediction. Pick the block you can actually
+watch, then let everything else in the plan follow from it.</p>
+
+<h3>1. Choose one primary block and name it in UTC</h3>
+<p>Write it down as a UTC window next to your local time, for example: primary window 13:00 to 16:00
+UTC, which is 21:00 to 00:00 in Kuala Lumpur. Put both in the plan so a change in daylight saving
+does not silently move your trading hours.</p>
+
+<h3>2. Cap the session, not the trade count</h3>
+<p>A session limit is easier to keep than a trade limit because it is a clock rather than a decision.
+Two hours of screen time with no more than three setups is a rule you can hold on a bad day. "Trade
+less" is not.</p>
+
+<h3>3. Tag every trade with the session it was taken in</h3>
+<p>This is the only way to learn whether your edge is real or a schedule accident. Most traders who
+tag by session discover their losses cluster in the hours they were tired, not the hours the market
+was difficult. Two months of tags answers a question no amount of chart study will.</p>
+
+<h3>4. Set the daily loss limit around the session, not the calendar day</h3>
+<p>If you trade one session, a single loss limit for that session is enough. If you trade London and
+then New York, decide in advance whether the London loss carries into New York. Most blown accounts
+are the second session trying to repair the first.</p>
+
+<p>The <a href="/xauusd-trading-journal">XAUUSD journal</a> stores the session tag and the server
+offset on every trade, so the per-session breakdown is a filter rather than a spreadsheet project.
+If you already size by risk, the <a href="/lot-size-calculator">lot size calculator</a> handles the
+other half of the same plan.</p>
+
+<div class="ans"><strong>One rule to take away:</strong> decide your session in UTC, convert it once
+to your local clock, and log which session each trade came from. If the stats later say your edge
+lives in one four hour window, you have found something worth more than a new indicator.</div>
+
+</article>
+<div class="cta"><h3>Log trades by session, not by memory</h3>
+<p>The demo opens with four sample accounts and 107 trades, so you can see a per-session breakdown
+before you commit. No login, no card. The live journal is $19/month or $149 once.</p>
+<a class="btn" href="/app?demo=1">Open the free demo</a>
+<a class="btn alt" href="/pricing">See pricing</a></div>
+<footer>The Gold Plan — a XAUUSD trading journal. Not signals, not a broker. We are not
+affiliated with any prop firm. <a href="/pricing">Pricing</a> ·
+<a href="/app?demo=1">Demo</a> · <a href="/privacy">Privacy</a></footer>
+</div>
+<script>
+(function(){
+  var box=document.getElementById('now-box');
+  if(!box)return;
+  function lastSunday(y,m){var d=new Date(Date.UTC(y,m+1,0));return d.getUTCDate()-d.getUTCDay();}
+  function nthSunday(y,m,n){
+    var first=new Date(Date.UTC(y,m,1)).getUTCDay();
+    return 1+((7-first)%7)+7*(n-1);
+  }
+  function pd(y,m,day,h){return Date.UTC(y,m,day,h||0);}
+  function dst(now){
+    var y=now.getUTCFullYear(), t=now.getTime();
+    var euStart=pd(y,2,lastSunday(y,2),1), euEnd=pd(y,9,lastSunday(y,9),1);
+    var usStart=pd(y,2,nthSunday(y,2,2),7), usEnd=pd(y,10,nthSunday(y,10,1),6);
+    return {london:t>=euStart&&t<euEnd, ny:t>=usStart&&t<usEnd};
+  }
+  function hhmm(h){var hr=Math.floor(h)%24,mn=Math.round((h-Math.floor(h))*60);
+    return (hr<10?'0':'')+hr+':'+(mn<10?'0':'')+mn;}
+  function update(){
+    var now=new Date(), d=dst(now);
+    var h=now.getUTCHours()+now.getUTCMinutes()/60+now.getUTCSeconds()/3600;
+    var lonS=d.london?7:8, lonE=d.london?16:17;
+    var nyS=d.ny?12:13, nyE=d.ny?21:22;
+    var label,detail;
+    if(h>=21&&h<22){
+      label='Daily break (rollover)';
+      detail='Spreads widen and swap is charged in this hour. Roughly 21:00 to 22:00 UTC on most brokers.';
+    }else{
+      var london=h>=lonS&&h<lonE, ny=h>=nyS&&h<nyE;
+      if(london&&ny){
+        label='London and New York overlap';
+        detail='Both desks active until '+hhmm(nyE>lonE?lonE:nyE)+' UTC. Tightest spreads of the day.';
+      }else if(london){
+        label='London session';
+        detail='London window is '+hhmm(lonS)+' to '+hhmm(lonE)+' UTC today'+(d.london?' (summer time).':' (winter time).');
+      }else if(ny){
+        label='New York session';
+        detail='New York window is '+hhmm(nyS)+' to '+hhmm(nyE)+' UTC today'+(d.ny?' (summer time).':' (winter time).');
+      }else if(h>=22){
+        label='Sydney session';
+        detail='Thinnest liquidity of the day. The week opens here on Sunday night.';
+      }else if(h>=0&&h<9){
+        label='Tokyo session';
+        detail='Tokyo is open, with Sydney. Quieter range and wider spreads than London, so size down if this is your only window.';
+        if(h>=6)detail='Tokyo is winding down before its 09:00 UTC close. London opens at 08:00 UTC in winter, 07:00 in summer.';
+      }else{
+        label='Between sessions';
+        detail='A gap between the Tokyo close and the London open. Low liquidity.';
+      }
+    }
+    document.getElementById('now-session').textContent=label;
+    var local=hhmm(now.getHours()+now.getMinutes()/60);
+    document.getElementById('now-detail').textContent=detail+
+      ' Your clock reads '+local+', which is '+hhmm(h)+' UTC.';
+    box.hidden=false;
+  }
+  update();
+  setInterval(update,30000);
+})();
+</script>
+</body>
+</html>
