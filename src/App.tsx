@@ -21,6 +21,7 @@ import ImportPage from './pages/Import'
 // Simulator dibundel berasingan — lightweight-charts + enjin replay tak
 // perlu masuk bundle utama untuk pengguna yang cuma nak guna journal.
 const Simulator = lazy(() => import('./pages/Simulator'))
+import PlanGenerator from './pages/PlanGenerator'
 import Landing from './pages/Landing'
 import Pricing from './pages/Pricing'
 import Privacy from './pages/Privacy'
@@ -106,6 +107,7 @@ function Shell() {
               <Route path="/input" element={<InputForm />} />
               <Route path="/log" element={<TradingLog />} />
               <Route path="/import" element={<ImportPage />} />
+              <Route path="/plan" element={<PlanGenerator />} />
               <Route
                 path="/sim"
                 element={

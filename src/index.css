@@ -2319,3 +2319,39 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
   background: rgba(200, 162, 74, 0.12);
   color: var(--gold-accent);
 }
+
+
+/* --- Trading Plan generator --- */
+.plan-h2 { font-size: 1.05rem; margin: 0 0 6px; }
+.plan-h3 { font-size: 0.9rem; margin: 0 0 6px; }
+.plan-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+.plan-stats-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--line, rgba(128,128,128,0.25));
+  border-radius: 10px;
+}
+.plan-stat-label { font-size: 0.72rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.plan-stat-val { font-size: 1.15rem; font-weight: 600; }
+.plan-error { color: #d05a5a; font-size: 0.85rem; margin-top: 12px; }
+.plan-result { border-left: 3px solid var(--ink-muted); }
+.plan-verdict-ok { border-left-color: #4c9a6a; }
+.plan-verdict-mid { border-left-color: #c9a227; }
+.plan-verdict-bad { border-left-color: #c25b5b; }
+.plan-sheet {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px dashed var(--line, rgba(128,128,128,0.35));
+  border-radius: 10px;
+}
+.plan-sheet-line { font-size: 0.95rem; line-height: 1.6; margin: 0; }
+@media (max-width: 640px) {
+  .plan-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}

@@ -9,6 +9,7 @@ export default function Nav() {
     { to: '/app/log', label: 'Trading Log' },
     { to: '/app/input', label: 'Input Form' },
     { to: '/app/import', label: 'Import MT5' },
+    { to: '/app/plan', label: 'Plan' },
     { to: '/app/sim', label: 'Simulator' },
     { to: '/app/help', label: 'How to use' },
     { to: '/app/settings', label: 'Settings' },
