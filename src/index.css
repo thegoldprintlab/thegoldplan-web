@@ -2341,10 +2341,21 @@ input:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
 .plan-stat-label { font-size: 0.72rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .plan-stat-val { font-size: 1.15rem; font-weight: 600; }
 .plan-error { color: #d05a5a; font-size: 0.85rem; margin-top: 12px; }
-.plan-result { border-left: 3px solid var(--ink-muted); }
-.plan-verdict-ok { border-left-color: #4c9a6a; }
-.plan-verdict-mid { border-left-color: #c9a227; }
-.plan-verdict-bad { border-left-color: #c25b5b; }
+.plan-result { border: 1px solid var(--line, rgba(128,128,128,0.25)); }
+.verdict-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  color: #16130c;
+}
+.verdict-ok { background: #4c9a6a; }
+.verdict-mid { background: #d9b02c; }
+.verdict-bad { background: #c25b5b; color: #fff; }
 .plan-sheet {
   margin-top: 18px;
   padding: 14px 16px;

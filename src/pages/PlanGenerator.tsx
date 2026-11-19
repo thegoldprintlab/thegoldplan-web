@@ -6,21 +6,18 @@ import { computeStats, simulatePlan, type PlanStats, type PlanResult } from '../
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase'
 import { fmtMoney } from '../lib/stats'
 
-const VERDICT_COPY: Record<PlanResult['verdict'], { head: string; body: string; cls: string }> = {
+const VERDICT_COPY: Record<PlanResult['verdict'], { head: string; body: string }> = {
   realistic: {
     head: 'This plan holds up.',
     body: 'Your journal numbers support this target at this risk level. Expect the drawdowns listed below on the way.',
-    cls: 'plan-verdict-ok',
   },
   stretch: {
     head: 'This plan is possible, but tight.',
     body: 'The edge is there, but the margin is thin. A wider horizon or a smaller target makes it sturdier.',
-    cls: 'plan-verdict-mid',
   },
   unrealistic: {
     head: 'This plan fights your numbers.',
     body: 'At your win rate and R profile, most paths miss the target or hit the drawdown cap first. Lower the target, widen the horizon, or reduce risk per trade.',
-    cls: 'plan-verdict-bad',
   },
 }
 
@@ -165,7 +162,10 @@ export default function PlanGenerator() {
       )}
 
       {result && v && (
-        <div className={`panel plan-result ${v.cls}`}>
+        <div className={`panel plan-result`}>
+          <span className={`verdict-tag ${result.verdict === 'realistic' ? 'verdict-ok' : result.verdict === 'stretch' ? 'verdict-mid' : 'verdict-bad'}`}>
+            {result.verdict}
+          </span>
           <h2 className="plan-h2">{v.head}</h2>
           <p>{v.body}</p>
           <div className="plan-stats-grid">
