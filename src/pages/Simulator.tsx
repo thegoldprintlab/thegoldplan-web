@@ -30,6 +30,7 @@ import {
   type IndicatorSettings,
 } from '../sim/settings'
 import { loadNews, newsDaysInRange, newsInRange, newsOnDay, type NewsEvent } from '../sim/news'
+import { loadLive, saveLive } from '../sim/autosave'
 import { isDemoPreview } from '../lib/demo'
 import { trackEvent } from '../lib/analytics'
 
@@ -80,6 +81,10 @@ export default function Simulator() {
   const [chalRules, setChalRules] = useState<ChallengeRules>(loadRules)
   const [chalOpen, setChalOpen] = useState(false)
 
+  /** Sesi auto-simpan — dibaca sekali sahaja pada mount, dipulihkan bila data bulan tiba. */
+  const restored = useRef(loadLive())
+  const restoredApplied = useRef(false)
+
   /** cursor terakhir yang dah diperiksa untuk SL/TP (elak semak berulang) */
   const lastChecked = useRef(0)
   /** Hari yang user klik pada kalendar tapi bulan lain — lompat selepas data tiba. */
@@ -95,6 +100,12 @@ export default function Simulator() {
   useEffect(() => saveIndicators(indicators), [indicators])
   useEffect(() => saveAccount(account), [account])
   useEffect(() => saveRules(chalRules), [chalRules])
+
+  // Auto-simpan sesi hidup: refresh terus sambung di tempat tinggal.
+  useEffect(() => {
+    if (!month || cursor <= 0) return
+    saveLive({ month, tf, cursor, balance, positions, closed, seq, marginCall })
+  }, [month, tf, cursor, balance, positions, closed, seq, marginCall])
 
   useEffect(() => {
     loadNews().then(setNews)
@@ -154,8 +165,10 @@ export default function Simulator() {
     getManifest()
       .then((m) => {
         setManifest(m)
-        // start on a random month — replay, not memorising
-        const pick = m.months[Math.floor(Math.random() * m.months.length)]
+        // Sambung sesi lepas kalau bulannya masih wujud — jangan mula rawak.
+        const saved = restored.current
+        const resume = saved && m.months.includes(saved.month) ? saved.month : null
+        const pick = resume ?? m.months[Math.floor(Math.random() * m.months.length)]
         setMonth(pick)
       })
       .catch((e) => setErr(e instanceof Error ? e.message : String(e)))
@@ -172,6 +185,25 @@ export default function Simulator() {
       .then((rows) => {
         if (dead) return
         setM1(rows)
+        // Pulihkan sesi auto-simpan (sekali sahaja, bulan yang sama):
+        // balance, posisi terbuka, trade tertutup, cursor, timeframe, margin call.
+        const snap = restored.current
+        if (snap && !restoredApplied.current && snap.month === month) {
+          restoredApplied.current = true
+          const aggFull = aggregate(rows, snap.tf)
+          const agg = demoPreview ? aggFull.slice(-DEMO_CANDLES) : aggFull
+          setTf(snap.tf)
+          setBalance(snap.balance)
+          setPositions(snap.positions)
+          setClosed(snap.closed)
+          setSeq(snap.seq || 1)
+          setMarginCall(Boolean(snap.marginCall))
+          setCursor(Math.max(1, Math.min(snap.cursor, agg.length)))
+          lastChecked.current = -1
+          setRecenterToken((n) => n + 1)
+          setLoading(false)
+          return
+        }
         const full = aggregate(rows, tf)
         // Demo preview: only the last DEMO_CANDLES candles exist.
         const agg = demoPreview ? full.slice(-DEMO_CANDLES) : full
