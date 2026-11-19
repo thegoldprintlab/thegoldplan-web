@@ -35,6 +35,15 @@
         ],
         "createdAt": "2026-11-19T19:25:26.761Z",
         "reason": "False positive: JetBrains Mono is declared in DESIGN.md typography as the mono token (fontFamily: JetBrains Mono, ui-monospace, Menlo, monospace). The template block uses exactly that stack for the plan sheet (numbers/code usage per DESIGN.md line 175). Lucif, 19 Nov 2026"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "public/trading-plan-template.html"
+        ],
+        "createdAt": "2026-11-19T19:32:25.368Z",
+        "reason": "Sanctioned exception: Inter is the brand typeface since launch, deliberately kept and whitelisted during the 18 Nov design pass (commit b3b800a, 'font Inter brand sejak launch, di-whitelist'). DESIGN.md documents Inter as working type for the public marketing surface. Lucif, 19 Nov 2026"
       }
     ]
   }
