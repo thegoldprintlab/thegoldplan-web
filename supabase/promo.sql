@@ -38,6 +38,7 @@ returns jsonb
 language plpgsql security definer set search_path = public
 as $$
 declare
+  v_norm   text;
   v_code   public.promo_codes%rowtype;
   v_uid    uuid := auth.uid();
   v_period timestamptz;
@@ -47,10 +48,18 @@ begin
     raise exception 'Not authenticated';
   end if;
 
+  -- Buang semua bukan huruf/angka, jadi paste dari WhatsApp/Telegram dengan
+  -- en-dash, spasi, backtick atau titik akhir tetap jadi kod yang betul.
+  v_norm := regexp_replace(upper(coalesce(p_code, '')), '[^A-Z0-9]', '', 'g');
+
+  if v_norm = '' then
+    raise exception 'Sila masukkan kod promo';
+  end if;
+
   -- Lock the row: dua redemption serentak tak boleh sama-sama lulus semakan used_count.
   select * into v_code
   from public.promo_codes
-  where code = upper(trim(p_code))
+  where regexp_replace(upper(code), '[^A-Z0-9]', '', 'g') = v_norm
   for update;
 
   if not found then
